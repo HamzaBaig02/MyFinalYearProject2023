@@ -7,18 +7,18 @@ class Network {
 
   Future getData() async {
     try {
+      String data = '';
       Response response = await get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         print('API request successful!');
         //to check if there is no error
-        String data = response.body;
+        data = response.body;
 
         return data;
       } else {
         print('API Error:${response.statusCode}');
-
-        return '';
+        return data;
       }
     } on Exception catch (e) {
       print(e);

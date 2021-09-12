@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:flutter/material.dart';
 import 'screens/homepage.dart';
@@ -30,35 +31,20 @@ void main() async {
   }
 
   //data from network
-  CryptoNetwork mynetwork = CryptoNetwork();
-  await mynetwork.startNetwork();
-
-  List<CoinData> coinList = [];
-
-  if (mynetwork.cryptoData != '') {
-    coinList = List.generate(100, (index) {
-      CoinData myCoin = mynetwork.getCryptoDataByIndex(index);
-      return myCoin;
-    });
-  }
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => user,
-      child: MyApp(coinList),
+      child: MyApp(),
     ),
   );
 }
 
 class MyApp extends StatelessWidget {
-  final List<CoinData> coinList;
-
-  MyApp(this.coinList);
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: UserHomePage(coinList),
+      home: Loading(),
     );
   }
 }

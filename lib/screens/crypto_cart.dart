@@ -2,6 +2,7 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,10 +42,14 @@ class _BuyState extends State<Buy> {
                   ),
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 30),
-                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.green.shade400,
+                        width: 2,
+                      ),
                     ),
                     child: TextField(
                       onChanged: (value) {
@@ -56,7 +61,14 @@ class _BuyState extends State<Buy> {
                         });
                       },
                       decoration: InputDecoration(
-                        labelText: 'Enter amount in USD',
+                        hintText: 'Enter amount in USD',
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.dollarSign,
+                          color: Colors.green,
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
                       ),
                     ),
                   ),
@@ -131,7 +143,7 @@ class ShopInfoCard extends StatelessWidget {
     return Stack(
       children: [
         Container(
-          width: 300,
+          width: 350,
           height: 228,
         ),
         Positioned.fill(
@@ -143,7 +155,7 @@ class ShopInfoCard extends StatelessWidget {
                 color: Colors.white,
               ),
               padding: EdgeInsets.all(10),
-              width: 300,
+              width: 318,
               height: 200,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -265,7 +277,7 @@ class CryptoAmountCard extends StatelessWidget {
           ),
         ),
         SizedBox(
-          width: 6,
+          width: 5,
         ),
         Expanded(
           child: Container(

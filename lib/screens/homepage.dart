@@ -26,7 +26,8 @@ class _UserHomePageState extends State<UserHomePage> {
     CryptoNetwork mynetwork = CryptoNetwork();
     await mynetwork.startNetwork();
 
-    widget.coinDataList = mynetwork.getCoinList();
+    if (mynetwork.getCoinList().isNotEmpty)
+      widget.coinDataList = mynetwork.getCoinList();
 
     await Future.delayed(Duration(seconds: 2));
 
