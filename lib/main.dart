@@ -1,0 +1,64 @@
+import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/services/crypto_network.dart';
+import 'package:flutter/material.dart';
+import 'screens/homepage.dart';
+import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  //data from disk
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String data = '';
+  try {
+    data = pref.getString('myData') ?? '';
+  } on Exception catch (e) {
+    print(e);
+  }
+
+  UserData user;
+
+  if (data != '') {
+    Map json = jsonDecode(data);
+    user = UserData.fromJson(json);
+  } else {
+    user = UserData('Hamza Baig', [], 10000, 0, 0);
+  }
+
+  //data from network
+  CryptoNetwork mynetwork = CryptoNetwork();
+  await mynetwork.startNetwork();
+
+  List<CoinData> coinList = [];
+
+  if (mynetwork.cryptoData != '') {
+    coinList = List.generate(100, (index) {
+      CoinData myCoin = mynetwork.getCryptoDataByIndex(index);
+      return myCoin;
+    });
+  }
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => user,
+      child: MyApp(coinList),
+    ),
+  );
+}
+
+class MyApp extends StatelessWidget {
+  final List<CoinData> coinList;
+
+  MyApp(this.coinList);
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: UserHomePage(coinList),
+    );
+  }
+}
