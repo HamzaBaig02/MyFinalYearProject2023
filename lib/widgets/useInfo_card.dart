@@ -219,9 +219,14 @@ class WalletTile extends StatelessWidget {
   WalletTile(this.currency);
 
   var cryptoFormatter = NumberFormat('0.00000');
+  var dollarFormatter = NumberFormat('0,000.00');
+
+  double dollars = 0;
 
   @override
   Widget build(BuildContext context) {
+    dollars = currency.valueUsd;
+
     return Container(
       decoration: BoxDecoration(
         color: Color(0xff2e3340),
@@ -254,7 +259,28 @@ class WalletTile extends StatelessWidget {
               ),
               Text(
                 '${cryptoFormatter.format(currency.amount)}',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
+              SizedBox(
+                height: 2,
+              ),
+              Row(
+                children: [
+                  Text(
+                    '\$${dollars > 999 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  SizedBox(width: 3),
+                  Text(
+                    '${currency.percentChange.toStringAsFixed(2)}%',
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: currency.percentChange > 0
+                          ? Colors.green
+                          : Colors.red,
+                    ),
+                  )
+                ],
               ),
             ],
           ),

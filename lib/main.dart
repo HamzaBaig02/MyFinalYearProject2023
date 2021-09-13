@@ -1,13 +1,9 @@
-import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
-import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:flutter/material.dart';
-import 'screens/homepage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
