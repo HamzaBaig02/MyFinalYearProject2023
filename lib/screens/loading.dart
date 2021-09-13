@@ -34,6 +34,7 @@ class _LoadingState extends State<Loading> {
           if (walletElement.coin.id == coinListElement.id) {
             walletElement.setPercentChanged(coinListElement.value);
             walletElement.setValueUSD(coinListElement.value);
+
             return;
           }
         });

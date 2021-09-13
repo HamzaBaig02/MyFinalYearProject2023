@@ -144,7 +144,7 @@ class ShopInfoCard extends StatelessWidget {
       children: [
         Container(
           width: 350,
-          height: 228,
+          height: 255,
         ),
         Positioned.fill(
           child: Align(
@@ -156,7 +156,7 @@ class ShopInfoCard extends StatelessWidget {
               ),
               padding: EdgeInsets.all(10),
               width: 318,
-              height: 200,
+              height: 220,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -209,38 +209,52 @@ class DollarAmountCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return Column(
       children: [
-        Expanded(
-          child: Container(
-            alignment: Alignment.centerRight,
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Text(
-                '${(coinData.value * amount).toStringAsFixed(2)}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
+        Container(
+          child: Text(
+            'Balance',
+            style: TextStyle(
+                fontSize: 24, color: Colors.grey, fontWeight: FontWeight.w300),
           ),
         ),
         SizedBox(
-          width: 6,
+          height: 5,
         ),
-        Expanded(
-          child: Container(
-            child: Text(
-              'USD',
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.w300),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Container(
+                alignment: Alignment.centerRight,
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Text(
+                    '${(Provider.of<UserData>(context, listen: false).balance - coinData.value * amount).toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ),
             ),
-          ),
-        )
+            SizedBox(
+              width: 10,
+            ),
+            Expanded(
+              child: Container(
+                child: Text(
+                  'USD',
+                  style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w300),
+                ),
+              ),
+            )
+          ],
+        ),
       ],
     );
   }
