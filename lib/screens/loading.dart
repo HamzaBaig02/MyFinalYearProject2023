@@ -17,36 +17,37 @@ class _LoadingState extends State<Loading> {
 
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
-    await mynetwork.startNetwork();
-    if (mynetwork.cryptoData != '') {
-      coinList = List.generate(100, (index) {
-        CoinData myCoin = mynetwork.getCryptoDataByIndex(index);
-        return myCoin;
-      });
-    }
-
-    if (Provider.of<UserData>(context, listen: false).wallet.isNotEmpty &&
-        coinList.isNotEmpty) {
-      Provider.of<UserData>(context, listen: false)
-          .wallet
-          .forEach((walletElement) {
-        coinList.forEach((coinListElement) {
-          if (walletElement.coin.id == coinListElement.id) {
-            walletElement.setPercentChanged(coinListElement.value);
-            walletElement.setValueUSD(coinListElement.value);
-
-            return;
-          }
+    await mynetwork.startNetwork().whenComplete(() {
+      if (mynetwork.cryptoData != '') {
+        coinList = List.generate(100, (index) {
+          CoinData myCoin = mynetwork.getCryptoDataByIndex(index);
+          return myCoin;
         });
-      });
-    }
+      }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) {
-        return UserHomePage(coinList);
-      }),
-    );
+      if (Provider.of<UserData>(context, listen: false).wallet.isNotEmpty &&
+          coinList.isNotEmpty) {
+        Provider.of<UserData>(context, listen: false)
+            .wallet
+            .forEach((walletElement) {
+          coinList.forEach((coinListElement) {
+            if (walletElement.coin.id == coinListElement.id) {
+              walletElement.setPercentChanged(coinListElement.value);
+              walletElement.setValueUSD(coinListElement.value);
+
+              return;
+            }
+          });
+        });
+      }
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) {
+          return UserHomePage(coinList);
+        }),
+      );
+    });
   }
 
   @override
