@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+
 
 class CoinData {
   int index = 0;

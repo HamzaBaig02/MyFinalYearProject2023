@@ -14,7 +14,6 @@ class UserInfoCard extends StatefulWidget {
 class _UserInfoCardState extends State<UserInfoCard>
     with TickerProviderStateMixin {
   double balance = 10000;
-
   double profit = 245;
 
   var formatter = NumberFormat('#,##,000.00');
@@ -102,14 +101,14 @@ class _UserInfoCardState extends State<UserInfoCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Profit',
+                        'Estimated Profit',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
                             fontSize: 15),
                       ),
                       Text(
-                        '\$ $profit',
+                        '\$ ${profit.toStringAsFixed(2)}',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,

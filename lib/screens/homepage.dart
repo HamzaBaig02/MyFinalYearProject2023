@@ -30,7 +30,8 @@ class _UserHomePageState extends State<UserHomePage> {
 
     await Future.delayed(Duration(seconds: 2));
 
-    if (widget.mynetwork.cryptoData.isNotEmpty) {
+    if (widget.mynetwork.cryptoData.isNotEmpty &&
+        Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
@@ -41,13 +42,37 @@ class _UserHomePageState extends State<UserHomePage> {
           walletElement.setValueUSD(updatedCoin.value);
           walletElement.setPercentChanged(updatedCoin.value);
         } else {
-          print('The Api has changed Indexes of the coins kindly update code');
+          print(
+              'Currencny rank changed of ${walletElement.coin.name}....updating coin data...');
+
+          for (int i = 0; i < 100; i++) {
+            if (walletElement.coin.id ==
+                widget.mynetwork.getCryptoDataByIndex(i).id) {
+              walletElement
+                  .setValueUSD(widget.mynetwork.getCryptoDataByIndex(i).value);
+              walletElement.setPercentChanged(
+                  widget.mynetwork.getCryptoDataByIndex(i).value);
+              walletElement.coin.index =
+                  widget.mynetwork.getCryptoDataByIndex(i).index;
+              return;
+            }
+          }
         }
       });
+
+      double sumRevenue = 0;
+      double sumExpenditure = 0;
+
+      Provider.of<UserData>(context, listen: false).wallet.forEach((element) {
+        sumRevenue += element.valueUsd;
+        sumExpenditure += element.buyingPrice;
+      });
+
+      Provider.of<UserData>(context, listen: false).profit =
+          sumRevenue - sumExpenditure;
     }
 
     setState(() {
-      widget.mynetwork;
       loading = false;
     });
   }
