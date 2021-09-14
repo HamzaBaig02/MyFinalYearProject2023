@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CoinData {
+  int index = 0;
   String id = '';
   String name = '';
   String symbol = '';
@@ -8,8 +9,8 @@ class CoinData {
   double percentChange = 0;
   String imageUrl = '';
 
-  CoinData(this.id, this.name, this.symbol, this.value, this.percentChange,
-      this.imageUrl);
+  CoinData(this.index, this.id, this.name, this.symbol, this.value,
+      this.percentChange, this.imageUrl);
 
   @override
   String toString() {
@@ -18,6 +19,7 @@ class CoinData {
 
   Map<String, dynamic> toJson() {
     return {
+      'index': index,
       'id': id,
       'name': name,
       'symbol': symbol,
@@ -29,6 +31,7 @@ class CoinData {
 
   factory CoinData.fromJson(dynamic json) {
     return CoinData(
+        json['index'] as int,
         json['id'] as String,
         json['name'] as String,
         json['symbol'] as String,

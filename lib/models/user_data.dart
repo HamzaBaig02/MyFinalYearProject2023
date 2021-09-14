@@ -13,6 +13,10 @@ class UserData extends ChangeNotifier {
 
   UserData(this.name, this.wallet, this.balance, this.profit, this.points);
 
+  void refresh() {
+    notifyListeners();
+  }
+
   void addCrypto(CryptoCurrency currency) {
     bool notPresent = true;
     wallet.forEach((element) {

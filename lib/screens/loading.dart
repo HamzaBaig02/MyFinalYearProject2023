@@ -13,41 +13,32 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
-  List<CoinData> coinList = [];
-
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
-    await mynetwork.startNetwork().whenComplete(() {
-      if (mynetwork.cryptoData != '') {
-        coinList = List.generate(100, (index) {
-          CoinData myCoin = mynetwork.getCryptoDataByIndex(index);
-          return myCoin;
-        });
-      }
+    await mynetwork.startNetwork();
 
-      if (Provider.of<UserData>(context, listen: false).wallet.isNotEmpty &&
-          coinList.isNotEmpty) {
-        Provider.of<UserData>(context, listen: false)
-            .wallet
-            .forEach((walletElement) {
-          coinList.forEach((coinListElement) {
-            if (walletElement.coin.id == coinListElement.id) {
-              walletElement.setPercentChanged(coinListElement.value);
-              walletElement.setValueUSD(coinListElement.value);
+    if (mynetwork.cryptoData.isNotEmpty) {
+      Provider.of<UserData>(context, listen: false)
+          .wallet
+          .forEach((walletElement) {
+        CoinData updatedCoin =
+            mynetwork.getCryptoDataByIndex(walletElement.coin.index);
 
-              return;
-            }
-          });
-        });
-      }
+        if (walletElement.coin.id == updatedCoin.id) {
+          walletElement.setValueUSD(updatedCoin.value);
+          walletElement.setPercentChanged(updatedCoin.value);
+        } else {
+          print('The Api has changed Indexes of the coins kindly update code');
+        }
+      });
+    }
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) {
-          return UserHomePage(coinList);
-        }),
-      );
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) {
+        return UserHomePage(mynetwork);
+      }),
+    );
   }
 
   @override

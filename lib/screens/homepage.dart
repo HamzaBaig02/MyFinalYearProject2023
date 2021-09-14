@@ -1,13 +1,16 @@
 import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:crypto_trainer/models/user_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
 import 'package:crypto_trainer/widgets/coin_tile.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 
 class UserHomePage extends StatefulWidget {
-  List<CoinData> coinDataList = [];
-  UserHomePage(this.coinDataList);
+  CryptoNetwork mynetwork;
+
+  UserHomePage(this.mynetwork);
 
   @override
   _UserHomePageState createState() => _UserHomePageState();
@@ -23,16 +26,28 @@ class _UserHomePageState extends State<UserHomePage> {
       loading = true;
     });
 
-    CryptoNetwork mynetwork = CryptoNetwork();
-    await mynetwork.startNetwork();
-
-    if (mynetwork.getCoinList().isNotEmpty)
-      widget.coinDataList = mynetwork.getCoinList();
+    await widget.mynetwork.startNetwork();
 
     await Future.delayed(Duration(seconds: 2));
 
+    if (widget.mynetwork.cryptoData.isNotEmpty) {
+      Provider.of<UserData>(context, listen: false)
+          .wallet
+          .forEach((walletElement) {
+        CoinData updatedCoin =
+            widget.mynetwork.getCryptoDataByIndex(walletElement.coin.index);
+
+        if (walletElement.coin.id == updatedCoin.id) {
+          walletElement.setValueUSD(updatedCoin.value);
+          walletElement.setPercentChanged(updatedCoin.value);
+        } else {
+          print('The Api has changed Indexes of the coins kindly update code');
+        }
+      });
+    }
+
     setState(() {
-      widget.coinDataList;
+      widget.mynetwork;
       loading = false;
     });
   }
@@ -56,7 +71,7 @@ class _UserHomePageState extends State<UserHomePage> {
                       topRight: Radius.circular(10),
                     ),
                   ),
-                  child: widget.coinDataList.isEmpty
+                  child: widget.mynetwork.cryptoData.isEmpty
                       ? Center(
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -82,9 +97,10 @@ class _UserHomePageState extends State<UserHomePage> {
                             physics: BouncingScrollPhysics(),
                             scrollDirection: Axis.vertical,
                             itemBuilder: (context, index) {
-                              return CoinTile(widget.coinDataList[index]);
+                              return CoinTile(
+                                  widget.mynetwork.getCryptoDataByIndex(index));
                             },
-                            itemCount: widget.coinDataList.length,
+                            itemCount: 100,
                           ),
                         ),
                 ),
