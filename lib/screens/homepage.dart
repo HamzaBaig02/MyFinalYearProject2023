@@ -26,7 +26,11 @@ class _UserHomePageState extends State<UserHomePage> {
       loading = true;
     });
 
-    await widget.mynetwork.startNetwork();
+    for (int i = 0; i < 3; i++) {
+      await widget.mynetwork.startNetwork();
+      if (widget.mynetwork.cryptoData.isNotEmpty) break;
+      print('Restarting Network...');
+    }
 
     await Future.delayed(Duration(seconds: 2));
 
@@ -54,22 +58,14 @@ class _UserHomePageState extends State<UserHomePage> {
                   widget.mynetwork.getCryptoDataByIndex(i).value);
               walletElement.coin.index =
                   widget.mynetwork.getCryptoDataByIndex(i).index;
-              return;
+              break;
             }
           }
         }
       });
 
-      double sumRevenue = 0;
-      double sumExpenditure = 0;
-
-      Provider.of<UserData>(context, listen: false).wallet.forEach((element) {
-        sumRevenue += element.valueUsd;
-        sumExpenditure += element.buyingPrice;
-      });
-
-      Provider.of<UserData>(context, listen: false).profit =
-          sumRevenue - sumExpenditure;
+      Provider.of<UserData>(context, listen: false)
+          .calculateNetExpectedProfit();
     }
 
     setState(() {
@@ -79,58 +75,60 @@ class _UserHomePageState extends State<UserHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade200,
-      body: SafeArea(
-        child: Container(
-          margin: EdgeInsets.all(3),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              UserInfoCard(),
-              Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
+        body: SafeArea(
+          child: Container(
+            margin: EdgeInsets.all(3),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                UserInfoCard(),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        topRight: Radius.circular(10),
+                      ),
                     ),
+                    child: widget.mynetwork.cryptoData.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                loading
+                                    ? CircularProgressIndicator()
+                                    : MaterialButton(
+                                        color: Colors.white,
+                                        elevation: 1,
+                                        child: Text('Refresh'),
+                                        onPressed: () async {
+                                          fetchData();
+                                        }),
+                                Text('Something went wrong...try refreshing.'),
+                              ],
+                            ),
+                          )
+                        : RefreshIndicator(
+                            onRefresh: fetchData,
+                            child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.vertical,
+                              itemBuilder: (context, index) {
+                                return CoinTile(widget.mynetwork
+                                    .getCryptoDataByIndex(index));
+                              },
+                              itemCount: 100,
+                            ),
+                          ),
                   ),
-                  child: widget.mynetwork.cryptoData.isEmpty
-                      ? Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              loading
-                                  ? CircularProgressIndicator()
-                                  : MaterialButton(
-                                      color: Colors.white,
-                                      elevation: 1,
-                                      child: Text('Refresh'),
-                                      onPressed: () async {
-                                        fetchData();
-                                      }),
-                              Text(
-                                  'Crypto-Currency data unavailable at the moment'),
-                            ],
-                          ),
-                        )
-                      : RefreshIndicator(
-                          onRefresh: fetchData,
-                          child: ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            scrollDirection: Axis.vertical,
-                            itemBuilder: (context, index) {
-                              return CoinTile(
-                                  widget.mynetwork.getCryptoDataByIndex(index));
-                            },
-                            itemCount: 100,
-                          ),
-                        ),
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

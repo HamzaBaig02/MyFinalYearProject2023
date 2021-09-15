@@ -15,7 +15,12 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
-    await mynetwork.startNetwork();
+
+    for (int i = 0; i < 3; i++) {
+      await mynetwork.startNetwork();
+      if (mynetwork.cryptoData.isNotEmpty) break;
+      print('Restarting Network...');
+    }
 
     if (mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
@@ -41,22 +46,14 @@ class _LoadingState extends State<Loading> {
                   .setPercentChanged(mynetwork.getCryptoDataByIndex(i).value);
               walletElement.coin.index =
                   mynetwork.getCryptoDataByIndex(i).index;
-              return;
+              break;
             }
           }
         }
       });
 
-      double sumRevenue = 0;
-      double sumExpenditure = 0;
-
-      Provider.of<UserData>(context, listen: false).wallet.forEach((element) {
-        sumRevenue += element.valueUsd;
-        sumExpenditure += element.buyingPrice;
-      });
-
-      Provider.of<UserData>(context, listen: false).profit =
-          sumRevenue - sumExpenditure;
+      Provider.of<UserData>(context, listen: false)
+          .calculateNetExpectedProfit();
     }
 
     Navigator.push(

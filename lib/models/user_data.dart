@@ -17,28 +17,56 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addCrypto(CryptoCurrency currency) {
+  void buyCrypto(CryptoCurrency currency) {
     bool notPresent = true;
-    wallet.forEach((element) {
-      if (element.coin.id == currency.coin.id) {
-        element.amount += currency.amount;
+    for (int i = 0; i < wallet.length; i++) {
+      if (wallet[i].coin.id == currency.coin.id) {
+        wallet[i].amount += currency.amount;
+        wallet[i].buyingPrice = currency.buyingPrice;
+        wallet[i].setPercentChanged(currency.valueUsd);
         notPresent = false;
         notifyListeners();
-        return;
+        break;
       }
-    });
+    }
     if (notPresent) {
       wallet.add(currency);
       notifyListeners();
     }
   }
 
-  void changeBalance(double balance, bool add) {
-    add ? (this.balance += balance) : (this.balance -= balance);
+  void sellCrypto(CryptoCurrency currency) {
+    for (int i = 0; i < wallet.length; i++) {
+      if (wallet[i].coin.id == currency.coin.id) {
+        wallet[i].amount -= currency.amount;
+        wallet[i].setPercentChanged(currency.valueUsd);
+        wallet[i].valueUsd = wallet[i].amount * currency.valueUsd;
+        if (wallet[i].amount <= 0) wallet.removeAt(i);
+        notifyListeners();
+        break;
+      }
+    }
+  }
+
+  void changeBalance(double amount, bool add) {
+    add ? (this.balance += amount) : (this.balance -= amount);
     notifyListeners();
   }
 
-  void calculateProfit() {}
+  void calculateNetExpectedProfit() {
+    double sumRevenue = 0;
+    double sumExpenditure = 0;
+
+    wallet.forEach((element) {
+      sumRevenue += element.valueUsd;
+      sumExpenditure += element.buyingPrice * element.amount;
+    });
+
+    profit = sumRevenue - sumExpenditure;
+
+    notifyListeners();
+  }
+
   void addTransaction() {}
   void calculatePoints() {}
 

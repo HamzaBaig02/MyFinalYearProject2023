@@ -79,7 +79,7 @@ class _BuyState extends State<Buy> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ShopButton('Buy', () {
-                        Provider.of<UserData>(context, listen: false).addCrypto(
+                        Provider.of<UserData>(context, listen: false).buyCrypto(
                           CryptoCurrency(widget.coinData, amount),
                         );
                         Provider.of<UserData>(context, listen: false)
