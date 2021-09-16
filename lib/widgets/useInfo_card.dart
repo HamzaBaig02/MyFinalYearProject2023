@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/screens/sell_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -198,8 +199,23 @@ class CryptoWallet extends StatelessWidget {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return WalletTile(Provider.of<UserData>(context, listen: true)
-                      .wallet[index]);
+                  return GestureDetector(
+                    onTap: () {
+                      print('Wallet button pressed');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Sell(
+                              Provider.of<UserData>(context, listen: true)
+                                  .wallet[index],
+                              index);
+                        }),
+                      );
+                    },
+                    child: WalletTile(
+                        Provider.of<UserData>(context, listen: true)
+                            .wallet[index]),
+                  );
                 },
                 itemCount:
                     Provider.of<UserData>(context, listen: true).wallet.length,

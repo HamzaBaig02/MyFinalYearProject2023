@@ -8,7 +8,6 @@ class CryptoCurrency {
   double buyingPrice = 0;
 
   CryptoCurrency(this.coin, this.amount) {
-    //percentChange = ((amount * coin.value) - valueUsd) / valueUsd;
     valueUsd = amount * coin.value;
     buyingPrice = coin.value;
     percentChange = ((amount * coin.value) - (buyingPrice * amount)) /

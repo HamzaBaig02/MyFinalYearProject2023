@@ -1,0 +1,254 @@
+import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:crypto_trainer/models/crypto_currency.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
+import 'package:crypto_trainer/models/user_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
+
+class Sell extends StatefulWidget {
+  CryptoCurrency ownedCrypto;
+  int index;
+  double amount = 0;
+  double valueUsd = 0;
+  Sell(this.ownedCrypto, this.index) {
+    amount = ownedCrypto.amount;
+    valueUsd = ownedCrypto.valueUsd;
+  }
+
+  @override
+  _SellState createState() => _SellState();
+}
+
+class _SellState extends State<Sell> {
+  void saveToStorage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String json = jsonEncode(Provider.of<UserData>(context, listen: false));
+    prefs.setString('myData', json);
+    print(prefs.getString('myData'));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Container(
+          color: Colors.grey.shade200,
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Stack(
+                    children: [
+                      Container(
+                        width: 350,
+                        height: 255,
+                      ),
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.white,
+                            ),
+                            padding: EdgeInsets.all(10),
+                            width: 318,
+                            height: 220,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  child: Text(
+                                    'HOW MUCH ?',
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.grey,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        alignment: Alignment.centerRight,
+                                        child: SingleChildScrollView(
+                                          scrollDirection: Axis.horizontal,
+                                          child: Text(
+                                            '${(widget.amount > 1 ? widget.amount.toStringAsFixed(2) : widget.amount)}',
+                                            style: TextStyle(
+                                              fontSize: 40,
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Expanded(
+                                      child: Container(
+                                        child: Text(
+                                          '${widget.ownedCrypto.coin.symbol.toUpperCase()}',
+                                          style: TextStyle(
+                                              fontSize: 40,
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Divider(
+                                  thickness: 1.2,
+                                ),
+                                Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Expanded(
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child: SingleChildScrollView(
+                                              scrollDirection: Axis.horizontal,
+                                              child: Text(
+                                                '${widget.valueUsd.toStringAsFixed(2)}',
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 10,
+                                        ),
+                                        Expanded(
+                                          child: Container(
+                                            child: Text(
+                                              'USD',
+                                              style: TextStyle(
+                                                  fontSize: 20,
+                                                  color: Colors.grey,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned.fill(
+                        child: Align(
+                          alignment: Alignment.topCenter,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.transparent,
+                            radius: 30,
+                            foregroundImage:
+                                NetworkImage(widget.ownedCrypto.coin.imageUrl),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.green.shade400,
+                        width: 2,
+                      ),
+                    ),
+                    child: TextField(
+                      onChanged: (value) {
+                        setState(() {
+                          widget.amount = widget.ownedCrypto.amount -
+                              (value == '' ? 0 : double.parse(value)) /
+                                  widget.ownedCrypto.coin.value;
+                          widget.valueUsd = widget.ownedCrypto.valueUsd -
+                              (value == '' ? 0 : double.parse(value));
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Enter amount in USD',
+                        prefixIcon: Icon(
+                          FontAwesomeIcons.dollarSign,
+                          color: Colors.green,
+                        ),
+                        border: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 120,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ShopButton('Buy', () {}, Colors.green.shade400),
+                      SizedBox(
+                        width: 40,
+                      ),
+                      ShopButton('Cancel', () {
+                        Navigator.pop(context);
+                      }, Colors.red.shade400),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+
+class ShopButton extends StatelessWidget {
+  String label;
+  VoidCallback onPressed;
+  Color color;
+
+  ShopButton(this.label, this.onPressed, this.color);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        alignment: Alignment.center,
+        child: Text(
+          label,
+          style: TextStyle(
+              color: Colors.white, fontSize: 18, fontWeight: FontWeight.w300),
+        ),
+        height: 50,
+        width: 100,
+        decoration: BoxDecoration(
+            color: color, borderRadius: BorderRadius.circular(20)),
+      ),
+    );
+  }
+}

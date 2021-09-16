@@ -1,8 +1,8 @@
+import 'package:crypto_trainer/screens/buy_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
-import 'package:crypto_trainer/screens/crypto_cart.dart';
 
 class CoinTile extends StatefulWidget {
   CoinData coinData;
