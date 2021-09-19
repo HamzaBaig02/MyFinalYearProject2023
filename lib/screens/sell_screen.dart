@@ -1,4 +1,4 @@
-import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:flutter/services.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,10 +10,9 @@ import 'dart:convert';
 
 class Sell extends StatefulWidget {
   CryptoCurrency ownedCrypto;
-  int index;
   double amount = 0;
   double valueUsd = 0;
-  Sell(this.ownedCrypto, this.index) {
+  Sell(this.ownedCrypto) {
     amount = ownedCrypto.amount;
     valueUsd = ownedCrypto.valueUsd;
   }
@@ -29,7 +28,7 @@ class _SellState extends State<Sell> {
     prefs.setString('myData', json);
     print(prefs.getString('myData'));
   }
-
+  double userInput = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -157,11 +156,14 @@ class _SellState extends State<Sell> {
                       Positioned.fill(
                         child: Align(
                           alignment: Alignment.topCenter,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.transparent,
-                            radius: 30,
-                            foregroundImage:
-                                NetworkImage(widget.ownedCrypto.coin.imageUrl),
+                          child: Hero(
+                            tag: '${widget.ownedCrypto.coin.id}',
+                            child: CircleAvatar(
+                              backgroundColor: Colors.transparent,
+                              radius: 30,
+                              foregroundImage: NetworkImage(
+                                  widget.ownedCrypto.coin.imageUrl),
+                            ),
                           ),
                         ),
                       )
@@ -171,18 +173,21 @@ class _SellState extends State<Sell> {
                     height: 20,
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    margin: EdgeInsets.symmetric(horizontal: 25),
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
                       border: Border.all(
-                        color: Colors.green.shade400,
+                        color: Colors.black12,
                         width: 2,
                       ),
                     ),
                     child: TextField(
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      keyboardType: TextInputType.number,
                       onChanged: (value) {
+                        userInput = double.parse(value);
                         setState(() {
                           widget.amount = widget.ownedCrypto.amount -
                               (value == '' ? 0 : double.parse(value)) /
@@ -195,7 +200,7 @@ class _SellState extends State<Sell> {
                         hintText: 'Enter amount in USD',
                         prefixIcon: Icon(
                           FontAwesomeIcons.dollarSign,
-                          color: Colors.green,
+                          color: Colors.black12,
                         ),
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
@@ -209,9 +214,24 @@ class _SellState extends State<Sell> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ShopButton('Buy', () {}, Colors.green.shade400),
+                      ShopButton('Sell', () {
+                        if (userInput > widget.ownedCrypto.valueUsd) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Insufficient Crypto Balance'),
+                            ),
+                          );
+                        } else {
+                          CryptoCurrency currency = CryptoCurrency(
+                              widget.ownedCrypto.coin, widget.amount);
+                          Provider.of<UserData>(context, listen: false)
+                              .sellCrypto(currency);
+                          saveToStorage();
+                          Navigator.pop(context);
+                        }
+                      }, Colors.green.shade400),
                       SizedBox(
-                        width: 40,
+                        width: 60,
                       ),
                       ShopButton('Cancel', () {
                         Navigator.pop(context);

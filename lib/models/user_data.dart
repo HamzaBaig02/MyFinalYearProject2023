@@ -23,7 +23,8 @@ class UserData extends ChangeNotifier {
       if (wallet[i].coin.id == currency.coin.id) {
         wallet[i].amount += currency.amount;
         wallet[i].buyingPrice = currency.buyingPrice;
-        wallet[i].setPercentChanged(currency.valueUsd);
+        wallet[i].valueUsd = currency.coin.value * wallet[i].amount;
+        wallet[i].setPercentChanged(currency.coin.value);
         notPresent = false;
         notifyListeners();
         break;
@@ -38,11 +39,14 @@ class UserData extends ChangeNotifier {
   void sellCrypto(CryptoCurrency currency) {
     for (int i = 0; i < wallet.length; i++) {
       if (wallet[i].coin.id == currency.coin.id) {
-        wallet[i].amount -= currency.amount;
-        wallet[i].setPercentChanged(currency.valueUsd);
-        wallet[i].valueUsd = wallet[i].amount * currency.valueUsd;
+        balance += (wallet[i].amount - currency.amount) * currency.coin.value;
+        wallet[i].amount = currency.amount;
+        wallet[i].setPercentChanged(currency.coin.value);
+        wallet[i].valueUsd = currency.amount * currency.coin.value;
         if (wallet[i].amount <= 0) wallet.removeAt(i);
+
         notifyListeners();
+
         break;
       }
     }
@@ -54,16 +58,21 @@ class UserData extends ChangeNotifier {
   }
 
   void calculateNetExpectedProfit() {
-    double sumRevenue = 0;
-    double sumExpenditure = 0;
+    if (wallet.isNotEmpty) {
+      double sumRevenue = 0;
+      double sumExpenditure = 0;
 
-    wallet.forEach((element) {
-      sumRevenue += element.valueUsd;
-      sumExpenditure += element.buyingPrice * element.amount;
-    });
+      wallet.forEach((element) {
+        sumRevenue += element.valueUsd;
+        sumExpenditure += element.buyingPrice * element.amount;
+        print('is not empty');
+      });
 
-    profit = sumRevenue - sumExpenditure;
-
+      profit = sumRevenue - sumExpenditure;
+    } else {
+      profit = 0;
+      print('is empty');
+    }
     notifyListeners();
   }
 

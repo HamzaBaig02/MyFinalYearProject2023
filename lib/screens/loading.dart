@@ -32,6 +32,7 @@ class _LoadingState extends State<Loading> {
         updatedCoin = mynetwork.getCryptoDataByIndex(walletElement.coin.index);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
+          walletElement.coin.value = updatedCoin.value;
           walletElement.setValueUSD(updatedCoin.value);
           walletElement.setPercentChanged(updatedCoin.value);
         } else {
@@ -46,15 +47,16 @@ class _LoadingState extends State<Loading> {
                   .setPercentChanged(mynetwork.getCryptoDataByIndex(i).value);
               walletElement.coin.index =
                   mynetwork.getCryptoDataByIndex(i).index;
+              walletElement.coin.value =
+                  mynetwork.getCryptoDataByIndex(i).value;
               break;
             }
           }
         }
       });
-
-      Provider.of<UserData>(context, listen: false)
-          .calculateNetExpectedProfit();
     }
+
+    Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
     Navigator.push(
       context,

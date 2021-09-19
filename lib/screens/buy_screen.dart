@@ -2,6 +2,7 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/models/user_data.dart';
@@ -26,6 +27,7 @@ class _BuyState extends State<Buy> {
     print(prefs.getString('myData'));
   }
 
+  double userInput = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,8 +54,11 @@ class _BuyState extends State<Buy> {
                       ),
                     ),
                     child: TextField(
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      keyboardType: TextInputType.number,
                       onChanged: (value) {
                         setState(() {
+                          userInput = double.parse(value);
                           value.isEmpty
                               ? amount = 0
                               : amount = (double.parse(value.toString()) /
@@ -79,15 +84,26 @@ class _BuyState extends State<Buy> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ShopButton('Buy', () {
-                        Provider.of<UserData>(context, listen: false).buyCrypto(
-                          CryptoCurrency(widget.coinData, amount),
-                        );
-                        Provider.of<UserData>(context, listen: false)
-                            .changeBalance(
-                                widget.coinData.value * amount, false);
+                        if (userInput >
+                            Provider.of<UserData>(context, listen: false)
+                                .balance) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Insufficient Account Balance'),
+                            ),
+                          );
+                        } else {
+                          Provider.of<UserData>(context, listen: false)
+                              .buyCrypto(
+                            CryptoCurrency(widget.coinData, amount),
+                          );
+                          Provider.of<UserData>(context, listen: false)
+                              .changeBalance(
+                                  widget.coinData.value * amount, false);
 
-                        Navigator.pop(context);
-                        saveToStorage();
+                          Navigator.pop(context);
+                          saveToStorage();
+                        }
                       }, Colors.green.shade400),
                       SizedBox(
                         width: 40,

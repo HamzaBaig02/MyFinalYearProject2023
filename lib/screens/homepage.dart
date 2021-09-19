@@ -43,6 +43,7 @@ class _UserHomePageState extends State<UserHomePage> {
             widget.mynetwork.getCryptoDataByIndex(walletElement.coin.index);
 
         if (walletElement.coin.id == updatedCoin.id) {
+          walletElement.coin.value = updatedCoin.value;
           walletElement.setValueUSD(updatedCoin.value);
           walletElement.setPercentChanged(updatedCoin.value);
         } else {
@@ -58,15 +59,16 @@ class _UserHomePageState extends State<UserHomePage> {
                   widget.mynetwork.getCryptoDataByIndex(i).value);
               walletElement.coin.index =
                   widget.mynetwork.getCryptoDataByIndex(i).index;
+              walletElement.coin.value =
+                  widget.mynetwork.getCryptoDataByIndex(i).value;
               break;
             }
           }
         }
       });
-
-      Provider.of<UserData>(context, listen: false)
-          .calculateNetExpectedProfit();
     }
+
+    Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
     setState(() {
       loading = false;

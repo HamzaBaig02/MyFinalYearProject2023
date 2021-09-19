@@ -52,6 +52,7 @@ class _UserInfoCardState extends State<UserInfoCard>
     return Column(
       children: [
         Container(
+          height: 190,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
@@ -72,7 +73,7 @@ class _UserInfoCardState extends State<UserInfoCard>
                         textStyle: TextStyle(
                             color: Colors.white,
                             letterSpacing: .75,
-                            fontSize: 25),
+                            fontSize: 30),
                       )),
                   SizedBox(
                     height: 5,
@@ -88,7 +89,7 @@ class _UserInfoCardState extends State<UserInfoCard>
                             fontSize: 15),
                       ),
                       Text(
-                        '\$ ${formatter.format(balance)}',
+                        '\$${formatter.format(balance)}',
                         style: TextStyle(
                             letterSpacing: 1,
                             color: Colors.white,
@@ -109,7 +110,7 @@ class _UserInfoCardState extends State<UserInfoCard>
                             fontSize: 15),
                       ),
                       Text(
-                        '\$ ${profit.toStringAsFixed(2)}',
+                        '\$${profit.toStringAsFixed(2)}',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
@@ -199,23 +200,8 @@ class CryptoWallet extends StatelessWidget {
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      print('Wallet button pressed');
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) {
-                          return Sell(
-                              Provider.of<UserData>(context, listen: true)
-                                  .wallet[index],
-                              index);
-                        }),
-                      );
-                    },
-                    child: WalletTile(
-                        Provider.of<UserData>(context, listen: true)
-                            .wallet[index]),
-                  );
+                  return WalletTile(Provider.of<UserData>(context, listen: true)
+                      .wallet[index]);
                 },
                 itemCount:
                     Provider.of<UserData>(context, listen: true).wallet.length,
@@ -242,64 +228,78 @@ class WalletTile extends StatelessWidget {
   Widget build(BuildContext context) {
     dollars = currency.valueUsd;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Color(0xff2e3340),
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: Color(0xff8b4a6c), width: 2),
-      ),
-      margin: EdgeInsets.all(2),
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          CircleAvatar(
-            backgroundColor: Colors.white,
-            radius: 16,
-            child: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              foregroundImage: NetworkImage(currency.coin.imageUrl),
-              radius: 15,
+    return GestureDetector(
+      onTap: () {
+        print('Wallet Tile pressed');
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return Sell(currency);
+          }),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xff2e3340),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Color(0xff8b4a6c), width: 2),
+        ),
+        margin: EdgeInsets.all(2),
+        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Hero(
+              tag: '${currency.coin.id}',
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 16,
+                child: CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  foregroundImage: NetworkImage(currency.coin.imageUrl),
+                  radius: 15,
+                ),
+              ),
             ),
-          ),
-          Column(
-            children: [
-              Text(
-                '${currency.coin.symbol}',
-                style: TextStyle(color: Colors.white),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Text(
-                '${cryptoFormatter.format(currency.amount)}',
-                style: TextStyle(color: Colors.white, fontSize: 12),
-              ),
-              SizedBox(
-                height: 2,
-              ),
-              Row(
-                children: [
-                  Text(
-                    '\$${dollars > 999 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  SizedBox(width: 3),
-                  Text(
-                    '${currency.percentChange.toStringAsFixed(2)}%',
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: currency.percentChange > 0
-                          ? Colors.green
-                          : Colors.red,
+            Column(
+              children: [
+                Text(
+                  '${currency.coin.symbol}',
+                  style: TextStyle(color: Colors.white),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  '${cryptoFormatter.format(currency.amount)}',
+                  style: TextStyle(color: Colors.white, fontSize: 12),
+                ),
+                SizedBox(
+                  height: 2,
+                ),
+                Row(
+                  children: [
+                    Text(
+                      '\$${dollars > 999 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
+                      style: TextStyle(color: Colors.white),
                     ),
-                  )
-                ],
-              ),
-            ],
-          ),
-        ],
+                    SizedBox(width: 3),
+                    Text(
+                      '${currency.percentChange.toStringAsFixed(2)}%',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: currency.percentChange > 0
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
