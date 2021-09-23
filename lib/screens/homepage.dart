@@ -2,6 +2,7 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
 import 'package:crypto_trainer/widgets/coin_tile.dart';
@@ -17,8 +18,7 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  int points = 25678;
-
+  int _selectedIndex = 0;
   bool loading = false;
 
   Future<void> fetchData() async {
@@ -80,10 +80,33 @@ class _UserHomePageState extends State<UserHomePage> {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
+        bottomNavigationBar: BottomNavigationBar(
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.home),
+              label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.user),
+              label: 'User',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(FontAwesomeIcons.moneyBillWave),
+              label: 'Transactions',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Color(0xff8b4a6c),
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
         backgroundColor: Colors.grey.shade200,
         body: SafeArea(
           child: Container(
-            margin: EdgeInsets.all(3),
+            margin: EdgeInsets.symmetric(vertical: 0, horizontal: 3),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -121,8 +144,9 @@ class _UserHomePageState extends State<UserHomePage> {
                               physics: BouncingScrollPhysics(),
                               scrollDirection: Axis.vertical,
                               itemBuilder: (context, index) {
-                                return CoinTile(widget.mynetwork
-                                    .getCryptoDataByIndex(index));
+                                return CoinTile(
+                                  widget.mynetwork.getCryptoDataByIndex(index),
+                                );
                               },
                               itemCount: 100,
                             ),

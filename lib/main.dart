@@ -23,7 +23,7 @@ void main() async {
     Map json = jsonDecode(data);
     user = UserData.fromJson(json);
   } else {
-    user = UserData('Hamza Baig', [], 10000, 0, 0);
+    user = UserData('Hamza Baig', [], 10000, 0, 0, []);
   }
 
   //data from network

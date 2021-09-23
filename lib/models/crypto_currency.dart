@@ -27,7 +27,7 @@ class CryptoCurrency {
 
   @override
   String toString() {
-    return 'CryptoCurrency{coin: $coin, amount: $amount}';
+    return 'CryptoCurrency{coin: $coin, amount: $amount, valueUsd: $valueUsd}';
   }
 
   Map<String, dynamic> toJson() {

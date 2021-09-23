@@ -52,7 +52,7 @@ class _UserInfoCardState extends State<UserInfoCard>
     return Column(
       children: [
         Container(
-          height: 190,
+          height: 200,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(
@@ -123,21 +123,22 @@ class _UserInfoCardState extends State<UserInfoCard>
                 ],
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     height: 10,
                   ),
                   CircleAvatar(
-                    radius: 45,
+                    radius: 50,
                     backgroundColor: Colors.white,
                     child: CircleAvatar(
                       backgroundColor: Colors.grey.shade400,
-                      radius: 40,
+                      radius: 45,
                       foregroundImage: AssetImage('assets/images/mfaraday.jpg'),
                     ),
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 15,
                   ),
                   MaterialButton(
                     shape: CircleBorder(),

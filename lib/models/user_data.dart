@@ -11,7 +11,8 @@ class UserData extends ChangeNotifier {
   int points;
   List<Transaction> transactions = [];
 
-  UserData(this.name, this.wallet, this.balance, this.profit, this.points);
+  UserData(this.name, this.wallet, this.balance, this.profit, this.points,
+      this.transactions);
 
   void refresh() {
     notifyListeners();
@@ -41,8 +42,9 @@ class UserData extends ChangeNotifier {
       if (wallet[i].coin.id == currency.coin.id) {
         balance += (wallet[i].amount - currency.amount) * currency.coin.value;
         wallet[i].amount = currency.amount;
-        wallet[i].setPercentChanged(currency.coin.value);
-        wallet[i].valueUsd = currency.amount * currency.coin.value;
+        //wallet[i].buyingPrice = currency.buyingPrice;
+        //wallet[i].setPercentChanged(currency.coin.value);
+        wallet[i].valueUsd = wallet[i].amount * currency.coin.value;
         if (wallet[i].amount <= 0) wallet.removeAt(i);
 
         notifyListeners();
@@ -76,7 +78,11 @@ class UserData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addTransaction() {}
+  void addTransaction(transaction) {
+    transactions.add(transaction);
+    notifyListeners();
+  }
+
   void calculatePoints() {}
 
   Map<String, dynamic> toJson() {
@@ -86,6 +92,7 @@ class UserData extends ChangeNotifier {
       'profit': profit,
       'points': points,
       'wallet': wallet,
+      'transactions': transactions,
     };
   }
 
@@ -93,8 +100,10 @@ class UserData extends ChangeNotifier {
     var tagObjsJson = json['wallet'] as List;
     List<CryptoCurrency> wallet =
         tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
+    List<Transaction> transactions =
+        tagObjsJson.map((tagJson) => Transaction.fromJson(tagJson)).toList();
 
     return UserData(json['name'] as String, wallet, json['balance'] as double,
-        json['profit'] as double, json['points'] as int);
+        json['profit'] as double, json['points'] as int, transactions);
   }
 }

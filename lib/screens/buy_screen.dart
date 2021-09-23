@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
@@ -100,7 +101,13 @@ class _BuyState extends State<Buy> {
                           Provider.of<UserData>(context, listen: false)
                               .changeBalance(
                                   widget.coinData.value * amount, false);
-
+                          Transaction transaction = Transaction(
+                              DateTime.now(),
+                              CryptoCurrency(widget.coinData, amount),
+                              'Bought');
+                          print('Transaction: $transaction');
+                          Provider.of<UserData>(context, listen: false)
+                              .addTransaction(transaction);
                           Navigator.pop(context);
                           saveToStorage();
                         }

@@ -1,3 +1,4 @@
+import 'package:crypto_trainer/models/transaction.dart';
 import 'package:flutter/services.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,8 +27,9 @@ class _SellState extends State<Sell> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String json = jsonEncode(Provider.of<UserData>(context, listen: false));
     prefs.setString('myData', json);
-    print(prefs.getString('myData'));
+    //print(prefs.getString('myData'));
   }
+
   double userInput = 0;
   @override
   Widget build(BuildContext context) {
@@ -224,8 +226,16 @@ class _SellState extends State<Sell> {
                         } else {
                           CryptoCurrency currency = CryptoCurrency(
                               widget.ownedCrypto.coin, widget.amount);
+                          Transaction transaction = Transaction(
+                              DateTime.now(),
+                              CryptoCurrency(widget.ownedCrypto.coin,
+                                  widget.ownedCrypto.amount - widget.amount),
+                              'Sold');
                           Provider.of<UserData>(context, listen: false)
                               .sellCrypto(currency);
+                          Provider.of<UserData>(context, listen: false)
+                              .addTransaction(transaction);
+                          print('Transaction: $transaction');
                           saveToStorage();
                           Navigator.pop(context);
                         }
