@@ -16,8 +16,8 @@ class Transaction {
   }
 
   factory Transaction.fromJson(dynamic json) {
-    return Transaction(DateTime.parse(json['DateTime']),
-        CryptoCurrency.fromJson(json['CryptoCurrency']), json['type']);
+    return Transaction(DateTime.parse(json['date']),
+        CryptoCurrency.fromJson(json['crypto']), json['type']);
   }
 
   @override

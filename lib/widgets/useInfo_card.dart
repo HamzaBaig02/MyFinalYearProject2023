@@ -251,27 +251,33 @@ class WalletTile extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Hero(
-              tag: '${currency.coin.id}',
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 16,
-                child: CircleAvatar(
-                  backgroundColor: Colors.transparent,
-                  foregroundImage: NetworkImage(currency.coin.imageUrl),
-                  radius: 15,
-                ),
-              ),
-            ),
-            Column(
+            Row(
               children: [
+                Hero(
+                  tag: '${currency.coin.id}',
+                  child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    radius: 16,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: ClipOval(
+                        child: Image.network(currency.coin.imageUrl),
+                      ),
+                      radius: 15,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 5,
+                ),
                 Text(
                   '${currency.coin.symbol}',
                   style: TextStyle(color: Colors.white),
                 ),
-                SizedBox(
-                  height: 5,
-                ),
+              ],
+            ),
+            Column(
+              children: [
                 Text(
                   '${cryptoFormatter.format(currency.amount)}',
                   style: TextStyle(color: Colors.white, fontSize: 12),

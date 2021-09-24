@@ -1,11 +1,9 @@
-import 'package:crypto_trainer/models/coin_data.dart';
-import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/widgets/crypto_list.dart';
+import 'package:crypto_trainer/widgets/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
-import 'package:crypto_trainer/widgets/coin_tile.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 
 class UserHomePage extends StatefulWidget {
@@ -19,61 +17,7 @@ class UserHomePage extends StatefulWidget {
 
 class _UserHomePageState extends State<UserHomePage> {
   int _selectedIndex = 0;
-  bool loading = false;
-
-  Future<void> fetchData() async {
-    setState(() {
-      loading = true;
-    });
-
-    for (int i = 0; i < 3; i++) {
-      await widget.mynetwork.startNetwork();
-      if (widget.mynetwork.cryptoData.isNotEmpty) break;
-      print('Restarting Network...');
-    }
-
-    await Future.delayed(Duration(seconds: 2));
-
-    if (widget.mynetwork.cryptoData.isNotEmpty &&
-        Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
-      Provider.of<UserData>(context, listen: false)
-          .wallet
-          .forEach((walletElement) {
-        CoinData updatedCoin =
-            widget.mynetwork.getCryptoDataByIndex(walletElement.coin.index);
-
-        if (walletElement.coin.id == updatedCoin.id) {
-          walletElement.coin.value = updatedCoin.value;
-          walletElement.setValueUSD(updatedCoin.value);
-          walletElement.setPercentChanged(updatedCoin.value);
-        } else {
-          print(
-              'Currencny rank changed of ${walletElement.coin.name}....updating coin data...');
-
-          for (int i = 0; i < 100; i++) {
-            if (walletElement.coin.id ==
-                widget.mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement
-                  .setValueUSD(widget.mynetwork.getCryptoDataByIndex(i).value);
-              walletElement.setPercentChanged(
-                  widget.mynetwork.getCryptoDataByIndex(i).value);
-              walletElement.coin.index =
-                  widget.mynetwork.getCryptoDataByIndex(i).index;
-              walletElement.coin.value =
-                  widget.mynetwork.getCryptoDataByIndex(i).value;
-              break;
-            }
-          }
-        }
-      });
-    }
-
-    Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
-
-    setState(() {
-      loading = false;
-    });
-  }
+  PageController _pageController = PageController();
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +44,7 @@ class _UserHomePageState extends State<UserHomePage> {
           onTap: (index) {
             setState(() {
               _selectedIndex = index;
+              _pageController.jumpToPage(index);
             });
           },
         ),
@@ -119,38 +64,23 @@ class _UserHomePageState extends State<UserHomePage> {
                         topRight: Radius.circular(10),
                       ),
                     ),
-                    child: widget.mynetwork.cryptoData.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                loading
-                                    ? CircularProgressIndicator()
-                                    : MaterialButton(
-                                        color: Colors.white,
-                                        elevation: 1,
-                                        child: Text('Refresh'),
-                                        onPressed: () async {
-                                          fetchData();
-                                        }),
-                                Text('Something went wrong...try refreshing.'),
-                              ],
-                            ),
-                          )
-                        : RefreshIndicator(
-                            onRefresh: fetchData,
-                            child: ListView.builder(
-                              physics: BouncingScrollPhysics(),
-                              scrollDirection: Axis.vertical,
-                              itemBuilder: (context, index) {
-                                return CoinTile(
-                                  widget.mynetwork.getCryptoDataByIndex(index),
-                                );
-                              },
-                              itemCount: 100,
-                            ),
+                    child: PageView(
+                      controller: _pageController,
+                      children: <Widget>[
+                        CryptoList(widget.mynetwork),
+                        Center(
+                          child: Container(
+                            child: Text('User Information'),
                           ),
+                        ),
+                        TransactionList()
+                      ],
+                      onPageChanged: (page) {
+                        setState(() {
+                          _selectedIndex = page;
+                        });
+                      },
+                    ),
                   ),
                 )
               ],

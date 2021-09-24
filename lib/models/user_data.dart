@@ -98,10 +98,11 @@ class UserData extends ChangeNotifier {
 
   factory UserData.fromJson(dynamic json) {
     var tagObjsJson = json['wallet'] as List;
+    var tagObjsJson2 = json['transactions'] as List;
     List<CryptoCurrency> wallet =
         tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
     List<Transaction> transactions =
-        tagObjsJson.map((tagJson) => Transaction.fromJson(tagJson)).toList();
+        tagObjsJson2.map((tagJson) => Transaction.fromJson(tagJson)).toList();
 
     return UserData(json['name'] as String, wallet, json['balance'] as double,
         json['profit'] as double, json['points'] as int, transactions);
