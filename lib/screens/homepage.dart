@@ -1,3 +1,4 @@
+import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
+import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget {
   CryptoNetwork mynetwork;
@@ -16,38 +18,13 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  int _selectedIndex = 0;
   PageController _pageController = PageController();
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.user),
-              label: 'User',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.moneyBillWave),
-              label: 'Transactions',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Color(0xff8b4a6c),
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-              _pageController.jumpToPage(index);
-            });
-          },
-        ),
+        bottomNavigationBar: MyBottomNavBar(onTappedBar),
         backgroundColor: Colors.grey.shade200,
         body: SafeArea(
           child: Container(
@@ -76,9 +53,9 @@ class _UserHomePageState extends State<UserHomePage> {
                         TransactionList()
                       ],
                       onPageChanged: (page) {
-                        setState(() {
-                          _selectedIndex = page;
-                        });
+                        Provider.of<BottomNavigationBarProvider>(context,
+                                listen: false)
+                            .setCurrentIndex(page);
                       },
                     ),
                   ),
@@ -88,6 +65,43 @@ class _UserHomePageState extends State<UserHomePage> {
           ),
         ),
       ),
+    );
+  }
+
+  void onTappedBar(int value) {
+    Provider.of<BottomNavigationBarProvider>(context, listen: false)
+        .setCurrentIndex(value);
+    _pageController.animateToPage(value,
+        duration: Duration(milliseconds: 500), curve: Curves.ease);
+  }
+}
+
+class MyBottomNavBar extends StatelessWidget {
+  final Function(int)? onTapped;
+
+  MyBottomNavBar(this.onTapped);
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: [
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.user),
+          label: 'User',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.moneyBillWave),
+          label: 'Transactions',
+        ),
+      ],
+      currentIndex:
+          Provider.of<BottomNavigationBarProvider>(context).currentIndex,
+      selectedItemColor: Color(0xff8b4a6c),
+      onTap: onTapped,
     );
   }
 }

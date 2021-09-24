@@ -61,7 +61,9 @@ class _LoadingState extends State<Loading> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {
-        return UserHomePage(mynetwork);
+        return ChangeNotifierProvider(
+            create: (context) => BottomNavigationBarProvider(),
+            child: UserHomePage(mynetwork));
       }),
     );
   }
@@ -83,5 +85,14 @@ class _LoadingState extends State<Loading> {
         ),
       ),
     );
+  }
+}
+
+class BottomNavigationBarProvider extends ChangeNotifier {
+  int currentIndex = 0;
+
+  void setCurrentIndex(int index) {
+    currentIndex = index;
+    notifyListeners();
   }
 }
