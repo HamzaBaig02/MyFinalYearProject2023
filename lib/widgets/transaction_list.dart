@@ -7,23 +7,28 @@ class TransactionList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child:
-          Provider.of<UserData>(context, listen: true).transactions.isNotEmpty
-              ? ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    return TransactionTile(
-                        Provider.of<UserData>(context, listen: true)
-                            .transactions[index]);
-                  },
-                  itemCount: Provider.of<UserData>(context, listen: true)
-                      .transactions
-                      .length,
-                )
-              : Center(
-                  child: Text('Transaction history is empty'),
-                ),
+      child: Provider.of<UserData>(context, listen: true)
+              .transactions
+              .isNotEmpty
+          ? ListView.builder(
+              physics: BouncingScrollPhysics(),
+              scrollDirection: Axis.vertical,
+              itemBuilder: (context, index) {
+                return TransactionTile(
+                    Provider.of<UserData>(context, listen: true).transactions[
+                        (Provider.of<UserData>(context, listen: true)
+                                    .transactions
+                                    .length -
+                                1) -
+                            index]);
+              },
+              itemCount: Provider.of<UserData>(context, listen: true)
+                  .transactions
+                  .length,
+            )
+          : Center(
+              child: Text('Transaction history is empty'),
+            ),
     );
   }
 }

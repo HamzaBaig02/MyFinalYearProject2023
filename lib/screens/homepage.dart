@@ -72,7 +72,7 @@ class _UserHomePageState extends State<UserHomePage> {
     Provider.of<BottomNavigationBarProvider>(context, listen: false)
         .setCurrentIndex(value);
     _pageController.animateToPage(value,
-        duration: Duration(milliseconds: 500), curve: Curves.ease);
+        duration: Duration(milliseconds: 300), curve: Curves.ease);
   }
 }
 
