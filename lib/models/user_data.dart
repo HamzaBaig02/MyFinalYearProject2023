@@ -22,11 +22,9 @@ class UserData extends ChangeNotifier {
     bool notPresent = true;
     for (int i = 0; i < wallet.length; i++) {
       if (wallet[i].coin.id == currency.coin.id) {
-        wallet[i].coin.value = currency.coin.value;
         wallet[i].amount += currency.amount;
-        wallet[i].buyingPrice = currency.buyingPrice;
-        wallet[i].setValueUSD();
-        wallet[i].setPercentChanged();
+        wallet[i].buyingPricePerCoin = currency.buyingPricePerCoin;
+        wallet[i].updateCoin(currency.coin);
         notPresent = false;
         notifyListeners();
         break;
@@ -43,11 +41,8 @@ class UserData extends ChangeNotifier {
       if (wallet[i].coin.id == currency.coin.id) {
         balance += (wallet[i].amount - currency.amount) * currency.coin.value;
         wallet[i].amount = currency.amount;
-        //wallet[i].buyingPrice = currency.buyingPrice;
-        //wallet[i].setPercentChanged(currency.coin.value);
         wallet[i].valueUsd = wallet[i].amount * currency.coin.value;
         if (wallet[i].amount <= 0) wallet.removeAt(i);
-
         notifyListeners();
 
         break;
@@ -56,7 +51,7 @@ class UserData extends ChangeNotifier {
   }
 
   void changeBalance(double amount, bool add) {
-    add ? (this.balance += amount) : (this.balance -= amount);
+    add ? (balance += amount) : (balance -= amount);
     notifyListeners();
   }
 
@@ -67,7 +62,7 @@ class UserData extends ChangeNotifier {
 
       wallet.forEach((element) {
         sumRevenue += element.valueUsd;
-        sumExpenditure += element.buyingPrice * element.amount;
+        sumExpenditure += element.buyingPricePerCoin * element.amount;
         print('is not empty');
       });
 

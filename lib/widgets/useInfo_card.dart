@@ -288,7 +288,7 @@ class WalletTile extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '\$${dollars > 999 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
+                      '\$${dollars >= 1000 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
                       style: TextStyle(color: Colors.white),
                     ),
                     SizedBox(width: 3),

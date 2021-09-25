@@ -5,23 +5,23 @@ class CryptoCurrency {
   double amount = 0;
   double valueUsd = 0;
   double percentChange = 0;
-  double buyingPrice = 0;
+  double buyingPricePerCoin = 0;
 
   CryptoCurrency(this.coin, this.amount) {
     valueUsd = amount * coin.value;
-    buyingPrice = coin.value;
-    // percentChange = ((amount * coin.value) - (buyingPrice * amount)) /
-    //     (buyingPrice * amount) *
-    //     100;
+    buyingPricePerCoin = coin.value;
   }
 
-  setPercentChanged() {
-    percentChange =
-        ((valueUsd) - (buyingPrice * amount)) / (buyingPrice * amount) * 100;
-  }
-
-  setValueUSD() {
+  CryptoCurrency.fromFile(this.coin, this.amount, this.buyingPricePerCoin) {
     valueUsd = amount * coin.value;
+  }
+
+  void updateCoin(CoinData coin) {
+    this.coin = coin;
+    valueUsd = coin.value * amount;
+    percentChange = ((valueUsd - (buyingPricePerCoin * amount)) /
+            (buyingPricePerCoin * amount)) *
+        100;
   }
 
   @override
@@ -33,11 +33,12 @@ class CryptoCurrency {
     return {
       'coin': coin,
       'amount': amount,
+      'buyingPricePerCoin': buyingPricePerCoin,
     };
   }
 
   factory CryptoCurrency.fromJson(dynamic json) {
-    return CryptoCurrency(
-        CoinData.fromJson(json['coin']), json['amount'] as double);
+    return CryptoCurrency.fromFile(CoinData.fromJson(json['coin']),
+        json['amount'] as double, json['buyingPricePerCoin'] as double);
   }
 }

@@ -31,30 +31,24 @@ class _CryptoListState extends State<CryptoList>
 
     if (widget.mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
+      CoinData updatedCoin;
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
-        CoinData updatedCoin =
+        updatedCoin =
             widget.mynetwork.getCryptoDataByIndex(walletElement.coin.index);
-
+//if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
-          walletElement.coin.value = updatedCoin.value;
-          walletElement.setValueUSD();
-          walletElement.setPercentChanged();
+          walletElement.updateCoin(updatedCoin);
         } else {
           print(
-              'Currencny rank changed of ${walletElement.coin.name}....updating coin data...');
+              'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
           for (int i = 0; i < 100; i++) {
             if (walletElement.coin.id ==
                 widget.mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement.coin.value =
-                  widget.mynetwork.getCryptoDataByIndex(i).value;
-              walletElement.setValueUSD();
-              walletElement.setPercentChanged();
-              walletElement.coin.index =
-                  widget.mynetwork.getCryptoDataByIndex(i).index;
-
+              walletElement
+                  .updateCoin(widget.mynetwork.getCryptoDataByIndex(i));
               break;
             }
           }
