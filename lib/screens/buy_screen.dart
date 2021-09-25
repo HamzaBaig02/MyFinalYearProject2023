@@ -55,15 +55,16 @@ class _BuyState extends State<Buy> {
                       ),
                     ),
                     child: TextField(
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
+                        value.isEmpty ? value = 0.toString() : value;
                         setState(() {
                           userInput = double.parse(value);
-                          value.isEmpty
-                              ? amount = 0
-                              : amount = (double.parse(value.toString()) /
-                                  widget.coinData.value);
+                          amount = (double.parse(value.toString()) /
+                              widget.coinData.value);
                         });
                       },
                       decoration: InputDecoration(
@@ -86,8 +87,9 @@ class _BuyState extends State<Buy> {
                     children: [
                       ShopButton('Buy', () {
                         if (userInput >
-                            Provider.of<UserData>(context, listen: false)
-                                .balance) {
+                                Provider.of<UserData>(context, listen: false)
+                                    .balance ||
+                            userInput <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Insufficient Account Balance'),

@@ -39,8 +39,8 @@ class _CryptoListState extends State<CryptoList>
 
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.coin.value = updatedCoin.value;
-          walletElement.setValueUSD(updatedCoin.value);
-          walletElement.setPercentChanged(updatedCoin.value);
+          walletElement.setValueUSD();
+          walletElement.setPercentChanged();
         } else {
           print(
               'Currencny rank changed of ${walletElement.coin.name}....updating coin data...');
@@ -48,14 +48,13 @@ class _CryptoListState extends State<CryptoList>
           for (int i = 0; i < 100; i++) {
             if (walletElement.coin.id ==
                 widget.mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement
-                  .setValueUSD(widget.mynetwork.getCryptoDataByIndex(i).value);
-              walletElement.setPercentChanged(
-                  widget.mynetwork.getCryptoDataByIndex(i).value);
-              walletElement.coin.index =
-                  widget.mynetwork.getCryptoDataByIndex(i).index;
               walletElement.coin.value =
                   widget.mynetwork.getCryptoDataByIndex(i).value;
+              walletElement.setValueUSD();
+              walletElement.setPercentChanged();
+              walletElement.coin.index =
+                  widget.mynetwork.getCryptoDataByIndex(i).index;
+
               break;
             }
           }
@@ -72,6 +71,7 @@ class _CryptoListState extends State<CryptoList>
 
   @override
   Widget build(BuildContext context) {
+    print('crypto list rebuilt');
     super.build(context);
     return Container(
       child: widget.mynetwork.cryptoData.isEmpty

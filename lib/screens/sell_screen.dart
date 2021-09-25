@@ -189,13 +189,14 @@ class _SellState extends State<Sell> {
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
+                        value.isEmpty ? value = 0.toString() : value;
                         userInput = double.parse(value);
                         setState(() {
                           widget.amount = widget.ownedCrypto.amount -
-                              (value == '' ? 0 : double.parse(value)) /
+                              (double.parse(value)) /
                                   widget.ownedCrypto.coin.value;
                           widget.valueUsd = widget.ownedCrypto.valueUsd -
-                              (value == '' ? 0 : double.parse(value));
+                              (double.parse(value));
                         });
                       },
                       decoration: InputDecoration(
@@ -217,7 +218,8 @@ class _SellState extends State<Sell> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ShopButton('Sell', () {
-                        if (userInput > widget.ownedCrypto.valueUsd) {
+                        if (userInput > widget.ownedCrypto.valueUsd ||
+                            userInput <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                               content: Text('Insufficient Crypto Balance'),

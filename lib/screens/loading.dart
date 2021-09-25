@@ -33,22 +33,21 @@ class _LoadingState extends State<Loading> {
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.coin.value = updatedCoin.value;
-          walletElement.setValueUSD(updatedCoin.value);
-          walletElement.setPercentChanged(updatedCoin.value);
+          walletElement.setValueUSD();
+          walletElement.setPercentChanged();
         } else {
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
           for (int i = 0; i < 100; i++) {
             if (walletElement.coin.id == mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement
-                  .setValueUSD(mynetwork.getCryptoDataByIndex(i).value);
-              walletElement
-                  .setPercentChanged(mynetwork.getCryptoDataByIndex(i).value);
-              walletElement.coin.index =
-                  mynetwork.getCryptoDataByIndex(i).index;
               walletElement.coin.value =
                   mynetwork.getCryptoDataByIndex(i).value;
+              walletElement.setValueUSD();
+              walletElement.setPercentChanged();
+              walletElement.coin.index =
+                  mynetwork.getCryptoDataByIndex(i).index;
+
               break;
             }
           }

@@ -22,10 +22,11 @@ class UserData extends ChangeNotifier {
     bool notPresent = true;
     for (int i = 0; i < wallet.length; i++) {
       if (wallet[i].coin.id == currency.coin.id) {
+        wallet[i].coin.value = currency.coin.value;
         wallet[i].amount += currency.amount;
         wallet[i].buyingPrice = currency.buyingPrice;
-        wallet[i].valueUsd = currency.coin.value * wallet[i].amount;
-        wallet[i].setPercentChanged(currency.coin.value);
+        wallet[i].setValueUSD();
+        wallet[i].setPercentChanged();
         notPresent = false;
         notifyListeners();
         break;

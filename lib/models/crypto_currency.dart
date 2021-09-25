@@ -10,19 +10,18 @@ class CryptoCurrency {
   CryptoCurrency(this.coin, this.amount) {
     valueUsd = amount * coin.value;
     buyingPrice = coin.value;
-    percentChange = ((amount * coin.value) - (buyingPrice * amount)) /
-        (buyingPrice * amount) *
-        100;
+    // percentChange = ((amount * coin.value) - (buyingPrice * amount)) /
+    //     (buyingPrice * amount) *
+    //     100;
   }
 
-  setPercentChanged(double coinValue) {
-    percentChange = ((amount * coinValue) - (buyingPrice * amount)) /
-        (buyingPrice * amount) *
-        100;
+  setPercentChanged() {
+    percentChange =
+        ((valueUsd) - (buyingPrice * amount)) / (buyingPrice * amount) * 100;
   }
 
-  setValueUSD(double coinValue) {
-    valueUsd = amount * coinValue;
+  setValueUSD() {
+    valueUsd = amount * coin.value;
   }
 
   @override
