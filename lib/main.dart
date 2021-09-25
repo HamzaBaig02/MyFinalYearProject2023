@@ -40,6 +40,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: ThemeData(
+        accentColor: Color(0xff8b4a6c),
+      ),
       home: Loading(),
     );
   }

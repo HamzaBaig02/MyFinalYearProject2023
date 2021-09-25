@@ -14,9 +14,9 @@ class TransactionTile extends StatelessWidget {
       padding: EdgeInsets.all(5),
       color: Colors.white,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            flex: 40,
+          Container(
             child: Row(
               children: [
                 CircleAvatar(
@@ -25,13 +25,13 @@ class TransactionTile extends StatelessWidget {
                   backgroundColor: Colors.grey.shade100,
                 ),
                 Container(
+                    width: 130,
                     padding: EdgeInsets.all(4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(transaction.crypto.coin.name),
                         Container(
-                          width: 52,
                           child: Text(
                             transaction.type,
                             style: TextStyle(fontSize: 10),
@@ -42,31 +42,27 @@ class TransactionTile extends StatelessWidget {
               ],
             ),
           ),
-          Expanded(
-            flex: 20,
-            child: Container(
-              child: Text(
-                '\$${transaction.crypto.valueUsd.toStringAsFixed(2)}',
-                style: TextStyle(fontSize: 15),
-              ),
+          Container(
+            width: 95,
+            child: Text(
+              '\$${transaction.crypto.valueUsd.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 15),
             ),
           ),
-          Expanded(
-            flex: 30,
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    '${DateFormat('kk:mm').format(transaction.date)}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
-                  ),
-                  Text(
-                    '${DateFormat('yyyy-MM-dd').format(transaction.date)}',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  )
-                ],
-              ),
+          Container(
+            width: 70,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '${DateFormat('kk:mm').format(transaction.date)}',
+                  style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                ),
+                Text(
+                  '${DateFormat('yyyy-MM-dd').format(transaction.date)}',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                )
+              ],
             ),
           )
         ],

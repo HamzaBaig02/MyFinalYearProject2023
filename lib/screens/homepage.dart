@@ -21,6 +21,7 @@ class _UserHomePageState extends State<UserHomePage> {
   PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
+    print('homepage rebuilt');
     return WillPopScope(
       onWillPop: () async => false,
       child: Scaffold(
@@ -83,6 +84,7 @@ class MyBottomNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('bottom nav bar rebuilt');
     return BottomNavigationBar(
       items: [
         BottomNavigationBarItem(
