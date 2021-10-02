@@ -46,11 +46,8 @@ class _CoinTileState extends State<CoinTile> with TickerProviderStateMixin {
         _toggleContainer();
       },
       child: Container(
-          margin: EdgeInsets.only(bottom: 1),
+          //margin: EdgeInsets.only(bottom: 1),
           padding: EdgeInsets.all(5),
-          decoration: BoxDecoration(
-            color: Colors.white,
-          ),
           child: Column(
             children: [
               CollapsedTile(coinData: widget.coinData, formatter: formatter),
@@ -103,40 +100,58 @@ class CollapsedTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          width: 140,
-          child: Row(
-            children: [
-              CircleAvatar(
-                foregroundImage: NetworkImage(coinData.imageUrl),
-                backgroundColor: Colors.grey.shade100,
-              ),
-              Container(
-                padding: EdgeInsets.all(4),
-                child: CoinNameSymbol(coinData: coinData),
-              ),
-            ],
+        Flexible(
+          flex: 10,
+          fit: FlexFit.tight,
+          child: Container(
+            //width: 140,
+
+            child: Row(
+              children: [
+                CircleAvatar(
+                  foregroundImage: NetworkImage(coinData.imageUrl),
+                  radius: 15,
+                  backgroundColor: Colors.grey.shade100,
+                ),
+                SizedBox(
+                  width: 5,
+                ),
+                Container(
+                  padding: EdgeInsets.all(4),
+                  child: CoinNameSymbol(coinData: coinData),
+                ),
+              ],
+            ),
           ),
         ),
-        Container(
-          width: 95,
-          child: Text(
-            '\$${formatter.format(
-              coinData.value,
-            )}',
-            style: TextStyle(fontSize: 16),
+        Flexible(
+          flex: 10,
+          fit: FlexFit.tight,
+          child: Container(
+            //width: 95,
+            child: Text(
+              '\$${coinData.value >= 1000 ? formatter.format(
+                  coinData.value,
+                ) : coinData.value.toStringAsFixed(2)}',
+              style: TextStyle(fontSize: 16),
+            ),
           ),
         ),
-        Container(
-          width: 58,
-          child: Text(
-            '${coinData.percentChange.toStringAsFixed(2)}%',
-            style: TextStyle(
-                color: coinData.percentChange < 0 ? Colors.red : Colors.green),
+        Flexible(
+          flex: 5,
+          fit: FlexFit.tight,
+          child: Container(
+            //width: 58,
+            child: Text(
+              '${coinData.percentChange.toStringAsFixed(2)}%',
+              style: TextStyle(
+                  color:
+                      coinData.percentChange < 0 ? Colors.red : Colors.green),
+            ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -157,7 +172,7 @@ class CoinNameSymbol extends StatelessWidget {
       children: [
         Text(coinData.symbol),
         Container(
-          width: 52,
+          width: 75,
           child: Text(
             coinData.name,
             style: TextStyle(fontSize: 10),

@@ -10,6 +10,7 @@ class UserData extends ChangeNotifier {
   double profit;
   int points;
   List<Transaction> transactions = [];
+  double amountInWalletUsd = 0;
 
   UserData(this.name, this.wallet, this.balance, this.profit, this.points,
       this.transactions);
@@ -65,7 +66,7 @@ class UserData extends ChangeNotifier {
         sumExpenditure += element.buyingPricePerCoin * element.amount;
         print('is not empty');
       });
-
+      amountInWalletUsd = sumRevenue;
       profit = sumRevenue - sumExpenditure;
     } else {
       profit = 0;

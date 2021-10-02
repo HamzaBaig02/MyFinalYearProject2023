@@ -68,6 +68,12 @@ class _CryptoListState extends State<CryptoList>
     print('crypto list rebuilt');
     super.build(context);
     return Container(
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(10),
+            topLeft: Radius.circular(10),
+          ),
+          color: Colors.white),
       child: widget.mynetwork.cryptoData.isEmpty
           ? Center(
               child: Column(
@@ -89,7 +95,7 @@ class _CryptoListState extends State<CryptoList>
             )
           : RefreshIndicator(
               onRefresh: fetchData,
-              child: ListView.builder(
+              child: ListView.separated(
                 physics: BouncingScrollPhysics(),
                 scrollDirection: Axis.vertical,
                 itemBuilder: (context, index) {
@@ -98,6 +104,13 @@ class _CryptoListState extends State<CryptoList>
                   );
                 },
                 itemCount: 100,
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey.shade100,
+                  );
+                },
               ),
             ),
     );

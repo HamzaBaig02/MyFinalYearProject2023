@@ -163,16 +163,17 @@ class _UserInfoCardState extends State<UserInfoCard>
 }
 
 class CryptoWallet extends StatelessWidget {
-  const CryptoWallet({
+  CryptoWallet({
     Key? key,
     required Animation<double> animation,
   })  : _animation = animation,
         super(key: key);
 
   final Animation<double> _animation;
-
+  final dollarFormatter = NumberFormat('0,000.00');
   @override
   Widget build(BuildContext context) {
+    double moneyInWallet = Provider.of<UserData>(context).amountInWalletUsd;
     return SizeTransition(
       sizeFactor: _animation,
       axis: Axis.vertical,
@@ -185,15 +186,30 @@ class CryptoWallet extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Wallet',
-              style: GoogleFonts.patuaOne(
-                textStyle: TextStyle(
-                    color: Color(0xff8b4a6c),
-                    letterSpacing: 3,
-                    fontSize: 35,
-                    fontWeight: FontWeight.w700),
-              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Wallet',
+                  style: GoogleFonts.patuaOne(
+                    textStyle: TextStyle(
+                        color: Color(0xff8b4a6c),
+                        letterSpacing: 3,
+                        fontSize: 35,
+                        fontWeight: FontWeight.w700),
+                  ),
+                ),
+                Text(
+                  '\$${moneyInWallet >= 1000 ? dollarFormatter.format(moneyInWallet) : (moneyInWallet).toStringAsFixed(2)}',
+                  style: GoogleFonts.patuaOne(
+                    textStyle: TextStyle(
+                        color: Color(0xff8b4a6c),
+                        letterSpacing: 1,
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
             ),
             Container(
               height: 120,
@@ -256,15 +272,10 @@ class WalletTile extends StatelessWidget {
                 Hero(
                   tag: '${currency.coin.id}',
                   child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    radius: 16,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: ClipOval(
-                        child: Image.network(currency.coin.imageUrl),
-                      ),
-                      radius: 15,
-                    ),
+                    backgroundColor: Colors.transparent,
+                    foregroundImage:
+                        NetworkImage(currency.coin.imageUrl, scale: 2),
+                    radius: 15,
                   ),
                 ),
                 SizedBox(
