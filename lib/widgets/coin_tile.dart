@@ -1,4 +1,6 @@
 import 'package:crypto_trainer/screens/buy_screen.dart';
+import 'package:crypto_trainer/screens/graph_loading_screen.dart';
+import 'package:crypto_trainer/screens/graph_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -75,6 +77,22 @@ class _CoinTileState extends State<CoinTile> with TickerProviderStateMixin {
                             );
                           },
                           child: Icon(Icons.shopping_bag_outlined),
+                        ),
+                      ),
+                      Container(
+                        width: 58,
+                        child: MaterialButton(
+                          shape: CircleBorder(),
+                          onPressed: () {
+                            print('Cart Button Pressed');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) {
+                                return GraphLoading(widget.coinData);
+                              }),
+                            );
+                          },
+                          child: Icon(Icons.auto_graph_outlined),
                         ),
                       )
                     ],
