@@ -12,7 +12,23 @@ class CryptoNetwork {
   }
 
   String get cryptoData => _cryptoData;
+List <CoinData> getCryptoList(){
+  List<CoinData> coinList = List.generate(100, (index){
+    int rank = int.parse(jsonDecode(_cryptoData)['data'][index]['rank']);
+    String name = jsonDecode(_cryptoData)['data'][index]['name'];
+    String symbol = jsonDecode(_cryptoData)['data'][index]['symbol'];
+    String id = jsonDecode(_cryptoData)['data'][index]['id'];
+    double value =
+    double.parse(jsonDecode(_cryptoData)['data'][index]['priceUsd']);
+    double percentChange = double.parse(
+        jsonDecode(_cryptoData)['data'][index]['changePercent24Hr']);
+    String image =
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
 
+    return CoinData(rank, id, name, symbol, value, percentChange, image);
+  });
+  return coinList;
+  }
   CoinData getCryptoDataByIndex(int index) {
     int rank = int.parse(jsonDecode(_cryptoData)['data'][index]['rank']);
     String name = jsonDecode(_cryptoData)['data'][index]['name'];

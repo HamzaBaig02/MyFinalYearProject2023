@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:crypto_trainer/widgets/coin_tile.dart';
@@ -5,8 +7,29 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:flutter/foundation.dart';
+
+List<CoinData> fetchCoinList(String response){
+  List<CoinData> coinList = List.generate(100, (index){
+    int rank = int.parse(jsonDecode(response)['data'][index]['rank']);
+    String name = jsonDecode(response)['data'][index]['name'];
+    String symbol = jsonDecode(response)['data'][index]['symbol'];
+    String id = jsonDecode(response)['data'][index]['id'];
+    double value =
+    double.parse(jsonDecode(response)['data'][index]['priceUsd']);
+    double percentChange = double.parse(
+        jsonDecode(response)['data'][index]['changePercent24Hr']);
+    String image =
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
+
+    return CoinData(rank, id, name, symbol, value, percentChange, image);
+  });
+  return coinList;
+}
+
 
 class CryptoList extends StatefulWidget {
+
   CryptoNetwork mynetwork;
   CryptoList(this.mynetwork);
 
@@ -17,6 +40,18 @@ class CryptoList extends StatefulWidget {
 class _CryptoListState extends State<CryptoList>
     with AutomaticKeepAliveClientMixin<CryptoList> {
   bool loading = false;
+  List<CoinData> coinList = [];
+
+
+  Future <List<CoinData>> createComputeFunction() async {
+    String response = widget.mynetwork.cryptoData;
+    return compute(fetchCoinList,response);
+
+  }
+
+
+
+  //Update Wallet Data
   Future<void> fetchData() async {
     setState(() {
       loading = true;
@@ -27,6 +62,14 @@ class _CryptoListState extends State<CryptoList>
       if (widget.mynetwork.cryptoData.isNotEmpty) break;
       print('Restarting Network...');
     }
+
+   if(widget.mynetwork.cryptoData.isNotEmpty){
+
+     coinList = await createComputeFunction();
+     print(coinList);
+   }
+
+
 
 
 
@@ -63,7 +106,13 @@ class _CryptoListState extends State<CryptoList>
       loading = false;
     });
   }
+@override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    createComputeFunction();
 
+  }
   @override
   Widget build(BuildContext context) {
     print('crypto list rebuilt');
