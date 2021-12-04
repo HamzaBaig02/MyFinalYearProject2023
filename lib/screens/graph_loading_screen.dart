@@ -22,7 +22,7 @@ class _GraphLoadingState extends State<GraphLoading> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {
-        return GraphScreen(nodes);
+        return GraphScreen(nodes,widget.coin);
       }),
     );
   }

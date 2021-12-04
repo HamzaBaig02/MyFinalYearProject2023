@@ -16,6 +16,7 @@ class _LoadingState extends State<Loading> {
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
 
+    //re-establishing api connection if it fails
     for (int i = 0; i < 3; i++) {
       await mynetwork.startNetwork();
       if (mynetwork.cryptoData.isNotEmpty) break;
@@ -29,7 +30,7 @@ class _LoadingState extends State<Loading> {
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
-        updatedCoin = mynetwork.getCryptoDataByIndex(walletElement.coin.index);
+        updatedCoin = mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.updateCoin(updatedCoin);

@@ -23,6 +23,7 @@ class Sell extends StatefulWidget {
 }
 
 class _SellState extends State<Sell> {
+  var _controller = TextEditingController();
   void saveToStorage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String json = jsonEncode(Provider.of<UserData>(context, listen: false));
@@ -31,6 +32,7 @@ class _SellState extends State<Sell> {
   }
 
   double userInput = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +87,7 @@ class _SellState extends State<Sell> {
                                           child: Text(
                                             '${(widget.amount > 1 ? widget.amount.toStringAsFixed(2) : widget.amount)}',
                                             style: TextStyle(
-                                              fontSize: 40,
+                                              fontSize: 30,
                                               fontWeight: FontWeight.w700,
                                             ),
                                           ),
@@ -100,7 +102,7 @@ class _SellState extends State<Sell> {
                                         child: Text(
                                           '${widget.ownedCrypto.coin.symbol.toUpperCase()}',
                                           style: TextStyle(
-                                              fontSize: 40,
+                                              fontSize: 30,
                                               color: Colors.grey,
                                               fontWeight: FontWeight.w300),
                                         ),
@@ -186,12 +188,15 @@ class _SellState extends State<Sell> {
                       ),
                     ),
                     child: TextField(
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      controller: _controller,
+                      // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       keyboardType: TextInputType.number,
                       onChanged: (value) {
-                        value.isEmpty ? value = 0.toString() : value;
-                        userInput = double.parse(value);
+
                         setState(() {
+
+                          value.isEmpty ? value = 0.toString() : value;
+                          userInput = double.parse(value);
                           widget.amount = widget.ownedCrypto.amount -
                               (double.parse(value)) /
                                   widget.ownedCrypto.coin.value;
@@ -205,6 +210,26 @@ class _SellState extends State<Sell> {
                           FontAwesomeIcons.dollarSign,
                           color: Colors.black12,
                         ),
+                        suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.angleDoubleUp,
+                          color: Colors.black12),onPressed: (){
+                          String value = widget.ownedCrypto.valueUsd.toString();
+                           _controller.text = value;
+
+                          setState(() {
+
+                            value.isEmpty ? value = 0.toString() : value;
+                            userInput = double.parse(value);
+                            widget.amount = widget.ownedCrypto.amount -
+                                (double.parse(value)) /
+                                    widget.ownedCrypto.coin.value;
+                            widget.valueUsd = widget.ownedCrypto.valueUsd -
+                                (double.parse(value));
+                          });
+
+
+
+
+                          },),
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,

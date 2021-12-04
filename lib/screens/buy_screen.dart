@@ -308,7 +308,7 @@ class CryptoAmountCard extends StatelessWidget {
               child: Text(
                 '${(amount > 1 ? amount.toStringAsFixed(2) : amount)}',
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 30,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -323,7 +323,7 @@ class CryptoAmountCard extends StatelessWidget {
             child: Text(
               '${coinData.symbol}',
               style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 30,
                   color: Colors.grey,
                   fontWeight: FontWeight.w300),
             ),

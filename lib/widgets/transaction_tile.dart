@@ -73,6 +73,10 @@ class TransactionTile extends StatelessWidget {
                   Text(
                     '${DateFormat('yyyy-MM-dd').format(transaction.date)}',
                     style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
+                  Text(
+                    transaction.type == 'Bought'?'@ \$${transaction.crypto.buyingPricePerCoin >= 1000 ? formatter.format(transaction.crypto.buyingPricePerCoin) : transaction.crypto.buyingPricePerCoin.toStringAsFixed(2)}':'@ \$${transaction.crypto.coin.value >= 1000 ? formatter.format(transaction.crypto.coin.value) : transaction.crypto.coin.value.toStringAsFixed(2)}',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
                   )
                 ],
               ),

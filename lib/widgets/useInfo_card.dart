@@ -103,7 +103,7 @@ class _UserInfoCardState extends State<UserInfoCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Estimated Profit',
+                        'Profit',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
@@ -178,7 +178,7 @@ class CryptoWallet extends StatelessWidget {
       sizeFactor: _animation,
       axis: Axis.vertical,
       axisAlignment: -1,
-      child: Container(
+      child: Provider.of<UserData>(context).wallet.isNotEmpty?Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
         ),
@@ -224,6 +224,13 @@ class CryptoWallet extends StatelessWidget {
                     Provider.of<UserData>(context, listen: true).wallet.length,
               ),
             ),
+          ],
+        ),
+      ):Center(
+        child: Row(
+          children: [
+            Text("Wallet is empty :("),
+
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 
 
 class CoinData {
-  int index = 0;
+  int rank = 0;
   String id = '';
   String name = '';
   String symbol = '';
@@ -9,17 +9,17 @@ class CoinData {
   double percentChange = 0;
   String imageUrl = '';
 
-  CoinData(this.index, this.id, this.name, this.symbol, this.value,
+  CoinData(this.rank, this.id, this.name, this.symbol, this.value,
       this.percentChange, this.imageUrl);
 
   @override
   String toString() {
-    return 'CoinData{name: $name, symbol: $symbol, value: $value, percentChange: $percentChange}';
+    return 'CoinData{rank:$rank,name: $name, symbol: $symbol, value: $value, percentChange: $percentChange}';
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'index': index,
+      'rank': rank,
       'id': id,
       'name': name,
       'symbol': symbol,
@@ -31,7 +31,7 @@ class CoinData {
 
   factory CoinData.fromJson(dynamic json) {
     return CoinData(
-        json['index'] as int,
+        json['rank'] as int,
         json['id'] as String,
         json['name'] as String,
         json['symbol'] as String,

@@ -62,7 +62,7 @@ class _CoinTileState extends State<CoinTile> with TickerProviderStateMixin {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Owned: 0.02 BTC/\$ 25'),
+                      Text('Temporary Sample Text'),
                       Container(
                         width: 58,
                         child: MaterialButton(
