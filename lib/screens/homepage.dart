@@ -1,3 +1,4 @@
+import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
@@ -9,7 +10,7 @@ import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget {
-  CryptoNetwork mynetwork;
+  List<CoinData> mynetwork;
 
   UserHomePage(this.mynetwork);
 
@@ -22,6 +23,7 @@ class _UserHomePageState extends State<UserHomePage> {
   PageController _pageController = PageController();
   @override
   Widget build(BuildContext context) {
+
     print('homepage rebuilt');
     return WillPopScope(
       onWillPop: () async => false,

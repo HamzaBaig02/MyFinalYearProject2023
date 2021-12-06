@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/user_data.dart';
@@ -6,6 +9,26 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
 
+
+
+List<CoinData> fetchCoinList(String response){
+  List<CoinData> coinList = List.generate(100, (index){
+    int rank = int.parse(jsonDecode(response)['data'][index]['rank']);
+    String name = jsonDecode(response)['data'][index]['name'];
+    String symbol = jsonDecode(response)['data'][index]['symbol'];
+    String id = jsonDecode(response)['data'][index]['id'];
+    double value =
+    double.parse(jsonDecode(response)['data'][index]['priceUsd']);
+    double percentChange = double.parse(
+        jsonDecode(response)['data'][index]['changePercent24Hr']);
+    String image =
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
+
+    return CoinData(rank, id, name, symbol, value, percentChange, image);
+  });
+  return coinList;
+}
+
 class Loading extends StatefulWidget {
   const Loading({Key? key}) : super(key: key);
   @override
@@ -13,6 +36,14 @@ class Loading extends StatefulWidget {
 }
 
 class _LoadingState extends State<Loading> {
+  List<CoinData> coinList = [];
+
+  Future <List<CoinData>> createComputeFunction(String response) async {
+print("Inside isolate");
+    return compute(fetchCoinList,response);
+
+  }
+
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
 
@@ -22,6 +53,13 @@ class _LoadingState extends State<Loading> {
       if (mynetwork.cryptoData.isNotEmpty) break;
       print('Restarting Network...');
     }
+
+    if(mynetwork.cryptoData.isNotEmpty){
+  print("making coinlist");
+      coinList = await createComputeFunction(mynetwork.cryptoData);
+
+    }
+
 
     if (mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
@@ -55,7 +93,7 @@ class _LoadingState extends State<Loading> {
       MaterialPageRoute(builder: (context) {
         return ChangeNotifierProvider(
             create: (context) => BottomNavigationBarProvider(),
-            child: UserHomePage(mynetwork));
+            child: UserHomePage(coinList));
       }),
     );
   }

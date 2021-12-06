@@ -30,8 +30,9 @@ List<CoinData> fetchCoinList(String response){
 
 class CryptoList extends StatefulWidget {
 
-  CryptoNetwork mynetwork;
-  CryptoList(this.mynetwork);
+  CryptoNetwork mynetwork = CryptoNetwork();
+  List<CoinData>cryptoList;
+  CryptoList(this.cryptoList);
 
   @override
   _CryptoListState createState() => _CryptoListState();
@@ -40,11 +41,12 @@ class CryptoList extends StatefulWidget {
 class _CryptoListState extends State<CryptoList>
     with AutomaticKeepAliveClientMixin<CryptoList> {
   bool loading = false;
-  List<CoinData> coinList = [];
+
 
 
   Future <List<CoinData>> createComputeFunction() async {
     String response = widget.mynetwork.cryptoData;
+    print("inside Isolate 2");
     return compute(fetchCoinList,response);
 
   }
@@ -64,13 +66,10 @@ class _CryptoListState extends State<CryptoList>
     }
 
    if(widget.mynetwork.cryptoData.isNotEmpty){
+print("creating list 2");
+     widget.cryptoList = await createComputeFunction();
 
-     coinList = await createComputeFunction();
-     print(coinList);
    }
-
-
-
 
 
     if (widget.mynetwork.cryptoData.isNotEmpty &&
@@ -80,7 +79,7 @@ class _CryptoListState extends State<CryptoList>
           .wallet
           .forEach((walletElement) {
         updatedCoin =
-            widget.mynetwork.getCryptoDataByIndex(walletElement.coin.rank);
+            widget.mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.updateCoin(updatedCoin);
@@ -110,7 +109,7 @@ class _CryptoListState extends State<CryptoList>
   void initState() {
     // TODO: implement initState
     super.initState();
-    createComputeFunction();
+
 
   }
   @override
@@ -123,11 +122,16 @@ class _CryptoListState extends State<CryptoList>
 
           margin: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Colors.white70,
             borderRadius: BorderRadius.circular(25),
 
           ),
           child: TextField(
+            style: TextStyle(
+            fontSize: 14.0,
+            height: 1.0,
+            color: Colors.black
+    ),
 
             // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
@@ -135,22 +139,22 @@ class _CryptoListState extends State<CryptoList>
 
             },
             decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
               hintText: 'Search...',
               prefixIcon: Icon(
                 FontAwesomeIcons.search,
+                size: 18,
                 color: Colors.black12,
               ),
               suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
+                  size: 18,
                   color: Colors.black12),onPressed: (){
 
 
 
 
               },),
-              border: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.grey, width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
+              border:InputBorder.none,
               focusedBorder:OutlineInputBorder(
                 borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
                 borderRadius: BorderRadius.circular(25.0),
@@ -167,7 +171,7 @@ class _CryptoListState extends State<CryptoList>
                   topLeft: Radius.circular(10),
                 ),
                 color: Colors.white),
-            child: widget.mynetwork.cryptoData.isEmpty
+            child: widget.cryptoList.isEmpty
                 ? Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +197,7 @@ class _CryptoListState extends State<CryptoList>
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
                         return CoinTile(
-                          widget.mynetwork.getCryptoDataByIndex(index),
+                          widget.cryptoList[index]
                         );
                       },
                       itemCount: 100,

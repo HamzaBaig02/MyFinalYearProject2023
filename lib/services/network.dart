@@ -8,7 +8,7 @@ class Network {
   Future getData() async {
     try {
       String data = '';
-      Response response = await get(Uri.parse(url));
+      Response response = await get(Uri.parse(url),headers: {"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
 
       if (response.statusCode == 200) {
         print('API request successful!');
