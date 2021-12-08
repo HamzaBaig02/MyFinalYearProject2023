@@ -105,7 +105,26 @@ print("creating list 2");
       loading = false;
     });
   }
-@override
+
+  void Search(String value){
+    filteredList.clear();
+    setState(() {
+
+      widget.cryptoList.forEach((element) {
+        if(element.name.toLowerCase().contains(value.toLowerCase()) || element.symbol.toLowerCase().contains(value.toLowerCase()))
+          filteredList.add(element);
+
+
+      });
+
+      if(value.isEmpty)
+        filteredList.clear();
+
+
+    });
+  }
+
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
@@ -115,12 +134,17 @@ print("creating list 2");
 
 
   TextEditingController _textController = TextEditingController();
-
+  bool search = false;
   List<CoinData> filteredList = [];
   @override
   Widget build(BuildContext context) {
 
     print('crypto list rebuilt');
+    if(_textController.text.length > 0 && filteredList.isEmpty)
+      search = true;
+    else
+      search = false;
+
     super.build(context);
     return Column(
       children: [
@@ -142,24 +166,7 @@ print("creating list 2");
 
             // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
-            onChanged: (value) {
-              filteredList.clear();
-              setState(() {
-
-                widget.cryptoList.forEach((element) {
-                  if(element.name.toLowerCase().contains(value.toLowerCase()) || element.symbol.toLowerCase().contains(value.toLowerCase()))
-                    filteredList.add(element);
-
-
-                });
-
-                if(value.isEmpty)
-                  filteredList.clear();
-
-
-              });
-
-            },
+            onChanged:Search,
             decoration: InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
               hintText: 'Search...',
@@ -183,7 +190,10 @@ print("creating list 2");
           ),
         ),
         Flexible(
-          child: Container(
+          child: search ? Padding(
+            padding: const EdgeInsets.all(20),
+            child: Text("No results found...",style: TextStyle(fontSize: 20),),
+          ) : Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(10),
@@ -209,16 +219,17 @@ print("creating list 2");
                       ],
                     ),
                   )
-                : RefreshIndicator(
+                :
+          RefreshIndicator(
                     onRefresh: fetchData,
                     child: ListView.separated(
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        return filteredList.isEmpty ? CoinTile(
-                          widget.cryptoList[index]
-                        ):CoinTile(
+                        return filteredList.isNotEmpty ? CoinTile(
                             filteredList[index]
+                        ):CoinTile(
+                            widget.cryptoList[index]
                         );
                       },
                       itemCount: filteredList.isEmpty ? 100 : filteredList.length,
