@@ -112,8 +112,14 @@ print("creating list 2");
 
 
   }
+
+
+  TextEditingController _textController = TextEditingController();
+
+  List<CoinData> filteredList = [];
   @override
   Widget build(BuildContext context) {
+
     print('crypto list rebuilt');
     super.build(context);
     return Column(
@@ -127,6 +133,7 @@ print("creating list 2");
 
           ),
           child: TextField(
+            controller: _textController,
             style: TextStyle(
             fontSize: 14.0,
             height: 1.0,
@@ -136,6 +143,21 @@ print("creating list 2");
             // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 
             onChanged: (value) {
+              filteredList.clear();
+              setState(() {
+
+                widget.cryptoList.forEach((element) {
+                  if(element.name.toLowerCase().contains(value.toLowerCase()) || element.symbol.toLowerCase().contains(value.toLowerCase()))
+                    filteredList.add(element);
+
+
+                });
+
+                if(value.isEmpty)
+                  filteredList.clear();
+
+
+              });
 
             },
             decoration: InputDecoration(
@@ -149,9 +171,6 @@ print("creating list 2");
               suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
                   size: 18,
                   color: Colors.black12),onPressed: (){
-
-
-
 
               },),
               border:InputBorder.none,
@@ -196,11 +215,13 @@ print("creating list 2");
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       itemBuilder: (context, index) {
-                        return CoinTile(
+                        return filteredList.isEmpty ? CoinTile(
                           widget.cryptoList[index]
+                        ):CoinTile(
+                            filteredList[index]
                         );
                       },
-                      itemCount: 100,
+                      itemCount: filteredList.isEmpty ? 100 : filteredList.length,
                       separatorBuilder: (context, index) {
                         return Divider(
                           height: 1,
