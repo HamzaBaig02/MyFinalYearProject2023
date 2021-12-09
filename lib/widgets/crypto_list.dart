@@ -148,47 +148,7 @@ print("creating list 2");
     super.build(context);
     return Column(
       children: [
-        Container(
-
-          margin: EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.circular(25),
-
-          ),
-          child: TextField(
-            controller: _textController,
-            style: TextStyle(
-            fontSize: 14.0,
-            height: 1.0,
-            color: Colors.black
-    ),
-
-            // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-            onChanged:Search,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
-              hintText: 'Search...',
-              prefixIcon: Icon(
-                FontAwesomeIcons.search,
-                size: 18,
-                color: Colors.black12,
-              ),
-              suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
-                  size: 18,
-                  color: Colors.black12),onPressed: (){
-
-              },),
-              border:InputBorder.none,
-              focusedBorder:OutlineInputBorder(
-                borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              //enabledBorder: InputBorder.none,
-            ),
-          ),
-        ),
+        SearchBar(Search,_textController),
         Flexible(
           child: search ? Padding(
             padding: const EdgeInsets.all(20),
@@ -250,4 +210,58 @@ print("creating list 2");
 
   @override
   bool get wantKeepAlive => true;
+}
+
+class SearchBar extends StatelessWidget {
+
+  final Function(String)? Search;
+  final TextEditingController _textController;
+
+
+  SearchBar(this.Search, this._textController);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+
+      margin: EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white70,
+        borderRadius: BorderRadius.circular(25),
+
+      ),
+      child: TextField(
+        controller: _textController,
+        style: TextStyle(
+        fontSize: 14.0,
+        height: 1.0,
+        color: Colors.black
+    ),
+
+        // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+        onChanged:Search,
+        decoration: InputDecoration(
+          contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
+          hintText: 'Search...',
+          prefixIcon: Icon(
+            FontAwesomeIcons.search,
+            size: 18,
+            color: Colors.black12,
+          ),
+          suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
+              size: 18,
+              color: Colors.black12),onPressed: (){
+
+          },),
+          border:InputBorder.none,
+          focusedBorder:OutlineInputBorder(
+            borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          //enabledBorder: InputBorder.none,
+        ),
+      ),
+    );
+  }
 }
