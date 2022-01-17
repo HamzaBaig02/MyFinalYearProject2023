@@ -10,22 +10,23 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
 List<CoinData> fetchCoinList(String response){
-  List<CoinData> coinList = List.generate(100, (index){
-    int rank = int.parse(jsonDecode(response)['data'][index]['rank']);
-    String name = jsonDecode(response)['data'][index]['name'];
-    String symbol = jsonDecode(response)['data'][index]['symbol'];
-    String id = jsonDecode(response)['data'][index]['id'];
-    double value =
-    double.parse(jsonDecode(response)['data'][index]['priceUsd']);
-    double percentChange = double.parse(
-        jsonDecode(response)['data'][index]['changePercent24Hr']);
-    String image =
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
+  final jsonObject = jsonDecode(response) as Map<String, dynamic>;
 
-    return CoinData(rank, id, name, symbol, value, percentChange, image);
+  List<CoinData> coinList = List.generate(500, (index){
+    final dataMap = jsonObject['data'][index] as Map<String, dynamic>;
+    String symbol = dataMap['symbol'];
+    return CoinData(int.parse(dataMap['rank']),
+        dataMap['id'] as String,
+        dataMap['name'] as String,
+        dataMap['symbol'] as String,
+        double.parse(dataMap['priceUsd'] as String),
+        double.parse(dataMap['changePercent24Hr'] as String),
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
+    );
   });
   return coinList;
 }
+
 
 
 class CryptoList extends StatefulWidget {
@@ -87,7 +88,7 @@ print("creating list 2");
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 100; i++) {
+          for (int i = 0; i < 500; i++) {
             if (walletElement.coin.id ==
                 widget.mynetwork.getCryptoDataByIndex(i).id) {
               walletElement
@@ -140,7 +141,7 @@ print("creating list 2");
   Widget build(BuildContext context) {
 
     print('crypto list rebuilt');
-    if(_textController.text.length > 0 && filteredList.isEmpty)
+    if(_textController.text.isNotEmpty && filteredList.isEmpty)
       search = true;
     else
       search = false;
@@ -148,7 +149,50 @@ print("creating list 2");
     super.build(context);
     return Column(
       children: [
-        SearchBar(Search,_textController),
+        Container(
+
+          margin: EdgeInsets.symmetric(vertical: 5),
+          decoration: BoxDecoration(
+            color: Colors.white70,
+            borderRadius: BorderRadius.circular(25),
+
+          ),
+          child: TextField(
+            controller: _textController,
+            style: TextStyle(
+                fontSize: 14.0,
+                height: 1.0,
+                color: Colors.black
+            ),
+
+            // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+            onChanged:Search,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
+              hintText: 'Search...',
+              prefixIcon: Icon(
+                FontAwesomeIcons.search,
+                size: 18,
+                color: Colors.black12,
+              ),
+              suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
+                size: 18,
+                color: _textController.text.isNotEmpty ? Colors.red : Colors.black12,),onPressed:(){setState(() {
+                _textController.clear();
+                filteredList.clear();
+              });}
+
+              ),
+              border:InputBorder.none,
+              focusedBorder:OutlineInputBorder(
+                borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              //enabledBorder: InputBorder.none,
+            ),
+          ),
+        ),//Search Bar
         Flexible(
           child: search ? Padding(
             padding: const EdgeInsets.all(20),
@@ -162,46 +206,46 @@ print("creating list 2");
                 color: Colors.white),
             child: widget.cryptoList.isEmpty
                 ? Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        loading
-                            ? CircularProgressIndicator()
-                            : MaterialButton(
-                                color: Colors.white,
-                                elevation: 1,
-                                child: Text('Refresh'),
-                                onPressed: () async {
-                                  fetchData();
-                                }),
-                        Text('Something went wrong...try refreshing.'),
-                      ],
-                    ),
-                  )
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  loading
+                      ? CircularProgressIndicator()
+                      : MaterialButton(
+                      color: Colors.white,
+                      elevation: 1,
+                      child: Text('Refresh'),
+                      onPressed: () async {
+                        fetchData();
+                      }),
+                  Text('Something went wrong...try refreshing.'),
+                ],
+              ),
+            )
                 :
-          RefreshIndicator(
-                    onRefresh: fetchData,
-                    child: ListView.separated(
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.vertical,
-                      itemBuilder: (context, index) {
-                        return filteredList.isNotEmpty ? CoinTile(
-                            filteredList[index]
-                        ):CoinTile(
-                            widget.cryptoList[index]
-                        );
-                      },
-                      itemCount: filteredList.isEmpty ? 100 : filteredList.length,
-                      separatorBuilder: (context, index) {
-                        return Divider(
-                          height: 1,
-                          thickness: 1,
-                          color: Colors.grey.shade100,
-                        );
-                      },
-                    ),
-                  ),
+            RefreshIndicator(
+              onRefresh: fetchData,
+              child: ListView.separated(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                  return filteredList.isNotEmpty ? CoinTile(
+                      filteredList[index]
+                  ):CoinTile(
+                      widget.cryptoList[index]
+                  );
+                },
+                itemCount: filteredList.isEmpty ? widget.cryptoList.length : filteredList.length,
+                separatorBuilder: (context, index) {
+                  return Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.grey.shade100,
+                  );
+                },
+              ),
+            ),
           ),
         ),
       ],

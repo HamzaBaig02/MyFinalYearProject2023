@@ -24,12 +24,12 @@ class Sell extends StatefulWidget {
 
 class _SellState extends State<Sell> {
   var _controller = TextEditingController();
-  void saveToStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = jsonEncode(Provider.of<UserData>(context, listen: false));
-    prefs.setString('myData', json);
-    //print(prefs.getString('myData'));
-  }
+  // void saveToStorage() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String json = jsonEncode(Provider.of<UserData>(context, listen: false));
+  //   prefs.setString('myData', json);
+  //   //print(prefs.getString('myData'));
+  // }
 
   double userInput = 0;
 
@@ -77,7 +77,7 @@ class _SellState extends State<Sell> {
                                 ),
                                 Row(
                                   mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
+                                  MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Expanded(
                                       child: Container(
@@ -117,7 +117,7 @@ class _SellState extends State<Sell> {
                                   children: [
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      MainAxisAlignment.center,
                                       children: [
                                         Expanded(
                                           child: Container(
@@ -211,9 +211,9 @@ class _SellState extends State<Sell> {
                           color: Colors.black12,
                         ),
                         suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.angleDoubleUp,
-                          color: Colors.black12),onPressed: (){
+                            color: Colors.black12),onPressed: (){
                           String value = widget.ownedCrypto.valueUsd.toString();
-                           _controller.text = value;
+                          _controller.text = value;
 
                           setState(() {
 
@@ -229,7 +229,7 @@ class _SellState extends State<Sell> {
 
 
 
-                          },),
+                        },),
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,
                         enabledBorder: InputBorder.none,
@@ -263,7 +263,8 @@ class _SellState extends State<Sell> {
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
                           print('Transaction: $transaction');
-                          saveToStorage();
+                          Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+
                           Navigator.pop(context);
                         }
                       }, Colors.green.shade400),

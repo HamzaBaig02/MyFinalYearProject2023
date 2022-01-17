@@ -29,6 +29,7 @@ class CoinData {
     };
   }
 
+
   factory CoinData.fromJson(dynamic json) {
     return CoinData(
         json['rank'] as int,

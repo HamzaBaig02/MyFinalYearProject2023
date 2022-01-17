@@ -1,14 +1,15 @@
 import 'package:http/http.dart';
 
 class Network {
-  String url;
+  Uri url;
+  Map<String,String> headers;
 
-  Network(this.url);
+  Network(this.url,this.headers);
 
   Future getData() async {
     try {
       String data = '';
-      Response response = await get(Uri.parse(url),headers: {"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
+      Response response = await get(url,headers: headers);
 
       if (response.statusCode == 200) {
         print('API request successful!');

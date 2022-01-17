@@ -5,48 +5,36 @@ import 'package:fl_chart/fl_chart.dart';
 
 class CryptoNetwork {
   String _cryptoData = '';
+  late Map<String,dynamic> decodedData;
+
 
   Future startNetwork({String url = 'https://api.coincap.io/v2/assets'}) async {
-    Network cryptoNetwork = Network(url);
+    Uri link = Uri.parse(url);
+    link = link.replace(queryParameters: <String, String>{'limit': '1000'});
+    Network cryptoNetwork = Network(link,{"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
     _cryptoData = await cryptoNetwork.getData() ?? '';
+    decodedData = jsonDecode(_cryptoData) as Map<String, dynamic>;
   }
 
   String get cryptoData => _cryptoData;
-List <CoinData> getCryptoList(){
-  List<CoinData> coinList = List.generate(100, (index){
-    int rank = int.parse(jsonDecode(_cryptoData)['data'][index]['rank']);
-    String name = jsonDecode(_cryptoData)['data'][index]['name'];
-    String symbol = jsonDecode(_cryptoData)['data'][index]['symbol'];
-    String id = jsonDecode(_cryptoData)['data'][index]['id'];
-    double value =
-    double.parse(jsonDecode(_cryptoData)['data'][index]['priceUsd']);
-    double percentChange = double.parse(
-        jsonDecode(_cryptoData)['data'][index]['changePercent24Hr']);
-    String image =
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
 
-    return CoinData(rank, id, name, symbol, value, percentChange, image);
-  });
-  return coinList;
-  }
   CoinData getCryptoDataByIndex(int index) {
-    int rank = int.parse(jsonDecode(_cryptoData)['data'][index]['rank']);
-    String name = jsonDecode(_cryptoData)['data'][index]['name'];
-    String symbol = jsonDecode(_cryptoData)['data'][index]['symbol'];
-    String id = jsonDecode(_cryptoData)['data'][index]['id'];
-    double value =
-        double.parse(jsonDecode(_cryptoData)['data'][index]['priceUsd']);
-    double percentChange = double.parse(
-        jsonDecode(_cryptoData)['data'][index]['changePercent24Hr']);
-    String image =
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
 
-    return CoinData(rank, id, name, symbol, value, percentChange, image);
+    final dataMap = decodedData['data'][index] as Map<String, dynamic>;
+    String symbol = dataMap['symbol'];
+    return CoinData(int.parse(dataMap['rank']),
+        dataMap['id'] as String,
+        dataMap['name'] as String,
+        dataMap['symbol'] as String,
+        double.parse(dataMap['priceUsd'] as String),
+        double.parse(dataMap['changePercent24Hr'] as String),
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
+    );
   }
 
   getGraphData(CoinData coin) async {
-    Network cryptoNetwork = Network(
-        'https://api.coincap.io/v2/assets/${coin.id}/history?interval=m1');
+    Uri link = Uri.parse('https://api.coincap.io/v2/assets/${coin.id}/history?interval=m1');
+    Network cryptoNetwork = Network(link,{"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
     String _cryptoData = '';
 
     for (int i = 0; i < 3; i++) {

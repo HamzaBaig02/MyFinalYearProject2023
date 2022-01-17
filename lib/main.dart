@@ -1,9 +1,15 @@
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+
+bool login = false;
+String email = "";
+String password = "";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,11 +25,11 @@ void main() async {
 
   UserData user;
 
-  if (data != '') {
+  if (data.isNotEmpty) {
     Map json = jsonDecode(data);
     user = UserData.fromJson(json);
   } else {
-    user = UserData('Hamza Baig', [], 10000, 0, 0, []);
+    user = UserData('Hamza Baig', [], 10000, 0, 0, [],"baighamza02@gmail.com");
   }
 
   //data from network
@@ -47,3 +53,4 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+

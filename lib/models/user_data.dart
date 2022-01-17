@@ -1,11 +1,17 @@
+import 'dart:convert';
+
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserData extends ChangeNotifier {
   List<CryptoCurrency> wallet;
 
   String name;
+  String emailID = "baighamza02@gmail.com";
   double balance;
   double profit;
   int points;
@@ -13,7 +19,7 @@ class UserData extends ChangeNotifier {
   double amountInWalletUsd = 0;
 
   UserData(this.name, this.wallet, this.balance, this.profit, this.points,
-      this.transactions);
+      this.transactions,this.emailID);
 
   void refresh() {
     notifyListeners();
@@ -79,12 +85,36 @@ class UserData extends ChangeNotifier {
     transactions.add(transaction);
     notifyListeners();
   }
+  void saveToStorage(UserData data) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String json = jsonEncode(data);
+    prefs.setString('myData', json);
+
+    String url = "http://192.168.10.4:3000/users/baighamza02@gmail.com";
+
+
+    Response response = await patch(
+        Uri.parse(url),
+        body:json,
+        headers:{
+          'Content-Type':
+          'application/json',
+        }
+    );
+
+    print(response.statusCode);
+    print(response.body);
+    print(json);
+
+
+  }
 
   void calculatePoints() {}
 
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'emailID': emailID,
       'balance': balance,
       'profit': profit,
       'points': points,
@@ -97,11 +127,11 @@ class UserData extends ChangeNotifier {
     var tagObjsJson = json['wallet'] as List;
     var tagObjsJson2 = json['transactions'] as List;
     List<CryptoCurrency> wallet =
-        tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
+    tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
     List<Transaction> transactions =
-        tagObjsJson2.map((tagJson) => Transaction.fromJson(tagJson)).toList();
+    tagObjsJson2.map((tagJson) => Transaction.fromJson(tagJson)).toList();
 
     return UserData(json['name'] as String, wallet, json['balance'] as double,
-        json['profit'] as double, json['points'] as int, transactions);
+        json['profit'] as double, json['points'] as int, transactions,"baighmza02@gmail.com");
   }
 }

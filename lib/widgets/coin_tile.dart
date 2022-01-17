@@ -48,7 +48,7 @@ class _CoinTileState extends State<CoinTile> with TickerProviderStateMixin {
         _toggleContainer();
       },
       child: Container(
-          //margin: EdgeInsets.only(bottom: 1),
+        //margin: EdgeInsets.only(bottom: 1),
           padding: EdgeInsets.all(5),
           child: Column(
             children: [
@@ -151,8 +151,8 @@ class CollapsedTile extends StatelessWidget {
             //width: 95,
             child: Text(
               '\$${coinData.value >= 1000 ? formatter.format(
-                  coinData.value,
-                ) : coinData.value.toStringAsFixed(2)}',
+                coinData.value,
+              ) : coinData.value.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -166,7 +166,7 @@ class CollapsedTile extends StatelessWidget {
               '${coinData.percentChange.toStringAsFixed(2)}%',
               style: TextStyle(
                   color:
-                      coinData.percentChange < 0 ? Colors.red : Colors.green),
+                  coinData.percentChange < 0 ? Colors.red : Colors.green),
             ),
           ),
         ),
@@ -190,7 +190,7 @@ class CoinNameSymbol extends StatelessWidget {
       children: [
         Text(coinData.symbol),
         Container(
-          width: 75,
+          width: 78,
           child: Text(
             coinData.name,
             style: TextStyle(fontSize: 10),

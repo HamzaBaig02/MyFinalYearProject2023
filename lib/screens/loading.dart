@@ -12,19 +12,20 @@ import 'package:crypto_trainer/screens/homepage.dart';
 
 
 List<CoinData> fetchCoinList(String response){
-  List<CoinData> coinList = List.generate(100, (index){
-    int rank = int.parse(jsonDecode(response)['data'][index]['rank']);
-    String name = jsonDecode(response)['data'][index]['name'];
-    String symbol = jsonDecode(response)['data'][index]['symbol'];
-    String id = jsonDecode(response)['data'][index]['id'];
-    double value =
-    double.parse(jsonDecode(response)['data'][index]['priceUsd']);
-    double percentChange = double.parse(
-        jsonDecode(response)['data'][index]['changePercent24Hr']);
-    String image =
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png';
 
-    return CoinData(rank, id, name, symbol, value, percentChange, image);
+  final jsonObject = jsonDecode(response) as Map<String, dynamic>;
+
+  List<CoinData> coinList = List.generate(500, (index){
+    final dataMap = jsonObject['data'][index] as Map<String, dynamic>;
+    String symbol = dataMap['symbol'];
+    return CoinData(int.parse(dataMap['rank']),
+      dataMap['id'] as String,
+      dataMap['name'] as String,
+      dataMap['symbol'] as String,
+      double.parse(dataMap['priceUsd'] as String),
+      double.parse(dataMap['changePercent24Hr'] as String),
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
+    );
   });
   return coinList;
 }
@@ -76,7 +77,7 @@ print("Inside isolate");
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 100; i++) {
+          for (int i = 0; i < 500; i++) {
             if (walletElement.coin.id == mynetwork.getCryptoDataByIndex(i).id) {
               walletElement.updateCoin(mynetwork.getCryptoDataByIndex(i));
               break;

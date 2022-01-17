@@ -21,12 +21,12 @@ class Buy extends StatefulWidget {
 class _BuyState extends State<Buy> {
   double amount = 0;
 
-  void saveToStorage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String json = jsonEncode(Provider.of<UserData>(context, listen: false));
-    prefs.setString('myData', json);
-    print(prefs.getString('myData'));
-  }
+  // void saveToStorage() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String json = jsonEncode(Provider.of<UserData>(context, listen: false));
+  //   prefs.setString('myData', json);
+  //   print(prefs.getString('myData'));
+  // }
 
   double userInput = 0;
   @override
@@ -87,8 +87,8 @@ class _BuyState extends State<Buy> {
                     children: [
                       ShopButton('Buy', () {
                         if (userInput >
-                                Provider.of<UserData>(context, listen: false)
-                                    .balance ||
+                            Provider.of<UserData>(context, listen: false)
+                                .balance ||
                             userInput <= 0) {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
@@ -102,7 +102,7 @@ class _BuyState extends State<Buy> {
                           );
                           Provider.of<UserData>(context, listen: false)
                               .changeBalance(
-                                  widget.coinData.value * amount, false);
+                              widget.coinData.value * amount, false);
                           Transaction transaction = Transaction(
                               DateTime.now(),
                               CryptoCurrency(widget.coinData, amount),
@@ -111,7 +111,7 @@ class _BuyState extends State<Buy> {
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
                           Navigator.pop(context);
-                          saveToStorage();
+                          Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
                         }
                       }, Colors.green.shade400),
                       SizedBox(
