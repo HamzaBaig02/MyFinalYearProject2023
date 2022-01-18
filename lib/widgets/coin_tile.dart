@@ -124,7 +124,7 @@ class CollapsedTile extends StatelessWidget {
           flex: 10,
           fit: FlexFit.tight,
           child: Container(
-            //width: 140,
+
 
             child: Row(
               children: [
@@ -148,7 +148,7 @@ class CollapsedTile extends StatelessWidget {
           flex: 10,
           fit: FlexFit.tight,
           child: Container(
-            //width: 95,
+
             child: Text(
               '\$${coinData.value >= 1000 ? formatter.format(
                 coinData.value,
@@ -190,7 +190,7 @@ class CoinNameSymbol extends StatelessWidget {
       children: [
         Text(coinData.symbol),
         Container(
-          width: 78,
+          width: 90,
           child: Text(
             coinData.name,
             style: TextStyle(fontSize: 10),

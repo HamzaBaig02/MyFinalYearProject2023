@@ -65,7 +65,7 @@ class _SellState extends State<Sell> {
                               children: [
                                 Container(
                                   child: Text(
-                                    'HOW MUCH ?',
+                                    'REMAINING',
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.grey,

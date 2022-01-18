@@ -12,7 +12,8 @@ class CryptoNetwork {
     Uri link = Uri.parse(url);
     link = link.replace(queryParameters: <String, String>{'limit': '1000'});
     Network cryptoNetwork = Network(link,{"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
-    _cryptoData = await cryptoNetwork.getData() ?? '';
+    _cryptoData = await cryptoNetwork.getData() ?? "";
+    if(_cryptoData.isNotEmpty)
     decodedData = jsonDecode(_cryptoData) as Map<String, dynamic>;
   }
 

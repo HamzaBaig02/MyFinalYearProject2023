@@ -19,7 +19,7 @@ class Network {
         return data;
       } else {
         print('API Error:${response.statusCode}');
-        return data;
+        return "";
       }
     } on Exception catch (e) {
       print(e);

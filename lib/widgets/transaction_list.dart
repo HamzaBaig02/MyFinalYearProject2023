@@ -11,7 +11,7 @@ class TransactionList extends StatelessWidget {
               .transactions
               .isNotEmpty
           ? ListView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: ClampingScrollPhysics(),
               scrollDirection: Axis.vertical,
               itemBuilder: (context, index) {
                 return TransactionTile(

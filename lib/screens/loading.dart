@@ -12,21 +12,34 @@ import 'package:crypto_trainer/screens/homepage.dart';
 
 
 List<CoinData> fetchCoinList(String response){
-
+  List<CoinData> coinList = [];
   final jsonObject = jsonDecode(response) as Map<String, dynamic>;
 
-  List<CoinData> coinList = List.generate(500, (index){
-    final dataMap = jsonObject['data'][index] as Map<String, dynamic>;
+  for(int i = 0;i < 1000;i++) {
+
+    final dataMap = jsonObject['data'][i] as Map<String, dynamic>;
     String symbol = dataMap['symbol'];
-    return CoinData(int.parse(dataMap['rank']),
-      dataMap['id'] as String,
-      dataMap['name'] as String,
-      dataMap['symbol'] as String,
-      double.parse(dataMap['priceUsd'] as String),
-      double.parse(dataMap['changePercent24Hr'] as String),
+
+    if(dataMap['rank'] == null || dataMap['priceUsd'] == null || dataMap['changePercent24Hr'] == null){
+      print('${dataMap['name']} contains null values, not including');
+      continue;
+    }
+
+
+    CoinData coin = CoinData(
+        int.parse(dataMap['rank']),
+        dataMap['id'] as String,
+        dataMap['name'] as String,
+        dataMap['symbol'] as String,
+        double.parse(dataMap['priceUsd'] as String),
+        double.parse(dataMap['changePercent24Hr'] as String),
         'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
     );
-  });
+
+    coinList.add(coin);
+
+
+  }
   return coinList;
 }
 
@@ -39,11 +52,6 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   List<CoinData> coinList = [];
 
-  Future <List<CoinData>> createComputeFunction(String response) async {
-print("Inside isolate");
-    return compute(fetchCoinList,response);
-
-  }
 
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
@@ -57,7 +65,7 @@ print("Inside isolate");
 
     if(mynetwork.cryptoData.isNotEmpty){
   print("making coinlist");
-      coinList = await createComputeFunction(mynetwork.cryptoData);
+      coinList = await compute(fetchCoinList,mynetwork.cryptoData);
 
     }
 
@@ -77,7 +85,7 @@ print("Inside isolate");
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 500; i++) {
+          for (int i = 0; i < 1000; i++) {
             if (walletElement.coin.id == mynetwork.getCryptoDataByIndex(i).id) {
               walletElement.updateCoin(mynetwork.getCryptoDataByIndex(i));
               break;

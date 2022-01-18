@@ -10,12 +10,19 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
 List<CoinData> fetchCoinList(String response){
+  List<CoinData> coinList = [];
   final jsonObject = jsonDecode(response) as Map<String, dynamic>;
 
-  List<CoinData> coinList = List.generate(500, (index){
-    final dataMap = jsonObject['data'][index] as Map<String, dynamic>;
+  for(int i = 0;i < 1000;i++) {
+
+    final dataMap = jsonObject['data'][i] as Map<String, dynamic>;
     String symbol = dataMap['symbol'];
-    return CoinData(int.parse(dataMap['rank']),
+
+    if(dataMap['rank'] == null || dataMap['priceUsd'] == null || dataMap['changePercent24Hr'] == null)
+      continue;
+
+    CoinData coin = CoinData(
+        int.parse(dataMap['rank']),
         dataMap['id'] as String,
         dataMap['name'] as String,
         dataMap['symbol'] as String,
@@ -23,7 +30,11 @@ List<CoinData> fetchCoinList(String response){
         double.parse(dataMap['changePercent24Hr'] as String),
         'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
     );
-  });
+
+    coinList.add(coin);
+
+
+  }
   return coinList;
 }
 
@@ -31,7 +42,6 @@ List<CoinData> fetchCoinList(String response){
 
 class CryptoList extends StatefulWidget {
 
-  CryptoNetwork mynetwork = CryptoNetwork();
   List<CoinData>cryptoList;
   CryptoList(this.cryptoList);
 
@@ -44,43 +54,37 @@ class _CryptoListState extends State<CryptoList>
   bool loading = false;
 
 
-
-  Future <List<CoinData>> createComputeFunction() async {
-    String response = widget.mynetwork.cryptoData;
-    print("inside Isolate 2");
-    return compute(fetchCoinList,response);
-
-  }
-
-
-
   //Update Wallet Data
   Future<void> fetchData() async {
+
+
+    CryptoNetwork mynetwork = CryptoNetwork();
+
     setState(() {
       loading = true;
     });
 
     for (int i = 0; i < 3; i++) {
-      await widget.mynetwork.startNetwork();
-      if (widget.mynetwork.cryptoData.isNotEmpty) break;
+      await mynetwork.startNetwork();
+      if (mynetwork.cryptoData.isNotEmpty) break;
       print('Restarting Network...');
     }
 
-   if(widget.mynetwork.cryptoData.isNotEmpty){
-print("creating list 2");
-     widget.cryptoList = await createComputeFunction();
+   if(mynetwork.cryptoData.isNotEmpty){
+
+     widget.cryptoList = await compute(fetchCoinList,mynetwork.cryptoData);
 
    }
 
 
-    if (widget.mynetwork.cryptoData.isNotEmpty &&
+    if (mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
       CoinData updatedCoin;
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
         updatedCoin =
-            widget.mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
+            mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.updateCoin(updatedCoin);
@@ -88,11 +92,11 @@ print("creating list 2");
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 500; i++) {
+          for (int i = 0; i < 1000; i++) {
             if (walletElement.coin.id ==
-                widget.mynetwork.getCryptoDataByIndex(i).id) {
+                mynetwork.getCryptoDataByIndex(i).id) {
               walletElement
-                  .updateCoin(widget.mynetwork.getCryptoDataByIndex(i));
+                  .updateCoin(mynetwork.getCryptoDataByIndex(i));
               break;
             }
           }
@@ -137,6 +141,10 @@ print("creating list 2");
   TextEditingController _textController = TextEditingController();
   bool search = false;
   List<CoinData> filteredList = [];
+  
+ 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -145,6 +153,7 @@ print("creating list 2");
       search = true;
     else
       search = false;
+
 
     super.build(context);
     return Column(
@@ -196,7 +205,7 @@ print("creating list 2");
         Flexible(
           child: search ? Padding(
             padding: const EdgeInsets.all(20),
-            child: Text("No results found...",style: TextStyle(fontSize: 20),),
+            child: Text("No results found...",style: TextStyle(fontSize: 20,color: Colors.grey),),
           ) : Container(
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.only(
