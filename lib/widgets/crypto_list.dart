@@ -18,7 +18,7 @@ List<CoinData> fetchCoinList(String response){
     final dataMap = jsonObject['data'][i] as Map<String, dynamic>;
     String symbol = dataMap['symbol'];
 
-    if(dataMap['rank'] == null || dataMap['priceUsd'] == null || dataMap['changePercent24Hr'] == null)
+    if(dataMap['rank'] == null || dataMap['priceUsd'] == null || dataMap['changePercent24Hr'] == null || dataMap['id'] == null|| dataMap['name'] == null|| dataMap['symbol'] == null)
       continue;
 
     CoinData coin = CoinData(
@@ -64,11 +64,9 @@ class _CryptoListState extends State<CryptoList>
       loading = true;
     });
 
-    for (int i = 0; i < 3; i++) {
+
       await mynetwork.startNetwork();
-      if (mynetwork.cryptoData.isNotEmpty) break;
-      print('Restarting Network...');
-    }
+
 
    if(mynetwork.cryptoData.isNotEmpty){
 
@@ -83,23 +81,18 @@ class _CryptoListState extends State<CryptoList>
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
-        updatedCoin =
-            mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
+        updatedCoin = mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.updateCoin(updatedCoin);
         } else {
           print(
-              'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
+              'Currency rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 1000; i++) {
-            if (walletElement.coin.id ==
-                mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement
-                  .updateCoin(mynetwork.getCryptoDataByIndex(i));
-              break;
-            }
-          }
+          widget.cryptoList.forEach((element) {
+            if (element.id == walletElement.coin.id)
+              walletElement.updateCoin(element);
+          });
         }
       });
     }

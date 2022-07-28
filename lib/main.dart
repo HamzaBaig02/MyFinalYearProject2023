@@ -7,10 +7,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
 
-bool login = false;
-String email = "";
-String password = "";
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -32,7 +28,7 @@ void main() async {
     user = UserData('Hamza Baig', [], 10000, 0, 0, [],"baighamza02@gmail.com");
   }
 
-  //data from network
+
 
   runApp(
     ChangeNotifierProvider(

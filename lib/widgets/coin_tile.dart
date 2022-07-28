@@ -1,6 +1,5 @@
 import 'package:crypto_trainer/screens/buy_screen.dart';
-import 'package:crypto_trainer/screens/graph_loading_screen.dart';
-import 'package:crypto_trainer/screens/graph_screen.dart';
+import 'package:crypto_trainer/screens/crypto_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,144 +14,67 @@ class CoinTile extends StatefulWidget {
   _CoinTileState createState() => _CoinTileState();
 }
 
-class _CoinTileState extends State<CoinTile> with TickerProviderStateMixin {
+class _CoinTileState extends State<CoinTile>{
   var formatter = NumberFormat('#,##,000.00');
-  late AnimationController _controller;
-  late Animation<double> _animation;
+
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: Curves.fastLinearToSlowEaseIn,
-    );
-  }
 
-  _toggleContainer() {
-    print(_animation.status);
-    if (_animation.status != AnimationStatus.completed) {
-      _controller.forward();
-    } else {
-      _controller.animateBack(0, duration: Duration(milliseconds: 300));
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        _toggleContainer();
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return CryptoDetails(widget.coinData);
+          }),
+        );
       },
       child: Container(
         //margin: EdgeInsets.only(bottom: 1),
           padding: EdgeInsets.all(5),
           child: Column(
             children: [
-              CollapsedTile(coinData: widget.coinData, formatter: formatter),
-              SizeTransition(
-                sizeFactor: _animation,
-                axis: Axis.vertical,
-                axisAlignment: -1,
-                child: Container(
-                  padding: EdgeInsets.all(3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Temporary Sample Text'),
-                      Container(
-                        width: 58,
-                        child: MaterialButton(
-                          shape: CircleBorder(),
-                          onPressed: () {
-                            print('Cart Button Pressed');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return Buy(widget.coinData);
-                              }),
-                            );
-                          },
-                          child: Icon(Icons.shopping_bag_outlined),
-                        ),
-                      ),
-                      Container(
-                        width: 58,
-                        child: MaterialButton(
-                          shape: CircleBorder(),
-                          onPressed: () {
-                            print('Cart Button Pressed');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) {
-                                return GraphLoading(widget.coinData);
-                              }),
-                            );
-                          },
-                          child: Icon(Icons.auto_graph_outlined),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              )
-            ],
-          )),
-    );
-  }
-}
-
-class CollapsedTile extends StatelessWidget {
-  const CollapsedTile({
-    Key? key,
-    required this.coinData,
-    required this.formatter,
-  }) : super(key: key);
-
-  final CoinData coinData;
-  final NumberFormat formatter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Flexible(
+          Row(
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+          Flexible(
           flex: 10,
-          fit: FlexFit.tight,
-          child: Container(
+            fit: FlexFit.tight,
+            child: Container(
 
 
-            child: Row(
-              children: [
-                CircleAvatar(
-                  foregroundImage: NetworkImage(coinData.imageUrl),
-                  radius: 15,
-                  backgroundColor: Colors.grey.shade100,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Container(
-                  padding: EdgeInsets.all(4),
-                  child: CoinNameSymbol(coinData: coinData),
-                ),
-              ],
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    foregroundImage: NetworkImage(widget.coinData.imageUrl),
+                    radius: 15,
+                    backgroundColor: Colors.grey.shade100,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(4),
+                    child: CoinNameSymbol(coinData: widget.coinData),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
         Flexible(
           flex: 10,
           fit: FlexFit.tight,
           child: Container(
 
             child: Text(
-              '\$${coinData.value >= 1000 ? formatter.format(
-                coinData.value,
-              ) : coinData.value.toStringAsFixed(2)}',
+              '\$${widget.coinData.value >= 1000 ? formatter.format(
+                widget.coinData.value,
+              ) : widget.coinData.value.toStringAsFixed(2)}',
               style: TextStyle(fontSize: 16),
             ),
           ),
@@ -163,17 +85,23 @@ class CollapsedTile extends StatelessWidget {
           child: Container(
             //width: 58,
             child: Text(
-              '${coinData.percentChange.toStringAsFixed(2)}%',
+              '${widget.coinData.percentChange.toStringAsFixed(2)}%',
               style: TextStyle(
                   color:
-                  coinData.percentChange < 0 ? Colors.red : Colors.green),
+                  widget.coinData.percentChange < 0 ? Colors.red : Colors.green),
             ),
           ),
         ),
-      ],
+        ],
+      ),
+
+            ],
+          )),
     );
   }
 }
+
+
 
 class CoinNameSymbol extends StatelessWidget {
   const CoinNameSymbol({
@@ -195,6 +123,7 @@ class CoinNameSymbol extends StatelessWidget {
             coinData.name,
             style: TextStyle(fontSize: 10),
           ),
+
         ),
       ],
     );

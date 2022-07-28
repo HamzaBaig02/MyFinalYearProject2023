@@ -38,10 +38,9 @@ class CryptoNetwork {
     Network cryptoNetwork = Network(link,{"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
     String _cryptoData = '';
 
-    for (int i = 0; i < 3; i++) {
-      _cryptoData = await cryptoNetwork.getData();
-      if (_cryptoData.isNotEmpty) break;
-    }
+
+    _cryptoData = await cryptoNetwork.getData();
+
     await cryptoNetwork.getData() ?? '';
     List<FlSpot> nodes = [];
     List response = jsonDecode(_cryptoData)['data'];

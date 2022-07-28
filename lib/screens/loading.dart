@@ -9,22 +9,23 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
 
-
-
-List<CoinData> fetchCoinList(String response){
+List<CoinData> fetchCoinList(String response) {
   List<CoinData> coinList = [];
   final jsonObject = jsonDecode(response) as Map<String, dynamic>;
 
-  for(int i = 0;i < 1000;i++) {
-
+  for (int i = 0; i < 1000; i++) {
     final dataMap = jsonObject['data'][i] as Map<String, dynamic>;
     String symbol = dataMap['symbol'];
 
-    if(dataMap['rank'] == null || dataMap['priceUsd'] == null || dataMap['changePercent24Hr'] == null){
+    if (dataMap['rank'] == null ||
+        dataMap['priceUsd'] == null ||
+        dataMap['changePercent24Hr'] == null ||
+        dataMap['id'] == null ||
+        dataMap['name'] == null ||
+        dataMap['symbol'] == null) {
       print('${dataMap['name']} contains null values, not including');
       continue;
     }
-
 
     CoinData coin = CoinData(
         int.parse(dataMap['rank']),
@@ -33,12 +34,9 @@ List<CoinData> fetchCoinList(String response){
         dataMap['symbol'] as String,
         double.parse(dataMap['priceUsd'] as String),
         double.parse(dataMap['changePercent24Hr'] as String),
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
-    );
+        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png');
 
     coinList.add(coin);
-
-
   }
   return coinList;
 }
@@ -52,23 +50,15 @@ class Loading extends StatefulWidget {
 class _LoadingState extends State<Loading> {
   List<CoinData> coinList = [];
 
-
   getCryptoData() async {
     CryptoNetwork mynetwork = CryptoNetwork();
 
-    //re-establishing api connection if it fails
-    for (int i = 0; i < 3; i++) {
-      await mynetwork.startNetwork();
-      if (mynetwork.cryptoData.isNotEmpty) break;
-      print('Restarting Network...');
+    await mynetwork.startNetwork();
+
+    if (mynetwork.cryptoData.isNotEmpty) {
+      print("making coinlist");
+      coinList = await compute(fetchCoinList, mynetwork.cryptoData);
     }
-
-    if(mynetwork.cryptoData.isNotEmpty){
-  print("making coinlist");
-      coinList = await compute(fetchCoinList,mynetwork.cryptoData);
-
-    }
-
 
     if (mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
@@ -77,7 +67,8 @@ class _LoadingState extends State<Loading> {
       Provider.of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
-        updatedCoin = mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
+        updatedCoin =
+            mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
 //if the currency rank hasn't changed
         if (walletElement.coin.id == updatedCoin.id) {
           walletElement.updateCoin(updatedCoin);
@@ -85,12 +76,10 @@ class _LoadingState extends State<Loading> {
           print(
               'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
 
-          for (int i = 0; i < 1000; i++) {
-            if (walletElement.coin.id == mynetwork.getCryptoDataByIndex(i).id) {
-              walletElement.updateCoin(mynetwork.getCryptoDataByIndex(i));
-              break;
-            }
-          }
+          coinList.forEach((element) {
+            if (element.id == walletElement.coin.id)
+              walletElement.updateCoin(element);
+          });
         }
       });
     }

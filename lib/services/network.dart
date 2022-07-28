@@ -9,7 +9,7 @@ class Network {
   Future getData() async {
     try {
       String data = '';
-      Response response = await get(url,headers: headers);
+      Response response = await get(url,headers: headers).timeout(Duration(seconds: 10),);
 
       if (response.statusCode == 200) {
         print('API request successful!');
