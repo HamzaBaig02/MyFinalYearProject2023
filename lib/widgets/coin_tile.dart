@@ -116,7 +116,7 @@ class CoinNameSymbol extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(coinData.symbol),
+        Text(coinData.symbol.toUpperCase()),
         Container(
           width: 90,
           child: Text(

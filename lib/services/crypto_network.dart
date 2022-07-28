@@ -5,31 +5,31 @@ import 'package:fl_chart/fl_chart.dart';
 
 class CryptoNetwork {
   String _cryptoData = '';
-  late Map<String,dynamic> decodedData;
+  late final decodedData;
 
 
-  Future startNetwork({String url = 'https://api.coincap.io/v2/assets'}) async {
+  Future startNetwork({String url = 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d'}) async {
     Uri link = Uri.parse(url);
-    link = link.replace(queryParameters: <String, String>{'limit': '1000'});
-    Network cryptoNetwork = Network(link,{"Authorization": "02ef9c70-91de-4a4f-bd48-2e8ab0a7b595"});
+    //link = link.replace(queryParameters: <String, String>{'limit': '1000'});
+    Network cryptoNetwork = Network(link,{"accept": "application/json"});
     _cryptoData = await cryptoNetwork.getData() ?? "";
     if(_cryptoData.isNotEmpty)
-    decodedData = jsonDecode(_cryptoData) as Map<String, dynamic>;
+    decodedData = jsonDecode(_cryptoData);
   }
 
   String get cryptoData => _cryptoData;
 
   CoinData getCryptoDataByIndex(int index) {
 
-    final dataMap = decodedData['data'][index] as Map<String, dynamic>;
-    String symbol = dataMap['symbol'];
-    return CoinData(int.parse(dataMap['rank']),
+    final dataMap = decodedData[index];
+    return CoinData(
+        dataMap['market_cap_rank'] as int,
         dataMap['id'] as String,
         dataMap['name'] as String,
         dataMap['symbol'] as String,
-        double.parse(dataMap['priceUsd'] as String),
-        double.parse(dataMap['changePercent24Hr'] as String),
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png'
+        double.parse(dataMap['current_price'].toString()),
+        double.parse(dataMap['price_change_percentage_24h'].toString()),
+        dataMap['image'] as String
     );
   }
 

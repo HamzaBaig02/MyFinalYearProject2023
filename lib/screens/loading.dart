@@ -11,15 +11,15 @@ import 'package:crypto_trainer/screens/homepage.dart';
 
 List<CoinData> fetchCoinList(String response) {
   List<CoinData> coinList = [];
-  final jsonObject = jsonDecode(response) as Map<String, dynamic>;
+  final jsonObject = jsonDecode(response);
 
-  for (int i = 0; i < 1000; i++) {
-    final dataMap = jsonObject['data'][i] as Map<String, dynamic>;
-    String symbol = dataMap['symbol'];
+  for (int i = 0; i < 250; i++) {
+    final dataMap = jsonObject[i];
 
-    if (dataMap['rank'] == null ||
-        dataMap['priceUsd'] == null ||
-        dataMap['changePercent24Hr'] == null ||
+
+    if (dataMap['market_cap_rank'] == null ||
+        dataMap['current_price'] == null ||
+        dataMap['price_change_percentage_24h'] == null ||
         dataMap['id'] == null ||
         dataMap['name'] == null ||
         dataMap['symbol'] == null) {
@@ -28,13 +28,14 @@ List<CoinData> fetchCoinList(String response) {
     }
 
     CoinData coin = CoinData(
-        int.parse(dataMap['rank']),
+        dataMap['market_cap_rank'] as int,
         dataMap['id'] as String,
         dataMap['name'] as String,
         dataMap['symbol'] as String,
-        double.parse(dataMap['priceUsd'] as String),
-        double.parse(dataMap['changePercent24Hr'] as String),
-        'https://static.coincap.io/assets/icons/${symbol.toLowerCase()}@2x.png');
+        double.parse(dataMap['current_price'].toString()),
+        double.parse(dataMap['price_change_percentage_24h'].toString()),
+        dataMap['image'] as String
+    );
 
     coinList.add(coin);
   }
@@ -62,25 +63,14 @@ class _LoadingState extends State<Loading> {
 
     if (mynetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
-      CoinData updatedCoin;
-
-      Provider.of<UserData>(context, listen: false)
+      Provider
+          .of<UserData>(context, listen: false)
           .wallet
           .forEach((walletElement) {
-        updatedCoin =
-            mynetwork.getCryptoDataByIndex(walletElement.coin.rank - 1);
-//if the currency rank hasn't changed
-        if (walletElement.coin.id == updatedCoin.id) {
-          walletElement.updateCoin(updatedCoin);
-        } else {
-          print(
-              'Currencny rank of ${walletElement.coin.name} changed...updating coin data...');
-
-          coinList.forEach((element) {
-            if (element.id == walletElement.coin.id)
-              walletElement.updateCoin(element);
-          });
-        }
+        coinList.forEach((element) {
+          if (element.id == walletElement.coin.id)
+            walletElement.updateCoin(element);
+        });
       });
     }
 
