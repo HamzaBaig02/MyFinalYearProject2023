@@ -1,4 +1,4 @@
-import 'package:crypto_trainer/screens/buy_screen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_trainer/screens/crypto_detail_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,7 +52,7 @@ class _CoinTileState extends State<CoinTile>{
                 children: [
                   CircleAvatar(
                     foregroundImage: NetworkImage(widget.coinData.imageUrl),
-                    radius: 15,
+                    radius: 17,
                     backgroundColor: Colors.grey.shade100,
                   ),
                   SizedBox(

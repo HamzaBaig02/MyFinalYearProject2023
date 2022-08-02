@@ -34,7 +34,19 @@ List<CoinData> fetchCoinList(String response){
         dataMap['symbol'] as String,
         double.parse(dataMap['current_price'].toString()),
         double.parse(dataMap['price_change_percentage_24h'].toString()),
-        dataMap['image'] as String
+        double.parse((dataMap['price_change_percentage_1h_in_currency']??0).toString()),
+        double.parse((dataMap['price_change_percentage_7d_in_currency']??0).toString()),
+        double.parse((dataMap['price_change_percentage_30d_in_currency']??0).toString()),
+        double.parse((dataMap['price_change_percentage_1y_in_currency']??0).toString()),
+        double.parse((dataMap['atl_change_percentage']??0).toString()),
+        double.parse((dataMap['ath_change_percentage']??0).toString()),
+        dataMap['image'] as String,
+        double.parse((dataMap['high_24h']??0).toString()),
+        double.parse((dataMap['low_24h']??0).toString()),
+        double.parse((dataMap['total_volume']??0).toString()),
+        double.parse((dataMap['ath']??0).toString()),
+        double.parse((dataMap['atl']??0).toString())
+
     );
 
     coinList.add(coin);

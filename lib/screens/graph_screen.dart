@@ -33,7 +33,7 @@ class GraphScreen extends StatelessWidget {
               padding: EdgeInsets.all(10),
               height: 300,
               width: 400,
-              child: Graph(nodes),
+              child: Graph(coin),
             ),
           ],
         ),
