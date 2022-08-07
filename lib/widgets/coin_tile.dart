@@ -5,6 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
 
+
+String formatNumber(double number){
+  final formatter = NumberFormat('#,##,000.00');
+  NumberFormat formatterBig = NumberFormat.compact();
+
+  return ( number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
+      number) : (number<0.0001?number.toStringAsExponential(3):number.toStringAsFixed(2)).toString()));
+}
+
 class CoinTile extends StatefulWidget {
   CoinData coinData;
 
@@ -15,7 +24,6 @@ class CoinTile extends StatefulWidget {
 }
 
 class _CoinTileState extends State<CoinTile>{
-  var formatter = NumberFormat('#,##,000.00');
 
   @override
   void initState() {
@@ -72,9 +80,7 @@ class _CoinTileState extends State<CoinTile>{
           child: Container(
 
             child: Text(
-              '\$${widget.coinData.value >= 1000 ? formatter.format(
-                widget.coinData.value,
-              ) : widget.coinData.value.toStringAsFixed(2)}',
+              '\$${formatNumber(widget.coinData.value)}',
               style: TextStyle(fontSize: 16),
             ),
           ),

@@ -12,7 +12,7 @@ String formatNumber(double number){
   NumberFormat formatterBig = NumberFormat.compact();
 
   return ( number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
-    number) : (number<0.0001?number.toStringAsExponential():number.toStringAsFixed(4)).toString()));
+    number) : (number<0.0001?number.toStringAsExponential(4):number.toStringAsFixed(4)).toString()));
 }
 Color percentColor(double number){
   return number < 0 ? Colors.red : Colors.green;
@@ -34,7 +34,6 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             CoinDataHeader(widget: widget),
             CoinLowHighVolume(widget: widget),
@@ -92,6 +91,7 @@ class CryptoPercentages extends StatelessWidget {
                 children: [
                   Text("Week",style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 5,),
+                  widget.coinData.percentChange7d == 0 ? Text("N/A",style: TextStyle(color: Colors.grey,fontSize: 20),):
                   Text("${widget.coinData.percentChange7d.toStringAsFixed(2)}%",style: TextStyle(color: percentColor(widget.coinData.percentChange7d),fontSize: 20),),
                 ],
               ),
@@ -106,6 +106,7 @@ class CryptoPercentages extends StatelessWidget {
                 children: [
                   Text("Month",style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 5,),
+                  widget.coinData.percentChange30d == 0 ? Text("N/A",style: TextStyle(color: Colors.grey,fontSize: 20),):
                   Text("${widget.coinData.percentChange30d.toStringAsFixed(2)}%",style: TextStyle(color: percentColor(widget.coinData.percentChange30d),fontSize: 20),),
                 ],
               ),
@@ -120,6 +121,7 @@ class CryptoPercentages extends StatelessWidget {
                 children: [
                   Text("Year",style: TextStyle(color: Colors.grey),),
                   SizedBox(height: 5,),
+                  widget.coinData.percentChange1y == 0 ? Text("N/A",style: TextStyle(color: Colors.grey,fontSize: 20),):
                   Text("${widget.coinData.percentChange1y.toStringAsFixed(2)}%",style: TextStyle(color: percentColor(widget.coinData.percentChange1y),fontSize: 20),),
                 ],
               ),
@@ -139,9 +141,9 @@ class CryptoGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 400,
 
-      margin: EdgeInsets.all(5.0),
+      margin: EdgeInsets.symmetric(vertical: 0,horizontal: 5),
       padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 10.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
