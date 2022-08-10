@@ -289,7 +289,7 @@ class WalletTile extends StatelessWidget {
                   width: 5,
                 ),
                 Text(
-                  '${currency.coin.symbol}',
+                  '${currency.coin.symbol.toUpperCase()}',
                   style: TextStyle(color: Colors.white),
                 ),
               ],

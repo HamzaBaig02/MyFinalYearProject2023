@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:intl/intl.dart';
 
+String formatNumber(double number){
+  final formatter = NumberFormat('#,##,000.00');
+  NumberFormat formatterBig = NumberFormat.compact();
+
+  return ( number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
+      number) : (number<0.0001?number.toStringAsExponential(3):number.toStringAsFixed(2)).toString()));
+}
+
+
 class TransactionTile extends StatelessWidget {
   Transaction transaction;
 
@@ -34,7 +43,7 @@ class TransactionTile extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(transaction.crypto.coin.symbol),
+                          Text(transaction.crypto.coin.symbol.toUpperCase()),
                           Container(
                             child: Text(
                               transaction.type,
@@ -53,7 +62,7 @@ class TransactionTile extends StatelessWidget {
             child: Container(
               //width: 95,
               child: Text(
-                '\$${transaction.crypto.valueUsd >= 1000 ? formatter.format(transaction.crypto.valueUsd) : transaction.crypto.valueUsd.toStringAsFixed(2)}',
+                '\$${formatNumber(transaction.crypto.valueUsd)}',
                 style: TextStyle(fontSize: 15),
               ),
             ),
@@ -75,7 +84,7 @@ class TransactionTile extends StatelessWidget {
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   ),
                   Text(
-                    transaction.type == 'Bought'?'@ \$${transaction.crypto.buyingPricePerCoin >= 1000 ? formatter.format(transaction.crypto.buyingPricePerCoin) : transaction.crypto.buyingPricePerCoin.toStringAsFixed(2)}':'@ \$${transaction.crypto.coin.value >= 1000 ? formatter.format(transaction.crypto.coin.value) : transaction.crypto.coin.value.toStringAsFixed(2)}',
+                    transaction.type == 'Bought'?'@ \$${formatNumber(transaction.crypto.buyingPricePerCoin)}':'@ \$${formatNumber(transaction.crypto.coin.value)}',
                     style: TextStyle(fontSize: 12, color: Colors.grey),
                   )
                 ],

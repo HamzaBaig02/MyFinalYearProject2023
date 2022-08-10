@@ -11,9 +11,9 @@ import 'package:crypto_trainer/screens/homepage.dart';
 
 List<CoinData> fetchCoinList(String response) {
   List<CoinData> coinList = [];
-  final jsonObject = jsonDecode(response);
+  final jsonObject = jsonDecode(response) as List;
 
-  for (int i = 0; i < 250; i++) {
+  for (int i = 0; i < jsonObject.length; i++) {
     final dataMap = jsonObject[i];
 
 
@@ -64,16 +64,18 @@ class _LoadingState extends State<Loading> {
   List<CoinData> coinList = [];
 
   getCryptoData() async {
-    CryptoNetwork mynetwork = CryptoNetwork();
 
-    await mynetwork.startNetwork();
+    CryptoNetwork myNetwork = CryptoNetwork();
 
-    if (mynetwork.cryptoData.isNotEmpty) {
-      print("making coinlist");
-      coinList = await compute(fetchCoinList, mynetwork.cryptoData);
+    for(int i = 1;i <= 2;i++){
+      await myNetwork.startNetwork(url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=$i&sparkline=false&price_change_percentage=1h%2C24h%2C7d%2C30d%2C1y');
+      if(myNetwork.cryptoData.isNotEmpty){
+        coinList = coinList + await compute(fetchCoinList, myNetwork.cryptoData);
+      }
+
     }
 
-    if (mynetwork.cryptoData.isNotEmpty &&
+    if (myNetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
       Provider
           .of<UserData>(context, listen: false)

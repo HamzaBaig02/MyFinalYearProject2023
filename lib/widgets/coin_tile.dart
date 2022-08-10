@@ -51,7 +51,7 @@ class _CoinTileState extends State<CoinTile>{
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
           Flexible(
-          flex: 10,
+          flex: 11,
             fit: FlexFit.tight,
             child: Container(
 
@@ -81,7 +81,7 @@ class _CoinTileState extends State<CoinTile>{
 
             child: Text(
               '\$${formatNumber(widget.coinData.value)}',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 14),
             ),
           ),
         ),

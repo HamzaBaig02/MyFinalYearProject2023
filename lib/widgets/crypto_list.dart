@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -11,9 +12,9 @@ import 'package:flutter/foundation.dart';
 
 List<CoinData> fetchCoinList(String response){
   List<CoinData> coinList = [];
-  final jsonObject = jsonDecode(response);
+  final jsonObject = jsonDecode(response) as List;
 
-  for (int i = 0; i < 250; i++) {
+  for (int i = 0; i < jsonObject.length; i++) {
     final dataMap = jsonObject[i];
 
 
@@ -74,24 +75,25 @@ class _CryptoListState extends State<CryptoList>
   Future<void> fetchData() async {
 
 
-    CryptoNetwork mynetwork = CryptoNetwork();
-
     setState(() {
       loading = true;
     });
 
+    CryptoNetwork myNetwork = CryptoNetwork();
+    List<CoinData> coinList = [];
+    for(int i = 1;i <= 2;i++){
+      await myNetwork.startNetwork(url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=250&page=$i&sparkline=false&price_change_percentage=1h%2C24h%2C7d%2C30d%2C1y');
+      if(myNetwork.cryptoData.isNotEmpty){
+        coinList = coinList + await compute(fetchCoinList, myNetwork.cryptoData);
+      }
+    }
 
-      await mynetwork.startNetwork();
+    if(coinList.isNotEmpty){
+      widget.cryptoList = coinList;
+    }
 
 
-   if(mynetwork.cryptoData.isNotEmpty){
-
-     widget.cryptoList = await compute(fetchCoinList,mynetwork.cryptoData);
-
-   }
-
-
-    if (mynetwork.cryptoData.isNotEmpty &&
+    if (myNetwork.cryptoData.isNotEmpty &&
         Provider.of<UserData>(context, listen: false).wallet.isNotEmpty) {
 
       Provider.of<UserData>(context, listen: false)
@@ -134,6 +136,11 @@ class _CryptoListState extends State<CryptoList>
   void initState() {
     // TODO: implement initState
     super.initState();
+
+      var timer = Timer.periodic(Duration(seconds: 40), (Timer t) => setState(() {
+        fetchData();
+      }));
+
 
 
   }
