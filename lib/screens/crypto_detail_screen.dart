@@ -2,17 +2,27 @@ import 'dart:ui';
 import 'package:crypto_trainer/widgets/web_scrap_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import '../models/coin_data.dart';
 import '../widgets/graph.dart';
 import 'buy_screen.dart';
+import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
 
 String formatNumber(double number){
+  var decimals = number.toString().split('.')[1];
   final formatter = NumberFormat('#,##,000.00');
   NumberFormat formatterBig = NumberFormat.compact();
-
-  return ( number >= 99999?formatterBig.format(number): (number >= 1000 ? formatter.format(
-    number) : (number<0.000001?number.toStringAsExponential(6):number.toStringAsFixed(6)).toString()));
+  if(number >= 1000000)
+    return formatterBig.format(number);
+  else if(number >= 1000)
+    return formatter.format(number);
+  else if(number >= 0.1)
+    return number.toStringAsFixed(2);
+  else if(number <= 0.00000001)
+    return number.toStringAsExponential();
+    else
+    return number.toStringAsFixed(7);
 }
 Color percentColor(double number){
   return number < 0 ? Colors.red : Colors.green;
@@ -36,7 +46,18 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xc48b4a6c),
+        child: Icon(FontAwesomeIcons.plus),
+        onPressed: (){
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Buy(widget.coinData);
+            }),
+          );
+        },
+      ),
       body: SafeArea(
         child: ScrollConfiguration(
           behavior: MyBehavior(),
@@ -45,7 +66,7 @@ class _CryptoDetailsState extends State<CryptoDetails> {
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  padding: EdgeInsets.symmetric(horizontal: 5.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -55,12 +76,7 @@ class _CryptoDetailsState extends State<CryptoDetails> {
                         Flexible(flex:65,fit:FlexFit.tight,child: CryptoGraph(widget.coinData)),
                         Flexible(flex:9,fit:FlexFit.tight,child: CryptoPercentages(widget: widget)),
                         Flexible(flex:9,fit:FlexFit.tight,child: WebScrapTile(widget.coinData)),
-                        SizedBox(height: 5,),
-                        Flexible(
-                          flex:8,
-                          fit: FlexFit.tight,
-                          child: BuyButton(widget: widget),
-                        )
+
                       ]
                   ),
                 ),
@@ -79,35 +95,6 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
 
 
-
-
-class BuyButton extends StatelessWidget {
-  const BuyButton({
-    Key? key,
-    required this.widget,
-  }) : super(key: key);
-
-  final CryptoDetails widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return Buy(widget.coinData);
-          }),
-        );
-      },
-      child: Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        child: Text("BUY",style: TextStyle(color: Colors.white,fontSize: 25,fontWeight: FontWeight.w300),),
-        decoration: BoxDecoration(color: Colors.green.shade300),
-      ),);
-  }
-}
 
 class CryptoPercentages extends StatelessWidget {
   const CryptoPercentages({
@@ -345,26 +332,29 @@ class PriceAndPercentage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-      Text('\$${formatNumber(widget.coinData.value)}',
-        style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w400
+    return Container(
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+        Text('\$${formatNumber(widget.coinData.value)}',
+          style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w400
+          ),
         ),
-      ),
-        SizedBox(width: 5,),
-        Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.grey.shade100),
-          padding: EdgeInsets.all(4),
-          child: Text("${widget.coinData.percentChange.toStringAsFixed(2)}%",
-            style: TextStyle(
-                fontSize: 14,
-                color: percentColor(widget.coinData.percentChange),
-            ),),
-        ),
-    ],);
+          SizedBox(width: 5,),
+          Container(
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.grey.shade100),
+            padding: EdgeInsets.all(4),
+            child: Text("${widget.coinData.percentChange.toStringAsFixed(2)}%",
+              style: TextStyle(
+                  fontSize: 14,
+                  color: percentColor(widget.coinData.percentChange),
+              ),),
+          ),
+      ],),
+    );
   }
 }
 

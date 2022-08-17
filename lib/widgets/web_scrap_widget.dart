@@ -20,11 +20,19 @@ Color predictionColor(String data){
 }
 
 String formatNumber(double number){
+  var decimals = number.toString().split('.')[1];
   final formatter = NumberFormat('#,##,000.00');
   NumberFormat formatterBig = NumberFormat.compact();
-
-  return ( number >= 99999?formatterBig.format(number): (number >= 1000 ? formatter.format(
-      number) : (number<0.0001?number.toStringAsExponential(4):number.toStringAsFixed(4)).toString()));
+  if(number >= 1000000)
+    return formatterBig.format(number);
+  else if(number >= 1000)
+    return formatter.format(number);
+  else if(number >= 0.1)
+    return number.toStringAsFixed(2);
+  else if(number <= 0.00000001)
+    return number.toStringAsExponential();
+  else
+    return number.toStringAsFixed(7);
 }
 
 bool isNumeric(String str) {

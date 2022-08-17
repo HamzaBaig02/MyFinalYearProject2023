@@ -37,8 +37,6 @@ class _UserHomePageState extends State<UserHomePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 UserInfoCard(),
-
-
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(

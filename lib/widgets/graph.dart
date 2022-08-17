@@ -165,9 +165,9 @@ class PriceGraph extends StatelessWidget {
               getTooltipItems: (List<LineBarSpot> touchedSpots) {
                 List<LineTooltipItem> list = [];
                 touchedSpots.forEach((element) {
-                  String price = element.y < 0.0001
-                      ? (element.y).toStringAsExponential(3)
-                      : (element.y).toStringAsFixed(4);
+                  String price = element.y < 0.00000001
+                      ? (element.y).toStringAsExponential()
+                      : (element.y).toStringAsFixed(7);
                   var date = DateTime.fromMillisecondsSinceEpoch(
                       element.x.toInt());
                   date = date.toLocal();
