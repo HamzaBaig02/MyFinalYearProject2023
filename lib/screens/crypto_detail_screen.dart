@@ -1,5 +1,5 @@
 import 'dart:ui';
-import 'package:crypto_trainer/screens/sell_screen.dart';
+import 'package:crypto_trainer/widgets/web_scrap_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +12,7 @@ String formatNumber(double number){
   NumberFormat formatterBig = NumberFormat.compact();
 
   return ( number >= 99999?formatterBig.format(number): (number >= 1000 ? formatter.format(
-    number) : (number<0.0001?number.toStringAsExponential(4):number.toStringAsFixed(4)).toString()));
+    number) : (number<0.000001?number.toStringAsExponential(6):number.toStringAsFixed(6)).toString()));
 }
 Color percentColor(double number){
   return number < 0 ? Colors.red : Colors.green;
@@ -44,19 +44,25 @@ class _CryptoDetailsState extends State<CryptoDetails> {
             slivers: [
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: Column(
-                    children: [
-                      Flexible(flex:12,fit:FlexFit.tight,child: CoinDataHeader(widget: widget)),
-                      Flexible(flex:9,fit:FlexFit.tight,child: CoinLowHighVolume(widget: widget)),
-                      Flexible(flex:65,fit:FlexFit.tight,child: CryptoGraph(widget.coinData)),
-                      Flexible(flex:10,fit:FlexFit.tight,child: CryptoPercentages(widget: widget)),
-                      SizedBox(height: 5,),
-                      Flexible(
-                        flex:8,
-                        fit: FlexFit.tight,
-                        child: BuyButton(widget: widget),
-                      )
-                    ]
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Flexible(flex:12,fit:FlexFit.tight,child: CoinImageAndName(widget: widget)),
+                        Flexible(fit: FlexFit.tight, flex: 8, child: PriceAndPercentage(widget: widget),),
+                        Flexible(flex:9,fit:FlexFit.tight,child: CoinLowHighVolume(widget: widget)),
+                        Flexible(flex:65,fit:FlexFit.tight,child: CryptoGraph(widget.coinData)),
+                        Flexible(flex:9,fit:FlexFit.tight,child: CryptoPercentages(widget: widget)),
+                        Flexible(flex:9,fit:FlexFit.tight,child: WebScrapTile(widget.coinData)),
+                        SizedBox(height: 5,),
+                        Flexible(
+                          flex:8,
+                          fit: FlexFit.tight,
+                          child: BuyButton(widget: widget),
+                        )
+                      ]
+                  ),
                 ),
               )
             ],
@@ -68,6 +74,12 @@ class _CryptoDetailsState extends State<CryptoDetails> {
     );
   }
 }
+
+
+
+
+
+
 
 class BuyButton extends StatelessWidget {
   const BuyButton({
@@ -110,7 +122,6 @@ class CryptoPercentages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 10.0),
       decoration: BoxDecoration(
         color: Colors.white,
           borderRadius: BorderRadius.circular(10)
@@ -121,7 +132,6 @@ class CryptoPercentages extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.center,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -135,7 +145,6 @@ class CryptoPercentages extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.center,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -150,7 +159,6 @@ class CryptoPercentages extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.center,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -165,7 +173,6 @@ class CryptoPercentages extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.center,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -192,7 +199,7 @@ class CryptoGraph extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 400,
-      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 10.0),
+      padding: EdgeInsets.symmetric(vertical: 5.0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
         color: Colors.white,
@@ -214,7 +221,6 @@ class CoinLowHighVolume extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
 
-      padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
       ),
@@ -223,7 +229,6 @@ class CoinLowHighVolume extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.centerLeft,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -244,7 +249,6 @@ class CoinLowHighVolume extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.center,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -259,7 +263,6 @@ class CoinLowHighVolume extends StatelessWidget {
           Flexible(
             fit: FlexFit.tight,
             child: Container(
-              alignment: Alignment.centerRight,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -279,8 +282,8 @@ class CoinLowHighVolume extends StatelessWidget {
   }
 }
 
-class CoinDataHeader extends StatelessWidget {
-  CoinDataHeader({
+class CoinImageAndName extends StatelessWidget {
+  CoinImageAndName({
     Key? key,
     required this.widget,
   }) : super(key: key);
@@ -290,7 +293,6 @@ class CoinDataHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 5.0,horizontal: 10.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10)
@@ -310,43 +312,59 @@ class CoinDataHeader extends StatelessWidget {
             flex: 6,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(widget.coinData.name,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.w500
                 ),
                 ),
                 Text(widget.coinData.symbol.toUpperCase(),
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 16,
                   color: Colors.grey
                 ),)
               ],
             ),
           ),
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-              Text('\$${formatNumber(widget.coinData.value)}',
-                style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400
-                ),
-              ),
-                Text("${widget.coinData.percentChange.toStringAsFixed(2)}%",
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: percentColor(widget.coinData.percentChange),
-                  ),),
-            ],),
-          )
+
         ],
       ),
     );
+  }
+}
+
+class PriceAndPercentage extends StatelessWidget {
+  const PriceAndPercentage({
+    Key? key,
+    required this.widget,
+  }) : super(key: key);
+
+  final CryptoDetails widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+      Text('\$${formatNumber(widget.coinData.value)}',
+        style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w400
+        ),
+      ),
+        SizedBox(width: 5,),
+        Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15),color: Colors.grey.shade100),
+          padding: EdgeInsets.all(4),
+          child: Text("${widget.coinData.percentChange.toStringAsFixed(2)}%",
+            style: TextStyle(
+                fontSize: 14,
+                color: percentColor(widget.coinData.percentChange),
+            ),),
+        ),
+    ],);
   }
 }
 

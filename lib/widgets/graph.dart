@@ -138,14 +138,14 @@ class PriceGraph extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 3, horizontal: 5),
         child: LineChart(LineChartData(
             titlesData: FlTitlesData(
               show: false,
+
             ),
             borderData: FlBorderData(show: false),
             gridData: FlGridData(
-              show: false,
+              show: true,
             ),
             lineBarsData: [
               LineChartBarData(
@@ -158,6 +158,7 @@ class PriceGraph extends StatelessWidget {
               //LineChartBarData(spots: smaNodesList,colors: [Colors.purple])
             ],
             lineTouchData: LineTouchData(
+              touchSpotThreshold: 12,
                 touchTooltipData: LineTouchTooltipData(
               tooltipPadding: EdgeInsets.symmetric(vertical: 5),
               fitInsideHorizontally: true,
@@ -208,9 +209,9 @@ class _GraphButtonState extends State<GraphButton> {
       child: Container(
         alignment: Alignment.center,
         padding: EdgeInsets.all(5),
-        margin: EdgeInsets.symmetric(horizontal: 5),
+        margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
         decoration: BoxDecoration(
-            color: widget.isSelected ? Colors.grey : Colors.blueGrey,
+            color: widget.isSelected ? Color(0xffc16996) : Color(0xff8b4a6c),
             borderRadius: BorderRadius.circular(5)),
         child: Text(
           "${widget.text}",

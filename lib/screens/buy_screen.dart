@@ -321,7 +321,7 @@ class CryptoAmountCard extends StatelessWidget {
         Expanded(
           child: Container(
             child: Text(
-              '${coinData.symbol}',
+              '${coinData.symbol.toUpperCase()}',
               style: TextStyle(
                   fontSize: 30,
                   color: Colors.grey,

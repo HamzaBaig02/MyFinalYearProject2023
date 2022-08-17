@@ -7,11 +7,13 @@ import 'package:crypto_trainer/models/coin_data.dart';
 
 
 String formatNumber(double number){
+  double n = number;
+  var decimals = n.toString().split('.')[1];
   final formatter = NumberFormat('#,##,000.00');
   NumberFormat formatterBig = NumberFormat.compact();
 
-  return ( number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
-      number) : (number<0.0001?number.toStringAsExponential(3):number.toStringAsFixed(2)).toString()));
+  return (number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
+      number) : ( number >= 1 ? number.toStringAsFixed(2) : (decimals.length > 6 ? number.toStringAsExponential(): number.toString()))));
 }
 
 class CoinTile extends StatefulWidget {

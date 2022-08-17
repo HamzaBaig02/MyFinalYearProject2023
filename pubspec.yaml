@@ -39,6 +39,7 @@ dependencies:
   flutter_spinkit: ^5.0.0
   fl_chart: ^0.40.0
   cached_network_image: ^3.2.1
+  html: ^0.15.0
 
 dev_dependencies:
   flutter_test:
