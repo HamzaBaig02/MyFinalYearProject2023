@@ -7,44 +7,11 @@ import 'package:intl/intl.dart';
 import '../models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
+import '../services/functions.dart';
+
 bool loading = true;
 
-Color predictionColor(String data){
-  if(data.toLowerCase() == 'neutral' || data.toLowerCase() == 'null')
-    return Colors.grey;
-  else if(data.toLowerCase() == 'bullish')
-    return Colors.green;
-  else if(data.toLowerCase() == 'bearish')
-    return Colors.red;
-  else return Colors.black;
-}
 
-String formatNumber(double number){
-  var decimals = number.toString().split('.')[1];
-  final formatter = NumberFormat('#,##,000.00');
-  NumberFormat formatterBig = NumberFormat.compact();
-  if(number >= 1000000)
-    return formatterBig.format(number);
-  else if(number >= 1000)
-    return formatter.format(number);
-  else if(number >= 0.1)
-    return number.toStringAsFixed(2);
-  else if(number <= 0.00000001)
-    return number.toStringAsExponential();
-  else
-    return number.toStringAsFixed(7);
-}
-
-bool isNumeric(String str) {
-
-  str = str.replaceAll(',','');
-  print(str);
-
-  if(str == null) {
-    return false;
-  }
-  return double.tryParse(str) != null;
-}
 
 Future<Map<String,String>> extractData(CoinData coin) async {
 //Getting the response from the targeted url

@@ -10,9 +10,9 @@ import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
 
 class UserHomePage extends StatefulWidget {
-  List<CoinData> mynetwork;
+  List<CoinData> coinList;
 
-  UserHomePage(this.mynetwork);
+  UserHomePage(this.coinList);
 
   @override
   _UserHomePageState createState() => _UserHomePageState();
@@ -48,7 +48,7 @@ class _UserHomePageState extends State<UserHomePage> {
                     child: PageView(
                       controller: _pageController,
                       children: <Widget>[
-                        CryptoList(widget.mynetwork),
+                        CryptoList(widget.coinList),
                         Center(
                           child: Container(
                             child: Text('User Information'),

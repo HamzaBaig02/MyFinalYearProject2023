@@ -1,14 +1,15 @@
 import 'dart:convert';
 
+import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserData extends ChangeNotifier {
   List<CryptoCurrency> wallet;
+  List<CoinData> bookmarks = [];
 
   String name;
   String emailID = "baighamza02@gmail.com";

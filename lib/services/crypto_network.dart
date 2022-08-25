@@ -4,6 +4,8 @@ import 'package:crypto_trainer/services/network.dart';
 import 'package:crypto_trainer/widgets/graph.dart';
 import 'package:fl_chart/fl_chart.dart';
 
+import 'functions.dart';
+
 class CryptoNetwork {
   String _cryptoData = "";
   late var decodedData;
@@ -86,4 +88,34 @@ class CryptoNetwork {
     } else
       return [];
   }
+
+  Future<Map<String, String>> getPerformanceIndicators({required CoinData coin}) async {
+    double sma200 = 0;
+    double sma50 = 0;
+    double rsi = 0;
+    double ema = 0;
+
+    Uri link = Uri.parse("https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=max&interval=daily");
+    Network cryptoNetwork = Network(link, {"accept": "application/json"});
+    String _cryptoData = '';
+
+    _cryptoData = await cryptoNetwork.getData() ?? " ";
+    List response = jsonDecode(_cryptoData)['prices'];
+    if(_cryptoData.isNotEmpty){
+
+      sma200 = calculateSMA(response,200);
+      sma50 = calculateSMA(response,50);
+      rsi = calculateRSI(response);
+
+
+    }
+
+    return {'sma50':'$sma50','sma200':'$sma200','rsi':'$rsi'};
+
+  }
+
 }
+
+
+
+

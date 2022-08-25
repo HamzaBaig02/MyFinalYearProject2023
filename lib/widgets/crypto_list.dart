@@ -58,7 +58,6 @@ List<CoinData> fetchCoinList(String response){
 
 
 class CryptoList extends StatefulWidget {
-
   List<CoinData>cryptoList;
   CryptoList(this.cryptoList);
 

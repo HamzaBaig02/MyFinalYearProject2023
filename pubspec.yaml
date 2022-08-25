@@ -41,6 +41,7 @@ dependencies:
   cached_network_image: ^3.2.1
   html: ^0.15.0
   flutter_expandable_fab: ^1.4.0
+  expandable: ^5.0.1
 
 dev_dependencies:
   flutter_test:
