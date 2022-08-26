@@ -58,21 +58,23 @@ List<CoinData> fetchCoinList(String response){
 
 
 class CryptoList extends StatefulWidget {
-  List<CoinData>cryptoList;
-  CryptoList(this.cryptoList);
+
+  List<CoinData>coinList;
+  CryptoList(this.coinList);
 
   @override
-  _CryptoListState createState() => _CryptoListState();
+  _CryptoListState createState() => _CryptoListState(coinList);
 }
 
 class _CryptoListState extends State<CryptoList>
     with AutomaticKeepAliveClientMixin<CryptoList> {
   bool loading = false;
+  List<CoinData> cryptoList;
 
+  _CryptoListState(this.cryptoList);
 
   //Update Wallet Data
   Future<void> fetchData() async {
-
 
     setState(() {
       loading = true;
@@ -88,7 +90,7 @@ class _CryptoListState extends State<CryptoList>
     }
 
     if(coinList.isNotEmpty){
-      widget.cryptoList = coinList;
+      cryptoList = coinList;
     }
 
 
@@ -99,12 +101,15 @@ class _CryptoListState extends State<CryptoList>
           .wallet
           .forEach((walletElement) {
 
-          widget.cryptoList.forEach((element) {
+          cryptoList.forEach((element) {
             if (element.id == walletElement.coin.id)
               walletElement.updateCoin(element);
           });
       });
     }
+
+
+    Provider.of<UserData>(context,listen: false).updateBookmarks(coinList: cryptoList);
 
     Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
@@ -117,7 +122,7 @@ class _CryptoListState extends State<CryptoList>
     filteredList.clear();
     setState(() {
 
-      widget.cryptoList.forEach((element) {
+      cryptoList.forEach((element) {
         if(element.name.toLowerCase().contains(value.toLowerCase()) || element.symbol.toLowerCase().contains(value.toLowerCase()))
           filteredList.add(element);
 
@@ -136,9 +141,8 @@ class _CryptoListState extends State<CryptoList>
     // TODO: implement initState
     super.initState();
 
-      var timer = Timer.periodic(Duration(seconds: 40), (Timer t) => setState(() {
-        fetchData();
-      }));
+      var timer = Timer.periodic(Duration(seconds: 40), (Timer t) => fetchData()
+      );
 
 
 
@@ -148,8 +152,7 @@ class _CryptoListState extends State<CryptoList>
   TextEditingController _textController = TextEditingController();
   bool search = false;
   List<CoinData> filteredList = [];
-  
- 
+
 
 
   @override
@@ -220,7 +223,7 @@ class _CryptoListState extends State<CryptoList>
                   topLeft: Radius.circular(10),
                 ),
                 color: Colors.white),
-            child: widget.cryptoList.isEmpty
+            child: cryptoList.isEmpty
                 ? Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -249,10 +252,10 @@ class _CryptoListState extends State<CryptoList>
                   return filteredList.isNotEmpty ? CoinTile(
                       filteredList[index]
                   ):CoinTile(
-                      widget.cryptoList[index]
+                      cryptoList[index]
                   );
                 },
-                itemCount: filteredList.isEmpty ? widget.cryptoList.length : filteredList.length,
+                itemCount: filteredList.isEmpty ? cryptoList.length : filteredList.length,
                 separatorBuilder: (context, index) {
                   return Divider(
                     height: 1,

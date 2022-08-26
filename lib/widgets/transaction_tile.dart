@@ -2,26 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:intl/intl.dart';
 
-String formatNumber(double number){
-  final formatter = NumberFormat('#,##,000.00');
-  NumberFormat formatterBig = NumberFormat.compact();
+import '../services/functions.dart';
 
-  return ( number >= 1000000?formatterBig.format(number): (number >= 1000 ? formatter.format(
-      number) : (number<0.0001?number.toStringAsExponential(3):number.toStringAsFixed(2)).toString()));
-}
 
 
 class TransactionTile extends StatelessWidget {
   Transaction transaction;
 
   TransactionTile(this.transaction);
-  var formatter = NumberFormat('#,##,000.00');
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 1),
       padding: EdgeInsets.all(5),
-      color: Colors.white,
       child: Row(
         children: [
           Flexible(

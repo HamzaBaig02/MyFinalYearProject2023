@@ -73,7 +73,11 @@ class _WebScrapTileState extends State<WebScrapTile> {
   Future fetchData(CoinData coin) async{
     webScrapData =  await compute(extractData,coin);
     print(webScrapData);
-    setState(() { loading = false;});
+    if(mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   List<String> labels = ["Sentiment","5-Day Prediction","1-Month Prediction"];
@@ -84,6 +88,12 @@ class _WebScrapTileState extends State<WebScrapTile> {
     super.initState();
     loading = true;
     fetchData(widget.coin);
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+
   }
 
   @override

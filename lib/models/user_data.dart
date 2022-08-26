@@ -20,7 +20,7 @@ class UserData extends ChangeNotifier {
   double amountInWalletUsd = 0;
 
   UserData(this.name, this.wallet, this.balance, this.profit, this.points,
-      this.transactions,this.emailID);
+      this.transactions,this.emailID,this.bookmarks);
 
   void refresh() {
     notifyListeners();
@@ -110,7 +110,23 @@ class UserData extends ChangeNotifier {
 
   }
 
-  void calculatePoints() {}
+  void updateBookmarks({required List<CoinData> coinList}) {
+
+
+    for(int i = 0;i < bookmarks.length;i++){
+      for(int j = 0;j < coinList.length;j++){
+
+        if(bookmarks[i].id == coinList[j].id){
+          bookmarks[i] = coinList[j];
+        }
+      }
+    }
+
+    notifyListeners();
+
+  }
+
+
 
   Map<String, dynamic> toJson() {
     return {
@@ -121,18 +137,26 @@ class UserData extends ChangeNotifier {
       'points': points,
       'wallet': wallet,
       'transactions': transactions,
+      'bookmarks': bookmarks,
     };
   }
 
   factory UserData.fromJson(dynamic json) {
     var tagObjsJson = json['wallet'] as List;
     var tagObjsJson2 = json['transactions'] as List;
+    var tagObjsJson3 = (json['bookmarks'] ?? [ ]) as List;
+
+
+
     List<CryptoCurrency> wallet =
     tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
     List<Transaction> transactions =
     tagObjsJson2.map((tagJson) => Transaction.fromJson(tagJson)).toList();
+    List<CoinData> bookmarks =
+    tagObjsJson3.map((tagJson) => CoinData.fromJson(tagJson)).toList();
+
 
     return UserData(json['name'] as String, wallet, json['balance'] as double,
-        json['profit'] as double, json['points'] as int, transactions,"baighmza02@gmail.com");
+        json['profit'] as double, json['points'] as int, transactions,"baighmza02@gmail.com", bookmarks);
   }
 }

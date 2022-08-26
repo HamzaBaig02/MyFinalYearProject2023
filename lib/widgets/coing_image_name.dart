@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:provider/provider.dart';
 
 import '../models/coin_data.dart';
+import '../models/user_data.dart';
+import 'bookmark_button.dart';
 
 
 class CoinImageAndName extends StatelessWidget {
@@ -49,11 +52,14 @@ class CoinImageAndName extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(child: Icon(FontAwesomeIcons.bookmark,color: Color(
-              0xff8b4a6c),))
+          Flexible(child: BookmarkButton(coin: coinData,))
 
         ],
       ),
     );
   }
 }
+
+
+
+

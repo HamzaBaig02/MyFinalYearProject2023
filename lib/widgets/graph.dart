@@ -57,8 +57,10 @@ class _GraphState extends State<Graph> {
     for(int i = 0;i < list.length;i++){
       nodesList.add(await list[i]);
     }
+    if(mounted){
+      setState((){});
+    }
 
-    setState((){});
   }
   void getGraphDataSMA(CoinDataGraph coinDataGraph) async {
 

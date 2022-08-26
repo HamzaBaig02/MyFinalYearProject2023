@@ -42,7 +42,10 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
     performanceIndicators = await compute(fetchData,widget.coinData);
 
-    setState(() {});
+    if(mounted){
+      setState(() {});
+    }
+
 
   }
 
@@ -57,6 +60,7 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       floatingActionButton: FloatingActionButton(
         backgroundColor: Color(0xc48b4a6c),
         child: Icon(FontAwesomeIcons.plus),

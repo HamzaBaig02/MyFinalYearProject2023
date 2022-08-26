@@ -88,6 +88,22 @@ class _LoadingState extends State<Loading> {
       });
     }
 
+    if (myNetwork.cryptoData.isNotEmpty &&
+        Provider.of<UserData>(context, listen: false).bookmarks.isNotEmpty) {
+
+      Provider.of<UserData>(context, listen: false)
+          .bookmarks
+          .forEach((bookmarkElement) {
+
+        coinList.forEach((element) {
+          if (element.id == bookmarkElement.id)
+            bookmarkElement = element;
+        });
+      });
+
+    }
+
+    Provider.of<UserData>(context,listen: false).updateBookmarks(coinList: coinList);
     Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
     Navigator.push(

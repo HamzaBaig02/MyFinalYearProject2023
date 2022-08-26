@@ -17,7 +17,7 @@ class IndicatorTile extends StatelessWidget {
         children: [
           Text(title,style: TextStyle(color: Colors.grey),),
           SizedBox(height: 5,),
-          Text(formatNumber(double.parse(data)),style: TextStyle(fontSize: 16),),
+          Text(data == 'null' ? 'N/A' : formatNumber(double.parse(data)),style: TextStyle(fontSize: 16),),
         ],
 
       ),

@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
+import 'package:crypto_trainer/widgets/bookmark_list.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,6 +9,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
+
+import '../models/user_data.dart';
 
 class UserHomePage extends StatefulWidget {
   List<CoinData> coinList;
@@ -54,7 +57,8 @@ class _UserHomePageState extends State<UserHomePage> {
                             child: Text('User Information'),
                           ),
                         ),
-                        TransactionList()
+                        TransactionList(),
+                        BookMarkList(),
                       ],
                       onPageChanged: (page) {
                         Provider.of<BottomNavigationBarProvider>(context,
@@ -102,10 +106,16 @@ class MyBottomNavBar extends StatelessWidget {
           icon: Icon(FontAwesomeIcons.moneyBillWave),
           label: 'Transactions',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(FontAwesomeIcons.bookmark),
+          label: 'Bookmarks',
+        ),
       ],
       currentIndex:
           Provider.of<BottomNavigationBarProvider>(context).currentIndex,
       selectedItemColor: Color(0xff8b4a6c),
+      unselectedItemColor: Colors.grey.shade500,
+      showUnselectedLabels: true,
       onTap: onTapped,
     );
   }

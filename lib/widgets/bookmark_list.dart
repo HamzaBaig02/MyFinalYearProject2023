@@ -1,17 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/coin_data.dart';
+import '../models/user_data.dart';
 import 'coin_tile.dart';
 
 class BookMarkList extends StatelessWidget {
-  List<CoinData> coinList;
+
   List<CoinData> filteredList = [];
 
-  BookMarkList(this.coinList);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.only(
+            topRight: Radius.circular(10),
+            topLeft: Radius.circular(10),
+          ),
+          color: Colors.white),
       child: ListView.separated(
         physics: BouncingScrollPhysics(),
         scrollDirection: Axis.vertical,
@@ -19,10 +27,10 @@ class BookMarkList extends StatelessWidget {
           return filteredList.isNotEmpty ? CoinTile(
               filteredList[index]
           ):CoinTile(
-              coinList[index]
+              Provider.of<UserData>(context,listen:true).bookmarks[index]
           );
         },
-        itemCount: filteredList.isEmpty ? coinList.length : filteredList.length,
+        itemCount: filteredList.isEmpty ? Provider.of<UserData>(context,listen:true).bookmarks.length : filteredList.length,
         separatorBuilder: (context, index) {
           return Divider(
             height: 1,
