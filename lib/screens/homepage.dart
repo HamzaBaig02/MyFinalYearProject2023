@@ -108,9 +108,10 @@ class MyBottomNavBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(FontAwesomeIcons.bookmark),
-          label: 'Bookmarks',
+          label: 'Favorites',
         ),
       ],
+      type: BottomNavigationBarType.fixed,
       currentIndex:
           Provider.of<BottomNavigationBarProvider>(context).currentIndex,
       selectedItemColor: Color(0xff8b4a6c),

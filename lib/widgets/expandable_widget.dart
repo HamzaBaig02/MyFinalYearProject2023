@@ -57,7 +57,7 @@ class _ExpandableWidgetState extends State<ExpandableWidget> with TickerProvider
               onTap: _toggleContainer,
               child: Row(
                 children: [
-                  Text(widget.title,style: TextStyle(fontSize: 20),),
+                  Text(widget.title,style: TextStyle(fontSize: 20,letterSpacing:1),),
                   Icon(icon,color: Color(0xff8b4a6c),)
                 ],
               ),

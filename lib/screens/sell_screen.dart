@@ -177,11 +177,11 @@ class _SellState extends State<Sell> {
                     height: 20,
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 25),
+                    margin: EdgeInsets.symmetric(horizontal: 40),
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(
                         color: Colors.black12,
                         width: 2,
@@ -205,7 +205,7 @@ class _SellState extends State<Sell> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: 'Enter amount in USD',
+                        hintText: 'Enter Amount In USD',
                         prefixIcon: Icon(
                           FontAwesomeIcons.dollarSign,
                           color: Colors.black12,

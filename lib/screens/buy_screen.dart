@@ -21,12 +21,6 @@ class Buy extends StatefulWidget {
 class _BuyState extends State<Buy> {
   double amount = 0;
 
-  // void saveToStorage() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String json = jsonEncode(Provider.of<UserData>(context, listen: false));
-  //   prefs.setString('myData', json);
-  //   print(prefs.getString('myData'));
-  // }
 
   double userInput = 0;
   @override
@@ -44,13 +38,13 @@ class _BuyState extends State<Buy> {
                     height: 20,
                   ),
                   Container(
-                    margin: EdgeInsets.symmetric(horizontal: 30),
+                    margin: EdgeInsets.symmetric(horizontal: 40),
                     padding: EdgeInsets.all(5),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                        color: Colors.green.shade400,
+                        color: Colors.black12,
                         width: 2,
                       ),
                     ),
@@ -68,10 +62,10 @@ class _BuyState extends State<Buy> {
                         });
                       },
                       decoration: InputDecoration(
-                        hintText: 'Enter amount in USD',
+                        hintText: 'Enter Amount In USD',
                         prefixIcon: Icon(
                           FontAwesomeIcons.dollarSign,
-                          color: Colors.green,
+                          color: Colors.black12,
                         ),
                         border: InputBorder.none,
                         focusedBorder: InputBorder.none,

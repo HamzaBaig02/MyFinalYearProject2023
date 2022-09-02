@@ -173,7 +173,7 @@ class _CryptoListState extends State<CryptoList>
           margin: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(
             color: Colors.white70,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(10),
 
           ),
           child: TextField(
@@ -206,7 +206,7 @@ class _CryptoListState extends State<CryptoList>
               border:InputBorder.none,
               focusedBorder:OutlineInputBorder(
                 borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
+                borderRadius: BorderRadius.circular(10),
               ),
               //enabledBorder: InputBorder.none,
             ),

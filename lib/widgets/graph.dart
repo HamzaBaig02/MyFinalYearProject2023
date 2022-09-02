@@ -1,10 +1,16 @@
+import 'package:crypto_trainer/models/graph_persistant_value.dart';
+import 'package:crypto_trainer/widgets/price_graph.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
 import '../models/coin_data.dart';
+import '../models/coin_graph_data.dart';
 import '../services/crypto_network.dart';
+import 'graph_button.dart';
 
 List<FlSpot> smaNodesList = [];
 
@@ -41,6 +47,7 @@ class _GraphState extends State<Graph> {
   List<List<FlSpot>> nodesList = [];
   int nodeIndex = 0;
   int currentSelectedIndex = 0;
+  bool enableTouch = false;
   late List<String> names = ["Day", "Week", "Month", "Year"];
   late List<CoinDataGraph> params = [
     CoinDataGraph(widget.coin, "1", "hourly"),
@@ -112,7 +119,15 @@ class _GraphState extends State<Graph> {
           fit: FlexFit.tight,
           child: nodesList.isEmpty
               ? Center(child: CircularProgressIndicator())
-              : PriceGraph(nodesList: nodesList, nodeIndex: nodeIndex, widget: widget),
+              : ChangeNotifierProvider(
+                create:(context)=>GraphPersistentValue(displayPersistent: true),
+                child: Stack(children: [
+
+                  PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex, widget: widget),
+                  IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex, widget: widget),),
+
+          ],),
+              ),
         ),
       ],
     );
@@ -123,112 +138,3 @@ class _GraphState extends State<Graph> {
 
 
 
-
-
-class PriceGraph extends StatelessWidget {
-  const PriceGraph({
-    Key? key,
-    required this.nodesList,
-    required this.nodeIndex,
-    required this.widget,
-  }) : super(key: key);
-
-  final List<List<FlSpot>> nodesList;
-  final int nodeIndex;
-  final Graph widget;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        padding: EdgeInsets.all(5),
-        child: LineChart(LineChartData(
-            titlesData: FlTitlesData(
-              show: false,
-
-            ),
-            borderData: FlBorderData(show: false),
-            gridData: FlGridData(
-              show: true,
-            ),
-            lineBarsData: [
-              LineChartBarData(
-                dotData: FlDotData(show: false),
-                  spots: nodesList[nodeIndex], colors: [
-                nodesList[nodeIndex][0].y < widget.coin.value
-                    ? Colors.green.shade300
-                    : Colors.red.shade400
-              ]),
-              //LineChartBarData(spots: smaNodesList,colors: [Colors.purple])
-            ],
-            lineTouchData: LineTouchData(
-              touchSpotThreshold: 12,
-                touchTooltipData: LineTouchTooltipData(
-              tooltipPadding: EdgeInsets.symmetric(vertical: 5),
-              fitInsideHorizontally: true,
-              getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                List<LineTooltipItem> list = [];
-                touchedSpots.forEach((element) {
-                  String price = element.y < 0.00000001
-                      ? (element.y).toStringAsExponential()
-                      : (element.y).toStringAsFixed(7);
-                  var date = DateTime.fromMillisecondsSinceEpoch(
-                      element.x.toInt());
-                  date = date.toLocal();
-                  String data = "\$$price\n$date";
-                  list.add(LineTooltipItem(
-                      data, TextStyle(color: Colors.white)));
-                });
-
-                return list;
-              },
-            ))
-
-        )),
-      );
-  }
-}
-
-class GraphButton extends StatefulWidget {
-  final int index;
-  final bool isSelected;
-  final VoidCallback onSelect;
-  final String text;
-
-  GraphButton(
-      {required this.text,
-      required this.index,
-      required this.isSelected,
-      required this.onSelect});
-
-  @override
-  State<GraphButton> createState() => _GraphButtonState();
-}
-
-class _GraphButtonState extends State<GraphButton> {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onSelect,
-      child: Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(5),
-        margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
-        decoration: BoxDecoration(
-            color: widget.isSelected ? Color(0xffc16996) : Color(0xff8b4a6c),
-            borderRadius: BorderRadius.circular(5)),
-        child: Text(
-          "${widget.text}",
-          style: TextStyle(color: Colors.white),
-        ),
-      ),
-    );
-  }
-}
-
-class CoinDataGraph {
-  CoinData coinData;
-  String days;
-  String interval;
-
-  CoinDataGraph(this.coinData, this.days, this.interval);
-}

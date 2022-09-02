@@ -1,6 +1,7 @@
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/screens/sell_screen.dart';
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +15,10 @@ class UserInfoCard extends StatefulWidget {
 
 class _UserInfoCardState extends State<UserInfoCard>
     with TickerProviderStateMixin {
-  double balance = 10000;
-  double profit = 245;
+  double balance = 0;
+  double profit = 0;
 
-  var formatter = NumberFormat('#,##,000.00');
+
 
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -89,13 +90,11 @@ class _UserInfoCardState extends State<UserInfoCard>
                             fontSize: 15),
                       ),
                       Text(
-                        '\$${formatter.format(balance)}',
+                        '\$${formatNumber(balance)}',
                         style: TextStyle(
                             letterSpacing: 1,
                             color: Colors.white,
-                            fontSize: balance > 99999
-                                ? (30 - balance.toString().length * 1.0)
-                                : 25),
+                            fontSize: 25),
                       ),
                     ],
                   ),
@@ -110,13 +109,11 @@ class _UserInfoCardState extends State<UserInfoCard>
                             fontSize: 15),
                       ),
                       Text(
-                        '\$${profit.toStringAsFixed(2)}',
+                        '\$${formatNumber(profit)}',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: profit > 99999
-                                ? (30 - profit.toString().length * 1.0)
-                                : 25),
+                            fontSize: 25),
                       ),
                     ],
                   )

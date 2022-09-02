@@ -1,4 +1,5 @@
 
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -41,6 +42,8 @@ String formatNumber(double number){
     return formatterBig.format(number);
   else if(number >= 1000)
     return formatter.format(number);
+  else if(number < 0)
+    return number.toStringAsFixed(2);
   else if(number >= 0.1)
     return number.toStringAsFixed(2);
   else if(number <= 0.00000001)
@@ -85,5 +88,70 @@ double calculateSMA(List response,int days){
   }
 
   return sum/days;
+
+}
+
+bool showDot (FlSpot spot,LineChartBarData barData){
+
+  double max = barData.spots[0].y;
+  double min = barData.spots[0].y;
+
+  for(int i = 0;i < barData.spots.length;i++){
+
+
+    if(max < barData.spots[i].y){
+
+      max = barData.spots[i].y;
+
+    }
+
+    if(min > barData.spots[i].y){
+
+      min = barData.spots[i].y;
+
+    }
+
+  }
+
+
+
+  if(spot.y == max || spot.y == min)
+    return true;
+  else
+    return false;
+
+
+
+}
+
+
+Map<String,int> maxminDot (List<FlSpot> barData){
+
+  double max = barData[0].y;
+  double min = barData[0].y;
+
+  int maxIndex = 0;
+  int minIndex = 0;
+
+  for(int i = 0;i < barData.length;i++){
+
+
+    if(max < barData[i].y){
+
+      max = barData[i].y;
+      maxIndex = i;
+
+    }
+
+    if(min > barData[i].y){
+
+      min = barData[i].y;
+      minIndex = i;
+    }
+
+  }
+
+
+  return {"max":maxIndex,"min":minIndex};
 
 }

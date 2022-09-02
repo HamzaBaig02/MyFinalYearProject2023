@@ -9,6 +9,8 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
 
+import '../models/graph_persistant_value.dart';
+
 List<CoinData> fetchCoinList(String response) {
   List<CoinData> coinList = [];
   final jsonObject = jsonDecode(response) as List;
@@ -109,9 +111,14 @@ class _LoadingState extends State<Loading> {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {
-        return ChangeNotifierProvider(
+        return MultiProvider(providers: [
+          ChangeNotifierProvider(
             create: (context) => BottomNavigationBarProvider(),
-            child: UserHomePage(coinList));
+          ),
+        ],
+          child: UserHomePage(coinList),
+
+        );
       }),
     );
   }

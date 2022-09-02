@@ -19,7 +19,7 @@ class TransactionTile extends StatelessWidget {
       child: Row(
         children: [
           Flexible(
-            flex: 10,
+            flex: 11,
             child: Container(
               child: Row(
                 children: [
@@ -54,7 +54,6 @@ class TransactionTile extends StatelessWidget {
             flex: 10,
             fit: FlexFit.tight,
             child: Container(
-              //width: 95,
               child: Text(
                 '\$${formatNumber(transaction.crypto.valueUsd)}',
                 style: TextStyle(fontSize: 15),
@@ -62,10 +61,10 @@ class TransactionTile extends StatelessWidget {
             ),
           ),
           Flexible(
-            flex: 6,
+            flex: 8,
             fit: FlexFit.tight,
             child: Container(
-              //width: 70,
+
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [

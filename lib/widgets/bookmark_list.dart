@@ -27,7 +27,9 @@ class BookMarkList extends StatelessWidget {
           return filteredList.isNotEmpty ? CoinTile(
               filteredList[index]
           ):CoinTile(
-              Provider.of<UserData>(context,listen:true).bookmarks[index]
+              Provider.of<UserData>(context,listen:true).bookmarks[
+              Provider.of<UserData>(context,listen:true).bookmarks.length - 1 -
+                index]
           );
         },
         itemCount: filteredList.isEmpty ? Provider.of<UserData>(context,listen:true).bookmarks.length : filteredList.length,

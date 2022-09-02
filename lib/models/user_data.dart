@@ -22,9 +22,6 @@ class UserData extends ChangeNotifier {
   UserData(this.name, this.wallet, this.balance, this.profit, this.points,
       this.transactions,this.emailID,this.bookmarks);
 
-  void refresh() {
-    notifyListeners();
-  }
 
   void buyCrypto(CryptoCurrency currency) {
     bool notPresent = true;
