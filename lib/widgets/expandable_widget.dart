@@ -1,3 +1,4 @@
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -57,7 +58,7 @@ class _ExpandableWidgetState extends State<ExpandableWidget> with TickerProvider
               onTap: _toggleContainer,
               child: Row(
                 children: [
-                  Text(widget.title,style: TextStyle(fontSize: 20,letterSpacing:1),),
+                  Text(widget.title,style: TextStyle(fontSize: getFontSize(context, 2.7),letterSpacing:1),),
                   Icon(icon,color: Color(0xff8b4a6c),)
                 ],
               ),

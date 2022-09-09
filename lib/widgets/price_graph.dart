@@ -47,6 +47,7 @@ class PriceGraph extends StatelessWidget {
                       touchedSpots.forEach((element) {
 
                         String price = formatNumber(element.y);
+
                         var date = DateTime.fromMillisecondsSinceEpoch(
                             element.x.toInt());
                         date = date.toLocal();
@@ -57,7 +58,24 @@ class PriceGraph extends StatelessWidget {
                         showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
 
                         list.add(LineTooltipItem(
-                            data, TextStyle(fontWeight: FontWeight.w500,color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.grey.shade700,height: 1.5)));
+                            data, TextStyle(fontWeight: FontWeight.w500,color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.grey.shade700,height: 1.5,shadows: showTooltipIndicatorsAtIndexes?[]:[
+                          Shadow( // bottomLeft
+                              offset: Offset(-1.5, -1.5),
+                              color: Colors.white
+                          ),
+                          Shadow( // bottomRight
+                              offset: Offset(1.5, -1.5),
+                              color: Colors.white
+                          ),
+                          Shadow( // topRight
+                              offset: Offset(1.5, 1.5),
+                              color: Colors.white
+                          ),
+                          Shadow( // topLeft
+                              offset: Offset(-1.5, 1.5),
+                              color: Colors.white
+                          ),
+                        ])));
                       });
 
                       return list;
@@ -83,12 +101,13 @@ class PriceGraph extends StatelessWidget {
           showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
 
           list.add(LineTooltipItem(
-              data, TextStyle(color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.transparent,height: 1.5)));
+              data, TextStyle(color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.transparent,height: 1.5 )));
         });
 
         return list;
       },
     );
+
     return Container(
       padding: EdgeInsets.all(5),
       child: LineChart(
@@ -122,7 +141,8 @@ class PriceGraph extends StatelessWidget {
                       return TouchedSpotIndicatorData(
 
                         FlLine(
-                          color: Colors.transparent,
+                          color: showTooltipIndicatorsAtIndexes?barData.colors[0]:Colors.transparent,
+                          strokeWidth: 2.3,
                         ),
                         FlDotData(
                           show: true,

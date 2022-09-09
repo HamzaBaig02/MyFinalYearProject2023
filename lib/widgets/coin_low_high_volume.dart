@@ -12,8 +12,12 @@ class CoinLowHighVolume extends StatelessWidget {
 
   CoinLowHighVolume({required this.coinData});
 
+
   @override
   Widget build(BuildContext context) {
+
+    double fontSize = getFontSize(context, 2.3);
+
     return Container(
 
       decoration: BoxDecoration(
@@ -23,54 +27,49 @@ class CoinLowHighVolume extends StatelessWidget {
         children: [
           Flexible(
             fit: FlexFit.tight,
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("24hr Low",
-                    style: TextStyle(
-                      color: Colors.grey,
-                    ),),
-                  SizedBox(height: 5,),
-                  Text("${'\$${formatNumber(coinData.low_24h)}'}",
-                    style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400
-                    ),),
-                ],
-              ),
-            ),
+            child: CoinLowHighVolTile(label: "24hr Low",data: coinData.low_24h, fontSize: fontSize),
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("24hr High",style: TextStyle(color: Colors.grey),),
-                  SizedBox(height: 5,),
-                  Text('\$${formatNumber(coinData.high_24h)}',
-                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-                ],
-              ),
-            ),
+            child: CoinLowHighVolTile(label: "24hr High",data: coinData.high_24h, fontSize: fontSize),
           ),
           Flexible(
             fit: FlexFit.tight,
-            child: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("24hr Vol",
-                    style: TextStyle(color: Colors.grey),),
-                  SizedBox(height: 5,),
-                  Text("\$${formatNumber(coinData.total_volume)}",
-                    style: TextStyle(fontSize: 16,fontWeight: FontWeight.w400),),
-                ],
-              ),
-            ),
+            child: CoinLowHighVolTile(label: "24hr Vol",data: coinData.total_volume, fontSize: fontSize),
           ),
 
+
+        ],
+      ),
+    );
+  }
+}
+
+class CoinLowHighVolTile extends StatelessWidget {
+
+  final String label;
+  final double data;
+  final double fontSize;
+
+
+  CoinLowHighVolTile({required this.label, required this.data, required this.fontSize});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+            style: TextStyle(
+              color: Colors.grey,
+            ),),
+          SizedBox(height: 5,),
+          Text("${'\$${formatNumber(data)}'}",
+            style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w400
+            ),),
         ],
       ),
     );

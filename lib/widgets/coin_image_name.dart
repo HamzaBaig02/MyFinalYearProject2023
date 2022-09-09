@@ -1,3 +1,4 @@
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -39,13 +40,13 @@ class CoinImageAndName extends StatelessWidget {
               children: [
                 Text(coinData.name,
                   style: TextStyle(
-                      fontSize: 20,
+                      fontSize: getFontSize(context, 2.8),
                       fontWeight: FontWeight.w500
                   ),
                 ),
                 Text(coinData.symbol.toUpperCase(),
                   style: TextStyle(
-                      fontSize: 16,
+                      fontSize: getFontSize(context, 2.5),
                       color: Colors.grey
                   ),),
 

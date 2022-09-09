@@ -18,7 +18,7 @@ class PriceAndPercentage extends StatelessWidget {
         children: [
           Text('\$${formatNumber(coinData.value)}',
             style: TextStyle(
-                fontSize: 22,
+                fontSize: getFontSize(context, 2.8),
                 fontWeight: FontWeight.w400
             ),
           ),
@@ -28,7 +28,7 @@ class PriceAndPercentage extends StatelessWidget {
             padding: EdgeInsets.all(4),
             child: Text("${coinData.percentChange.toStringAsFixed(2)}%",
               style: TextStyle(
-                fontSize: 14,
+                fontSize: getFontSize(context, 2),
                 color: percentColor(coinData.percentChange),
               ),),
           ),

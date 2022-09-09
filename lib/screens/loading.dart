@@ -9,7 +9,6 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
 
-import '../models/graph_persistant_value.dart';
 
 List<CoinData> fetchCoinList(String response) {
   List<CoinData> coinList = [];

@@ -1,7 +1,12 @@
 
+import 'dart:convert';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../models/user_data.dart';
 
 double calculateRSI(List response){
   List<double> temp = [];
@@ -42,12 +47,14 @@ String formatNumber(double number){
     return formatterBig.format(number);
   else if(number >= 1000)
     return formatter.format(number);
+  else if(number == 0)
+    return number.toString();
   else if(number < 0)
     return number.toStringAsFixed(2);
   else if(number >= 0.1)
     return number.toStringAsFixed(2);
   else if(number <= 0.00000001)
-    return number.toStringAsExponential();
+    return number.toStringAsExponential(5);
   else
     return number.toStringAsFixed(7);
 }
@@ -58,7 +65,7 @@ Color percentColor(double number){
 
 Color predictionColor(String data){
   if(data.toLowerCase() == 'neutral' || data.toLowerCase() == 'null')
-    return Colors.grey;
+    return Colors.grey.shade600;
   else if(data.toLowerCase() == 'bullish')
     return Colors.green;
   else if(data.toLowerCase() == 'bearish')
@@ -153,5 +160,45 @@ Map<String,int> maxminDot (List<FlSpot> barData){
 
 
   return {"max":maxIndex,"min":minIndex};
+
+}
+
+fetchDataFromDisk()async{
+  //data from disk
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String data = '';
+  try {
+    data = pref.getString('myData') ?? '';
+  } on Exception catch (e) {
+    print(e);
+  }
+
+  UserData user;
+
+  if (data.isNotEmpty) {
+    Map json = jsonDecode(data);
+    user = UserData.fromJson(json);
+  } else {
+    user = UserData('Hi, User', [], 10000, 0, 0, [],"baighamza02@gmail.com",[]);
+  }
+ return user;
+}
+
+double getFontSize(BuildContext context,multiplier){
+  double unitHeightValue = MediaQuery.of(context).size.height * 0.01;
+  double fontSize = multiplier * unitHeightValue;
+  return fontSize;
+}
+
+
+double doubleNullCheck(dynamic x){
+  double y = 0;
+  try {
+    y = x;
+    return y;
+  } catch(e){
+
+    return 0;
+  }
 
 }

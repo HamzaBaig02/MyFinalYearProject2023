@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
-import 'package:intl/intl.dart';
 import '../models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
@@ -15,7 +14,6 @@ bool loading = true;
 
 Future<Map<String,String>> extractData(CoinData coin) async {
 //Getting the response from the targeted url
-print(coin);
   var response =
   await http.Client().get(
       Uri.parse('https://coincodex.com/crypto/${coin.id}/price-prediction/'),headers:{"Access-Control-Allow-Origin": "*","Content-Type": "application/json"});
@@ -138,7 +136,7 @@ class web_scrap_tile extends StatelessWidget {
         children: [
           Text(label,style: TextStyle(color: Colors.grey),),
           SizedBox(height: 5,),
-          loading ? Container(height:15,width:15,child: CircularProgressIndicator.adaptive()):Text(data == 'null' ? 'N/A' : (isNumeric(data)?'\$${formatNumber(double.parse(data.replaceAll(',', '')))}':data),style: TextStyle(fontSize: 16,color: predictionColor(data),),),
+          loading ? Container(height:15,width:15,child: CircularProgressIndicator.adaptive()):Text(data == 'null' ? 'N/A' : (isNumeric(data)?'\$${formatNumber(double.parse(data.replaceAll(',', '')))}':data),style: TextStyle(fontSize: getFontSize(context, 2.3),color: predictionColor(data),),),
         ],
       ),
     );

@@ -75,7 +75,7 @@ class _CoinTileState extends State<CoinTile>{
 
             child: Text(
               '\$${formatNumber(widget.coinData.value)}',
-              style: TextStyle(fontSize: 14),
+              style: TextStyle(fontSize: getFontSize(context, 2.1)),
             ),
           ),
         ),

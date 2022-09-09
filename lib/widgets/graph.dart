@@ -19,7 +19,6 @@ Future<List<FlSpot>> fetchGraphData(CoinDataGraph data) async {
 
   nodes = await CryptoNetwork().getGraphData(
       coin: data.coinData, days: data.days, interval: data.interval);
-
   return nodes;
 }
 
@@ -51,21 +50,30 @@ class _GraphState extends State<Graph> {
   late List<String> names = ["Day", "Week", "Month", "Year"];
   late List<CoinDataGraph> params = [
     CoinDataGraph(widget.coin, "1", "hourly"),
-    CoinDataGraph(widget.coin, "7", "daily"),
-    CoinDataGraph(widget.coin, "30", "daily"),
     CoinDataGraph(widget.coin, "365", "daily")
   ];
 
   void getGraphData(List<CoinDataGraph> coinDataGraph) async {
-    List list = [];
+    List<Future<List<FlSpot>>> list = [];
+    List<int> days = [7,30,365];
+
     for (int i = 0; i < coinDataGraph.length; i++) {
       list.add(compute(fetchGraphData, coinDataGraph[i]));
     }
-    for(int i = 0;i < list.length;i++){
-      nodesList.add(await list[i]);
-    }
+
+    nodesList.add(await list[0]);
+    var x = await list[1];
+
+
+
     if(mounted){
-      setState((){});
+      setState((){
+
+        for(int i = 0;i < days.length;i++){
+          nodesList.add(x.sublist(x.length - days[i],x.length));
+        }
+
+      });
     }
 
   }
