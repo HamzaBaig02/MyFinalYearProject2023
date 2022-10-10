@@ -14,6 +14,7 @@ import '../models/coin_data.dart';
 import '../services/network.dart';
 import '../widgets/coin_low_high_volume.dart';
 import '../widgets/coin_image_name.dart';
+import '../widgets/crypto_graph_dimensions.dart';
 import '../widgets/crypto_percentages.dart';
 import '../widgets/graph.dart';
 import '../widgets/price_percentage.dart';
@@ -48,16 +49,12 @@ class _CryptoDetailsState extends State<CryptoDetails> {
   Map<String,dynamic> coinDetails = {};
 
   void getData()async{
-    List list = [];
-    list.add(compute(fetchData,widget.coinData));
-    list.add(compute(fetchCoinDetails,widget.coinData));
-    performanceIndicators = await list[0] ?? {};
-    coinDetails = await list[1] ?? {};
-    print(coinDetails);
+    coinDetails = await compute(fetchCoinDetails,widget.coinData) ?? {};
+    await Future.delayed(Duration(seconds: 1));
+    performanceIndicators = await compute(fetchData,widget.coinData) ?? {};
     if(mounted){
       setState(() {});
     }
-
 
   }
 
@@ -131,24 +128,7 @@ class _CryptoDetailsState extends State<CryptoDetails> {
 
 
 
-class CryptoGraph extends StatelessWidget {
-  final CoinData coin;
 
-  CryptoGraph(this.coin);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.55,
-      padding: EdgeInsets.symmetric(vertical: 5.0,),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-        color: Colors.white,
-      ),
-      child: Graph(coin),
-    );
-  }
-}
 
 
 class MyBehavior extends ScrollBehavior {

@@ -41,17 +41,17 @@ class _CommunitySentimentBarState extends State<CommunitySentimentBar> {
                     borderRadius: BorderRadius.circular(15)),
                 height: height,
                 width: MediaQuery.of(context).size.width,
-              child: Container(
-                margin: EdgeInsets.symmetric(horizontal: 3),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(widget.pos == 0 ? 'N/A' : widget.pos.toString(),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: getFontSize(context,1.6)),),
-                    Text(widget.neg == 0 ? 'N/A' : widget.neg.toString(),style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500,fontSize: getFontSize(context,1.6)),)
-                  ],
-                ),
               ),
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 3),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(widget.pos == 0 ? 'N/A' : "Positive ${widget.pos.toString()}%",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: getFontSize(context,2.0)),),
+                  Text(widget.neg == 0 ? 'N/A' : "Negative ${widget.neg.toString()}%",style: TextStyle(color: Colors.red,fontWeight: FontWeight.w600,fontSize: getFontSize(context,2.0)),)
+                ],
               ),
+            ),
           ],
         ),
 

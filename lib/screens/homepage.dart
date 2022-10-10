@@ -2,6 +2,7 @@ import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/widgets/bookmark_list.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
+import 'package:crypto_trainer/widgets/portfolio_pie_chart.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,7 +55,7 @@ class _UserHomePageState extends State<UserHomePage> {
                         CryptoList(widget.coinList),
                         Center(
                           child: Container(
-                            child: Text('User Information'),
+                            child: PortfolioPieChart(),
                           ),
                         ),
                         TransactionList(),

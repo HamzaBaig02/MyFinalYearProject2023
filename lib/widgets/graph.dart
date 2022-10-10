@@ -54,17 +54,17 @@ class _GraphState extends State<Graph> {
   ];
 
   void getGraphData(List<CoinDataGraph> coinDataGraph) async {
-    List<Future<List<FlSpot>>> list = [];
+    List<List<FlSpot>> list = [];
     List<int> days = [7,30,365];
 
     for (int i = 0; i < coinDataGraph.length; i++) {
-      list.add(compute(fetchGraphData, coinDataGraph[i]));
+      list.add( await compute(fetchGraphData, coinDataGraph[i]));
     }
 
-    nodesList.add(await list[0]);
-    var x = await list[1];
+    nodesList.add(list[0]); // getting hourly graphy data for one day
 
-
+    //using the year data to get weekly,monthly,yearly data
+    var x = list[1];
 
     if(mounted){
       setState((){
