@@ -3,6 +3,7 @@ import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sizer/sizer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

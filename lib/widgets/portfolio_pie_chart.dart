@@ -1,6 +1,5 @@
 import 'dart:math';
-
-import 'package:crypto_trainer/models/coin_data.dart';
+import 'package:sizer/sizer.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/cupertino.dart';
@@ -48,15 +47,16 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
     
     return List.generate(assetData.length, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 20.0 : 14.0;
-      final radius = isTouched ? 110.0 : 100.0;
+      final fontSize = isTouched ? 20.0 : 12.0;
+      final radius = isTouched ? 80.0 : 75.0;
       final widgetSize = isTouched ? 55.0 : 40.0;
+      final titlePositionPercentageOffset = isTouched ? 0.4 : 0.5;
 
 
       return PieChartSectionData(
             color: pieChartColors[i],
             value: assetData[i].value/totalWalletValue * 100,
-            title: (assetData[i].value/totalWalletValue * 100).toStringAsFixed(2),
+            title: (assetData[i].value/totalWalletValue * 100).toStringAsFixed(2) + '%',
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
@@ -69,7 +69,7 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
               isOthers: assetData[i].name == 'Others' ? true : false,
             ),
             badgePositionPercentageOffset: 1.08,
-            titlePositionPercentageOffset: 0.6,
+            titlePositionPercentageOffset: titlePositionPercentageOffset,
           );
 
     });
@@ -83,12 +83,14 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
   }
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Container(
-      child: Column(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(
             fit: FlexFit.tight,
-            flex: 9,
+            flex: 5,
             child: Container(
               child: PieChart(
                 PieChartData(
@@ -109,23 +111,20 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
                       show: false,
                     ),
                     sectionsSpace: 0,
-                    centerSpaceRadius: 35,
+                    centerSpaceRadius: 40,
                     sections: showingSections()),
               ),
             ),
           ),
           Flexible(
-            flex: 1,
-            fit: FlexFit.loose,
+            flex: 2,
+            fit: FlexFit.tight,
             child: Container(
-
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  children: List.generate(assetData.length, (index) {
-                    return PieChartKey(name: assetData[index].name, color: pieChartColors[index]);
-                  }
-                  ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(assetData.length, (index) {
+                  return PieChartKey(name: assetData[index].name, color: pieChartColors[index]);
+                }
                 ),
               ),
             ),
@@ -222,9 +221,8 @@ class PieChartKey extends StatelessWidget {
       padding: EdgeInsets.all(4.5),
       child: Row(
         children: [
-          CircleAvatar(backgroundColor: color,radius: 10,),
-          SizedBox(width: 5,),
-          Text(name),
+          Flexible(flex: 1,fit: FlexFit.tight,child: CircleAvatar(backgroundColor: color,radius: 8,)),
+          Flexible(flex:3,fit: FlexFit.tight,child: Text(name)),
         ],
       ),
     );
