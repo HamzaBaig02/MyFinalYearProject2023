@@ -50,7 +50,7 @@ class _GraphState extends State<Graph> {
   late List<String> names = ["Day", "Week", "Month", "Year"];
   late List<CoinDataGraph> params = [
     CoinDataGraph(widget.coin, "1", "hourly"),
-    CoinDataGraph(widget.coin, "365", "daily")
+    CoinDataGraph(widget.coin, "400", "daily")
   ];
 
   void getGraphData(List<CoinDataGraph> coinDataGraph) async {

@@ -3,9 +3,7 @@ import 'dart:ui';
 import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:crypto_trainer/services/functions.dart';
 import 'package:crypto_trainer/widgets/community_sentiment_bar.dart';
-import 'package:crypto_trainer/widgets/expandable_widget.dart';
-import 'package:crypto_trainer/widgets/performance_indicators.dart';
-import 'package:crypto_trainer/widgets/web_scrap_widget.dart';
+import 'package:crypto_trainer/widgets/crypto_menu_bottom_sheet.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,10 +19,6 @@ import '../widgets/price_percentage.dart';
 import 'buy_screen.dart';
 
 
-Future<Map<String,String>> fetchData(CoinData coin) async {
-  CryptoNetwork myNetwork = CryptoNetwork();
-  return await myNetwork.getPerformanceIndicators(coin: coin);
-}
 
 Future<Map<String,dynamic>> fetchCoinDetails(CoinData coin) async {
   Uri url =  Uri.parse("https://api.coingecko.com/api/v3/coins/${coin.id}?localization=false&tickers=false&market_data=true&community_data=true&developer_data=true");
@@ -45,13 +39,11 @@ class CryptoDetails extends StatefulWidget {
 
 class _CryptoDetailsState extends State<CryptoDetails> {
 
-  Map<String,String> performanceIndicators = {};
+
   Map<String,dynamic> coinDetails = {};
 
   void getData()async{
     coinDetails = await compute(fetchCoinDetails,widget.coinData) ?? {};
-    await Future.delayed(Duration(seconds: 1));
-    performanceIndicators = await compute(fetchData,widget.coinData) ?? {};
     if(mounted){
       setState(() {});
     }
@@ -87,16 +79,15 @@ class _CryptoDetailsState extends State<CryptoDetails> {
       ),
       body: SafeArea(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 5),
+          padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
           child: ScrollConfiguration(
             behavior: MyBehavior(),
             child: CustomScrollView(
               slivers: [
                 SliverFillRemaining(
                   hasScrollBody: false,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  child: Wrap(
+                    runSpacing: 5,
                       children: [
                         CoinImageAndName(coinData: widget.coinData,),
                         PriceAndPercentage(coinData: widget.coinData,),
@@ -104,8 +95,16 @@ class _CryptoDetailsState extends State<CryptoDetails> {
                         CryptoGraph(widget.coinData),
                         CryptoPercentages(coinData: widget.coinData,),
                         CommunitySentimentBar(pos:doubleNullCheck(coinDetails['sentiment_votes_up_percentage']), neg: doubleNullCheck(coinDetails['sentiment_votes_down_percentage'])),
-                        ExpandableWidget(title: 'Price Prediction', expanded: WebScrapTile(widget.coinData)),
-                        ExpandableWidget(title:'Performance Indicators',expanded: PerformanceIndicators(performanceIndicators: performanceIndicators,),),
+                        Wrap(
+                          spacing: 10,
+                          children: [
+                          CryptoMenuButton(text: 'Price Prediction',icon: FontAwesomeIcons.chartLine,coin: widget.coinData,),
+                            CryptoMenuButton(text: 'Performance Indicators',icon: FontAwesomeIcons.calculator,coin: widget.coinData,),
+                            CryptoMenuButton(text: 'Developer Sentiment',icon: FontAwesomeIcons.code,coin: widget.coinData,),
+                            //CryptoMenuButton(text: 'About Coin',icon: FontAwesomeIcons.infoCircle,coin: widget.coinData,)
+                        ],)
+                        //ExpandableWidget(title: 'Price Prediction', expanded: WebScrapTile(widget.coinData)),
+                        //ExpandableWidget(title:'Performance Indicators',expanded: PerformanceIndicators(performanceIndicators: performanceIndicators,),),
 
 
                       ]
@@ -118,6 +117,49 @@ class _CryptoDetailsState extends State<CryptoDetails> {
         ),
     ),
 
+    );
+  }
+}
+
+class CryptoMenuButton extends StatelessWidget {
+ final String text;
+ final IconData icon;
+ final CoinData coin;
+
+
+ CryptoMenuButton({required this.text, required this.icon, required this.coin});
+
+  @override
+  Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+    return Container(
+      width: width*0.25,
+      height: width*0.20,
+      padding: EdgeInsets.all(2),
+      margin: EdgeInsets.symmetric(vertical: 5),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.grey.shade300,
+      ),
+      child : GestureDetector(
+        onTap: (){
+          showModalBottomSheet(context: context, builder: (BuildContext context) {
+            return Container(
+              child: CryptoBottomSheet(coin: coin,name: text,),
+            );
+
+        });
+        },
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+          Icon(icon,color: Colors.black,size: 20,),
+          SizedBox(height: 8,),
+          Text(text,style: TextStyle(color: Colors.black87),textAlign: TextAlign.center,)
+        ],),
+      )
     );
   }
 }

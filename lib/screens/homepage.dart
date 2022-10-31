@@ -53,11 +53,7 @@ class _UserHomePageState extends State<UserHomePage> {
                       controller: _pageController,
                       children: <Widget>[
                         CryptoList(widget.coinList),
-                        Center(
-                          child: Container(
-                            child: PortfolioPieChart(),
-                          ),
-                        ),
+                        PortfolioPieChart(),
                         TransactionList(),
                         BookMarkList(),
                       ],

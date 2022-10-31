@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:sizer/sizer.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -47,9 +48,9 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
     
     return List.generate(assetData.length, (i) {
       final isTouched = i == touchedIndex;
-      final fontSize = isTouched ? 20.0 : 12.0;
-      final radius = isTouched ? 80.0 : 75.0;
-      final widgetSize = isTouched ? 55.0 : 40.0;
+      final fontSize = isTouched ? getFontSize(context, 2.5) : getFontSize(context, 1.8);
+      final radius = isTouched ? MediaQuery.of(context).size.height * 0.11 : MediaQuery.of(context).size.height * 0.09;
+      final widgetSize = isTouched ? MediaQuery.of(context).size.height * 0.065 : MediaQuery.of(context).size.height * 0.045;
       final titlePositionPercentageOffset = isTouched ? 0.4 : 0.5;
 
 
@@ -60,7 +61,7 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
             radius: radius,
             titleStyle: TextStyle(
                 fontSize: fontSize,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
                 color: const Color(0xffffffff)),
             badgeWidget: _Badge(
               assetData[i].imageUrl,
@@ -84,8 +85,9 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     return Container(
-      child: Row(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(
@@ -116,12 +118,14 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
               ),
             ),
           ),
+          SizedBox(height: 5,),
           Flexible(
             flex: 2,
-            fit: FlexFit.tight,
+            fit: FlexFit.loose,
             child: Container(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+              child: Wrap(
+                runSpacing: 5,
+                direction: Axis.horizontal,
                 children: List.generate(assetData.length, (index) {
                   return PieChartKey(name: assetData[index].name, color: pieChartColors[index]);
                 }
@@ -217,12 +221,14 @@ class PieChartKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
     return Container(
+      width: width*0.4,
       padding: EdgeInsets.all(4.5),
       child: Row(
         children: [
-          Flexible(flex: 1,fit: FlexFit.tight,child: CircleAvatar(backgroundColor: color,radius: 8,)),
-          Flexible(flex:3,fit: FlexFit.tight,child: Text(name)),
+          Flexible(flex: 1,fit: FlexFit.tight,child: CircleAvatar(backgroundColor: color,radius: MediaQuery.of(context).size.height * 0.01,)),
+          Flexible(flex:3,fit: FlexFit.tight,child: Text(name,style: TextStyle(fontSize: getFontSize(context, 1.8),fontWeight: FontWeight.w400),)),
         ],
       ),
     );
