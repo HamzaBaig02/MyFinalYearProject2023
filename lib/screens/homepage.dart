@@ -8,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
-import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
 
 import '../models/user_data.dart';

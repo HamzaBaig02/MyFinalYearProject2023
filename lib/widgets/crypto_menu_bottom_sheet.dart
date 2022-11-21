@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/widgets/performance_indicators.dart';
 import 'package:crypto_trainer/widgets/web_scrap_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/coin_data.dart';
@@ -22,10 +23,19 @@ class CryptoBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
+
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(30),topRight: Radius.circular(30))
+      ),
       child:Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(name,style: TextStyle(fontSize: getFontSize(context, 2.7),letterSpacing:1),),
+          SizedBox(height: 5,),
           menuWidget(name)
         ],
       )

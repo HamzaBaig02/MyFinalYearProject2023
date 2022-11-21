@@ -13,7 +13,7 @@ class IndicatorTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(title,style: TextStyle(color: Colors.grey),),
           SizedBox(height: 5,),

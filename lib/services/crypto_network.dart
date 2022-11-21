@@ -89,13 +89,13 @@ class CryptoNetwork {
       return [];
   }
 
-  Future<Map<String, String>> getPerformanceIndicators({required CoinData coin}) async {
+  Future<Map<String, String>> getPerformanceIndicators({required String coinId}) async {
     double sma200 = 0;
     double sma50 = 0;
     double rsi = 0;
     double ema = 0;
 
-    Uri link = Uri.parse("https://api.coingecko.com/api/v3/coins/${coin.id}/market_chart?vs_currency=usd&days=max&interval=daily");
+    Uri link = Uri.parse("https://api.coingecko.com/api/v3/coins/${coinId}/market_chart?vs_currency=usd&days=max&interval=daily");
     Network cryptoNetwork = Network(link, {"accept": "application/json"});
     String _cryptoData = '';
 
@@ -106,11 +106,12 @@ class CryptoNetwork {
       sma200 = calculateSMA(response,200);
       sma50 = calculateSMA(response,50);
       rsi = calculateRSI(response);
+      ema = calculateEMA(response,20);
 
 
     }
 
-    return {'sma50':'$sma50','sma200':'$sma200','rsi':'$rsi'};
+    return {'sma50':'$sma50','sma200':'$sma200','rsi':'$rsi','ema':'$ema'};
 
   }
 

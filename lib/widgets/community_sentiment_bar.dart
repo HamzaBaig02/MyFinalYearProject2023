@@ -48,7 +48,8 @@ class _CommunitySentimentBarState extends State<CommunitySentimentBar> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(widget.pos == 0 ? 'N/A' : "Positive ${widget.pos.toString()}%",style: TextStyle(color: Colors.green,fontWeight: FontWeight.w600,fontSize: getFontSize(context,2.0)),),
-                  Text(widget.neg == 0 ? 'N/A' : "Negative ${widget.neg.toString()}%",style: TextStyle(color: Colors.red,fontWeight: FontWeight.w600,fontSize: getFontSize(context,2.0)),)
+                  Text(widget.neg == 0 ? 'N/A' : "Negative ${widget.neg.toString()}%",style: TextStyle(color: Colors.red,fontWeight: FontWeight.w600,fontSize: getFontSize(context,2.0)),),
+
                 ],
               ),
             ),

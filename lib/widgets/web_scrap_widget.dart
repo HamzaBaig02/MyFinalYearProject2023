@@ -1,14 +1,17 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:html/parser.dart' as parser;
+import 'package:provider/provider.dart';
 import '../models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
+import '../services/coin_information_stats.dart';
 import '../services/functions.dart';
 
-bool loading = true;
+//bool loading = true;
 
 
 
@@ -69,11 +72,13 @@ class WebScrapTile extends StatefulWidget {
 class _WebScrapTileState extends State<WebScrapTile> {
   Map<String,String> webScrapData = {};
   Future fetchData(CoinData coin) async{
-    webScrapData =  await compute(extractData,coin);
-    print(webScrapData);
+    // webScrapData =  await compute(extractData,coin);
+    // print(webScrapData);
+    // webScrapData = Provider.of<CoinInfo>(context,
+    //     listen: true).pricePrediction;
     if(mounted) {
       setState(() {
-        loading = false;
+        //loading = false;
       });
     }
   }
@@ -84,8 +89,9 @@ class _WebScrapTileState extends State<WebScrapTile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loading = true;
+    //loading = true;
     fetchData(widget.coin);
+
   }
   @override
   void dispose() {
@@ -96,22 +102,16 @@ class _WebScrapTileState extends State<WebScrapTile> {
 
   @override
   Widget build(BuildContext context) {
+    webScrapData = Provider.of<CoinInfo>(context,
+        listen: true).pricePrediction;
     return Container(
-      color: Colors.white,
+      color: Colors.transparent,
       child: Row(
-        children: [
-          Flexible(
-            fit: FlexFit.tight,
-            child: web_scrap_tile(data: webScrapData['sentiment'].toString(),label: "Sentiment",),
-          ),
-          Flexible(
-            fit: FlexFit.tight,
-            child: web_scrap_tile(data: webScrapData['5dayprediction'].toString(),label: "5-Day",),
-          ),
-          Flexible(
-            fit: FlexFit.tight,
-            child: web_scrap_tile(data: webScrapData['1monthprediction'].toString(),label: "1-Month",),
-          ),
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+          web_scrap_tile(data: webScrapData['sentiment'].toString(),label: "Sentiment",),
+          web_scrap_tile(data: webScrapData['5dayprediction'].toString(),label: "5-Day",),
+          web_scrap_tile(data: webScrapData['1monthprediction'].toString(),label: "1-Month",),
 
         ],
       ),
@@ -136,7 +136,8 @@ class web_scrap_tile extends StatelessWidget {
         children: [
           Text(label,style: TextStyle(color: Colors.grey),),
           SizedBox(height: 5,),
-          loading ? Container(height:15,width:15,child: CircularProgressIndicator.adaptive()):Text(data == 'null' ? 'N/A' : (isNumeric(data)?'\$${formatNumber(double.parse(data.replaceAll(',', '')))}':data),style: TextStyle(fontSize: getFontSize(context, 2.3),color: predictionColor(data),),),
+          Provider.of<CoinInfo>(context,
+              listen: true).loading ? Container(height:15,width:15,child: CircularProgressIndicator.adaptive()):Text(data == 'null' ? 'N/A' : (isNumeric(data)?'\$${formatNumber(double.parse(data.replaceAll(',', '')))}':data),style: TextStyle(fontSize: getFontSize(context, 2.3),color: predictionColor(data),),),
         ],
       ),
     );
