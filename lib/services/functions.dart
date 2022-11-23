@@ -43,6 +43,7 @@ double calculateEMA(List response, int days){
   double weightFactor = 2 / (days + 1);
   double sma = calculateSMA(response, days);
   double initialEMA = weightFactor * (response[0][1] - sma) + sma;
+  print('ema grpah data ${response[response.length-1][1]}');
 
   return initialEMA;
 

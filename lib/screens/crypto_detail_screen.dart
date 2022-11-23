@@ -9,6 +9,7 @@ import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import '../models/coin_data.dart';
@@ -111,10 +112,9 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
             icon:FontAwesomeIcons.calculator,
             titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
             onPress: () {
-              showModalBottomSheet(context: context, builder: (BuildContext context) {
-                return Container(
-                  child : CryptoBottomSheet(coin: widget.coinData,name: "Performance Indicators",),
-                );
+              showModalBottomSheet(context: context,isScrollControlled: true, builder: (BuildContext context) {
+                return Wrap(
+                    children:[ CryptoBottomSheet(coin: widget.coinData,name: "Performance Indicators",)]);
 
               },backgroundColor: Colors.transparent);
               _animationController.reverse();

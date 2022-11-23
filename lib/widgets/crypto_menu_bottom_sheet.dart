@@ -35,7 +35,7 @@ class CryptoBottomSheet extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(name,style: TextStyle(fontSize: getFontSize(context, 2.7),letterSpacing:1),),
-          SizedBox(height: 5,),
+          SizedBox(height: 8,),
           menuWidget(name)
         ],
       )

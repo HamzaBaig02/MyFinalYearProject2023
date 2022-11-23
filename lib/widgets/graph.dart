@@ -50,7 +50,7 @@ class _GraphState extends State<Graph> {
   late List<String> names = ["Day", "Week", "Month", "Year"];
   late List<CoinDataGraph> params = [
     CoinDataGraph(widget.coin, "1", "hourly"),
-    CoinDataGraph(widget.coin, "400", "daily")
+    CoinDataGraph(widget.coin, "370", "daily")
   ];
 
   void getGraphData(List<CoinDataGraph> coinDataGraph) async {
@@ -71,7 +71,9 @@ class _GraphState extends State<Graph> {
 
         for(int i = 0;i < days.length;i++){
           nodesList.add(x.sublist(x.length - days[i],x.length));
+
         }
+
 
       });
     }
@@ -103,20 +105,18 @@ class _GraphState extends State<Graph> {
                   scrollDirection: Axis.horizontal,
                   itemCount: 4,
                   itemBuilder: (context, index) {
-                    return GestureDetector(
-                      child: GraphButton(
-                          text: names[index],
-                          index: index,
-                          isSelected: currentSelectedIndex == index,
-                          onSelect: () {
-                            setState(() {
-                              currentSelectedIndex = index;
-                              nodeIndex = index;
-                            });
+                    return GraphButton(
+                        text: names[index],
+                        index: index,
+                        isSelected: currentSelectedIndex == index,
+                        onSelect: () {
+                          setState(() {
+                            currentSelectedIndex = index;
+                            nodeIndex = index;
+                          });
 
 
-                          }),
-                    );
+                        });
                   }),
             )),
         SizedBox(
