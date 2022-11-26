@@ -3,7 +3,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../models/coin_data.dart';
+import '../models/settings.dart';
 import '../models/user_data.dart';
+import '../services/functions.dart';
 
 class BookmarkButton extends StatefulWidget {
   final CoinData coin;
@@ -52,7 +54,14 @@ class _BookmarkButtonState extends State<BookmarkButton> {
           });
 
           Provider.of<UserData>(context,listen:false).bookmarks.add(widget.coin);
-          Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+
+          if (Provider.of<Settings>(context,
+              listen: false).isGuest == false) {
+            storeUserDataOnCloud(context, Provider.of<UserData>(context,listen:false));
+          }
+          else{
+            Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+          }
         }
         else{
           setState(() {

@@ -1,12 +1,16 @@
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/screens/login_signup.dart';
 import 'package:crypto_trainer/screens/sell_screen.dart';
 import 'package:crypto_trainer/services/functions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../models/settings.dart';
 
 class UserInfoCard extends StatefulWidget {
   @override
@@ -50,6 +54,7 @@ class _UserInfoCardState extends State<UserInfoCard>
   Widget build(BuildContext context) {
     balance = Provider.of<UserData>(context, listen: true).balance;
     profit = Provider.of<UserData>(context, listen: true).profit;
+    //final user = FirebaseAuth.instance.currentUser?? '';
     return Column(
       children: [
         Container(
@@ -137,16 +142,37 @@ class _UserInfoCardState extends State<UserInfoCard>
                   SizedBox(
                     height: 15,
                   ),
-                  MaterialButton(
-                    shape: CircleBorder(),
-                    onPressed: () {
-                      print('Wallet Button Pressed');
-                      _toggleContainer();
-                    },
-                    child: Icon(
-                      FontAwesomeIcons.wallet,
-                      color: Colors.white,
-                    ),
+                  Row(
+                    children: [
+                      MaterialButton(
+                        shape: CircleBorder(),
+                        onPressed: () {
+                          print('Wallet Button Pressed');
+                          _toggleContainer();
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.wallet,
+                          color: Colors.white,
+                        ),
+                      ),
+                      MaterialButton(
+                        shape: CircleBorder(),
+                        onPressed: () {
+
+                          FirebaseAuth.instance.signOut();
+                          Provider.of<Settings>(context, listen: false).setGuestUser(0);
+                          saveSettingsToStorage(0);
+                          Provider.of<UserData>(context, listen: false).clear();
+                          Navigator.pop(context);
+                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+                          //Navigator.pushReplacement(context, '/loginSignup');
+                        },
+                        child: Icon(
+                          FontAwesomeIcons.signOutAlt,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               )

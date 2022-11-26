@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
@@ -8,6 +10,8 @@ import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
+
+import '../services/functions.dart';
 
 
 List<CoinData> fetchCoinList(String response) {
@@ -122,10 +126,47 @@ class _LoadingState extends State<Loading> {
     );
   }
 
+  getUserDataFromCloud()async{
+    try {
+      final currentUser = FirebaseAuth.instance.currentUser;
+      if(currentUser == null){
+        print('User doesnt exists');
+        UserData user = await fetchDataFromDisk();
+        Provider.of<UserData>(context,
+            listen: false).load(user);
+      }
+      else{
+        Provider.of<UserData>(context,
+            listen: false).emailID = currentUser?.email??'';
+        final docUser = FirebaseFirestore.instance.collection('users').doc(currentUser?.email);
+        var snapShot;
+        await docUser.get()
+            .then((doc) {
+          if(doc.exists) {
+            print("exists");
+            snapShot = doc;
+            Provider.of<UserData>(context,
+                listen: false).loadFromCloud(doc);
+
+
+          } else {
+            print("doesnt exists");
+          }
+        });
+      }
+
+
+    } on Exception catch (e) {
+      print(e);
+      // TODO
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     getCryptoData();
+    getUserDataFromCloud();
   }
 
   @override

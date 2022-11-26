@@ -9,6 +9,9 @@ import 'package:crypto_trainer/models/user_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../models/settings.dart';
+import '../services/functions.dart';
+
 class Sell extends StatefulWidget {
   CryptoCurrency ownedCrypto;
   double amount = 0;
@@ -263,7 +266,14 @@ class _SellState extends State<Sell> {
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
                           print('Transaction: $transaction');
-                          Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+
+                          if (Provider.of<Settings>(context,
+                              listen: false).isGuest == false) {
+                            storeUserDataOnCloud(context, Provider.of<UserData>(context,listen:false));
+                          }
+                          else{
+                            Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+                          }
 
                           Navigator.pop(context);
                         }

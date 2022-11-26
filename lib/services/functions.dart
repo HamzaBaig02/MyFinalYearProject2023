@@ -1,9 +1,14 @@
 
 import 'dart:convert';
+import 'dart:ffi';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/user_data.dart';
@@ -194,6 +199,72 @@ fetchDataFromDisk()async{
   }
  return user;
 }
+
+fetchSettingsFromDisk()async{
+  SharedPreferences pref = await SharedPreferences.getInstance();
+  String data = '';
+  int isGuest = 0;
+  try {
+    data = pref.getString('mySettings') ?? '';
+  } on Exception catch (e) {
+    print(e);
+  }
+  if (data.isNotEmpty) {
+    Map json = jsonDecode(data);
+    print(data);
+     isGuest = json['isGuest'];
+  } else {
+    isGuest = 0;
+  }
+  return isGuest;
+
+}
+
+void saveSettingsToStorage(int isGuest) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String json = jsonEncode({'isGuest':isGuest});
+  prefs.setString('mySettings', json);
+
+
+
+  print(json);
+
+
+}
+
+storeUserDataOnCloud(BuildContext context,UserData data)async{
+
+  try {
+
+    final currentUser = FirebaseAuth.instance.currentUser;
+    if(currentUser == null){
+      print('User doesnt exists');
+    }
+    else{
+      final docUser = FirebaseFirestore.instance.collection('users').doc(currentUser?.email);
+      var snapShot;
+      docUser.get()
+          .then((doc) {
+        if(doc.exists) {
+          print("exists,updating...");
+          snapShot = doc;
+          docUser.update(data.toJsonFireStore());
+
+
+        } else {
+          print("doesn't exists, creating...");
+          docUser.set(data.toJsonFireStore());
+        }
+      });
+    }
+
+
+  } on Exception catch (e) {
+    print(e);
+    // TODO
+  }
+}
+
 
 double getFontSize(BuildContext context,multiplier){
   double unitHeightValue = MediaQuery.of(context).size.height * 0.01;

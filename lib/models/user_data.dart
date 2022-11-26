@@ -10,12 +10,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class UserData extends ChangeNotifier {
   List<CryptoCurrency> wallet;
   List<CoinData> bookmarks = [];
-
   String name;
   String emailID = "baighamza02@gmail.com";
   double balance;
   double profit;
-  int points;
+  int points = 0;
   List<Transaction> transactions = [];
   double amountInWalletUsd = 0;
 
@@ -88,20 +87,6 @@ class UserData extends ChangeNotifier {
     String json = jsonEncode(data);
     prefs.setString('myData', json);
 
-    String url = "http://192.168.10.4:3000/users/baighamza02@gmail.com";
-
-
-    Response response = await patch(
-        Uri.parse(url),
-        body:json,
-        headers:{
-          'Content-Type':
-          'application/json',
-        }
-    );
-
-    print(response.statusCode);
-    print(response.body);
     print(json);
 
 
@@ -138,10 +123,75 @@ class UserData extends ChangeNotifier {
     };
   }
 
+  Map<String, dynamic> toJsonFireStore() {
+    return {
+      'name': name,
+      'emailID': emailID,
+      'balance': balance,
+      'profit': profit,
+      'points': points,
+      'wallet': wallet.map((i) => i.toJsonFireStore()).toList(),
+      'transactions': transactions.map((i) => i.toJsonFireStore()).toList(),
+      'bookmarks': bookmarks.map((i) => i.toJson()).toList(),
+    };
+  }
+
+  void loadFromCloud(dynamic  json){
+   print(json);
+    var tagObjsJson = json['wallet'] as List;
+    var tagObjsJson2 = json['transactions'] as List;
+    var tagObjsJson3 = (json['bookmarks'] ?? [ ]) as List;
+
+    List<CryptoCurrency> wallet =
+    tagObjsJson.map((tagJson) => CryptoCurrency.fromJson(tagJson)).toList();
+    List<Transaction> transactions =
+    tagObjsJson2.map((tagJson) => Transaction.fromJson(tagJson)).toList();
+    List<CoinData> bookmarks =
+    tagObjsJson3.map((tagJson) => CoinData.fromJson(tagJson)).toList();
+
+    this.name = json['name'] as String;
+    this.wallet = wallet;
+    this.balance = json['balance'] as double;
+    this.profit = json['profit'] as double;
+    this.points = json['points'] as int??0;
+    this.transactions = transactions;
+    this.emailID = json['emailID'] as String ?? '';
+    this.bookmarks = bookmarks;
+
+    notifyListeners();
+
+  }
+
+
+  void clear(){
+    this.name = 'User';
+    this.wallet = [];
+    this.balance = 10000;
+    this.profit = 0;
+    this.points = 0;
+    this.transactions = [];
+    this.emailID = '';
+    this.bookmarks = [];
+    notifyListeners();
+  }
+
+  void load(UserData user){
+    this.name = user.name ?? 'User';
+    this.wallet = user.wallet ?? [];
+    this.balance = user.balance ?? 10000;
+    this.profit = user.profit ?? 0;
+    this.points = user.points ?? 0;
+    this.transactions = user.transactions ?? [];
+    this.emailID = user.emailID ?? '';
+    this.bookmarks = user.bookmarks ?? [];
+    notifyListeners();
+  }
+
   factory UserData.fromJson(dynamic json) {
     var tagObjsJson = json['wallet'] as List;
     var tagObjsJson2 = json['transactions'] as List;
     var tagObjsJson3 = (json['bookmarks'] ?? [ ]) as List;
+
 
 
 

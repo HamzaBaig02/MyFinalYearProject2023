@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,8 @@ import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+
+import '../models/settings.dart';
 
 class Buy extends StatefulWidget {
   CoinData coinData;
@@ -105,7 +108,14 @@ class _BuyState extends State<Buy> {
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
                           Navigator.pop(context);
-                          Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+
+                          if (Provider.of<Settings>(context,
+                              listen: false).isGuest == false) {
+                            storeUserDataOnCloud(context, Provider.of<UserData>(context,listen:false));
+                          }
+                          else{
+                            Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
+                          }
                         }
                       }, Colors.green.shade400),
                       SizedBox(

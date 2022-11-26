@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "608493129524",
+    "project_id": "crypto-trainer-70b65",
+    "storage_bucket": "crypto-trainer-70b65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:608493129524:android:96d9d019c7b80fa6729f61",
+        "android_client_info": {
+          "package_name": "hamzabaig.crypto_trainer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "608493129524-0hvl7fpldu1r8qba0lc6vnr31946l0is.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7Maw9XKTzlWsAOR2kf1F3HxdJ0QqYkp8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "608493129524-0hvl7fpldu1r8qba0lc6vnr31946l0is.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

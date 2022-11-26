@@ -14,6 +14,13 @@ class Transaction {
       'type': type,
     };
   }
+  Map<String, dynamic> toJsonFireStore() {
+    return {
+      'date': date.toString(),
+      'crypto': crypto.toJsonFireStore(),
+      'type': type,
+    };
+  }
 
   factory Transaction.fromJson(dynamic json) {
     return Transaction(DateTime.parse(json['date']),

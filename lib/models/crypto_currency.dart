@@ -38,6 +38,14 @@ class CryptoCurrency {
     };
   }
 
+  Map<String, dynamic> toJsonFireStore() {
+    return {
+      'coin': coin.toJson(),
+      'amount': amount,
+      'buyingPricePerCoin': buyingPricePerCoin,
+    };
+  }
+
   factory CryptoCurrency.fromJson(dynamic json) {
     return CryptoCurrency.fromFile(CoinData.fromJson(json['coin']),
         json['amount'] as double, json['buyingPricePerCoin'] as double);

@@ -1,0 +1,15 @@
+import 'package:flutter/cupertino.dart';
+
+class Settings extends ChangeNotifier {
+  bool isGuest = false;
+  bool signedOut = false;
+
+  void setGuestUser(int isGuest){
+    if(isGuest == 0)
+    this.isGuest = false;
+    else
+      this.isGuest = true;
+    notifyListeners();
+  }
+
+}

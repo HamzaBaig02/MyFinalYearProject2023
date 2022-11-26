@@ -10,6 +10,8 @@ import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:flutter/foundation.dart';
 
+import '../models/settings.dart';
+
 List<CoinData> fetchCoinList(String response){
   List<CoinData> coinList = [];
   final jsonObject = jsonDecode(response) as List;
@@ -75,10 +77,11 @@ class _CryptoListState extends State<CryptoList>
 
   //Update Wallet Data
   Future<void> fetchData() async {
-
-    setState(() {
-      loading = true;
-    });
+    if(mounted) {
+      setState(() {
+        loading = true;
+      });
+    }
 
     CryptoNetwork myNetwork = CryptoNetwork();
     List<CoinData> coinList = [];
@@ -113,9 +116,11 @@ class _CryptoListState extends State<CryptoList>
 
     Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
-    setState(() {
-      loading = false;
-    });
+    if(mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   void Search(String value){
@@ -135,16 +140,23 @@ class _CryptoListState extends State<CryptoList>
 
     });
   }
-
+  Timer? timer;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-      var timer = Timer.periodic(Duration(seconds: 40), (Timer t) => fetchData()
+      timer = Timer.periodic(Duration(seconds: 40), (Timer t) => fetchData()
       );
 
 
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    timer?.cancel();
 
   }
 
@@ -157,6 +169,7 @@ class _CryptoListState extends State<CryptoList>
 
   @override
   Widget build(BuildContext context) {
+
 
     print('crypto list rebuilt');
     if(_textController.text.isNotEmpty && filteredList.isEmpty)
