@@ -74,12 +74,19 @@ class _UserInfoCardState extends State<UserInfoCard>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Text(Provider.of<UserData>(context, listen: true).name,
+                  Text('Welcome',
                       style: GoogleFonts.patuaOne(
                         textStyle: TextStyle(
                             color: Colors.white,
                             letterSpacing: .75,
-                            fontSize: 30),
+                            fontSize: getFontSize(context,4)),
+                      )),
+                  Text(Provider.of<UserData>(context, listen: true).emailID,
+                      style: GoogleFonts.patuaOne(
+                        textStyle: TextStyle(
+                            color: Colors.white,
+                            letterSpacing: .75,
+                            fontSize: getFontSize(context,2.8)),
                       )),
                   SizedBox(
                     height: 5,
@@ -92,14 +99,15 @@ class _UserInfoCardState extends State<UserInfoCard>
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: 15),
+                            fontSize: getFontSize(context,3.3),
+                        fontWeight: FontWeight.w500),
                       ),
                       Text(
                         '\$${formatNumber(balance)}',
                         style: TextStyle(
                             letterSpacing: 1,
                             color: Colors.white,
-                            fontSize: 25),
+                            fontSize: getFontSize(context,3)),
                       ),
                     ],
                   ),
@@ -111,34 +119,56 @@ class _UserInfoCardState extends State<UserInfoCard>
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: 15),
+                            fontSize: getFontSize(context, 3.3),
+                            fontWeight: FontWeight.w500),
                       ),
                       Text(
                         '\$${formatNumber(profit)}',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: 25),
+                            fontSize: getFontSize(context,3),
                       ),
+                      )
                     ],
                   )
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(
-                    height: 10,
+
+                  PopupMenuButton(
+                    child: Icon(FontAwesomeIcons.ellipsisV,color: Colors.white,),
+                    itemBuilder: (context) {
+                      return List.generate(1, (index) {
+                        return PopupMenuItem(
+                          height: 10,
+                          child: GestureDetector(child: Text('Logout',style: TextStyle(fontSize: 16),),
+                          onTap:(){
+
+                            FirebaseAuth.instance.signOut();
+                            Provider.of<Settings>(context, listen: false).setGuestUser(0);
+                            saveSettingsToStorage(0);
+                            Provider.of<UserData>(context, listen: false).clear();
+                            //Navigator.pop(context);
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+                          }
+                            ,),
+                        );
+                      });
+                    },
                   ),
-                  CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Colors.white,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.grey.shade400,
-                      radius: 45,
-                      foregroundImage: AssetImage('assets/images/mfaraday.jpg'),
-                    ),
-                  ),
+                  // CircleAvatar(
+                  //   radius: 50,
+                  //   backgroundColor: Colors.white,
+                  //   child: CircleAvatar(
+                  //     backgroundColor: Colors.grey.shade400,
+                  //     radius: 45,
+                  //     foregroundImage: AssetImage('assets/images/mfaraday.jpg'),
+                  //   ),
+                  // ),
                   SizedBox(
                     height: 15,
                   ),
@@ -155,23 +185,7 @@ class _UserInfoCardState extends State<UserInfoCard>
                           color: Colors.white,
                         ),
                       ),
-                      MaterialButton(
-                        shape: CircleBorder(),
-                        onPressed: () {
 
-                          FirebaseAuth.instance.signOut();
-                          Provider.of<Settings>(context, listen: false).setGuestUser(0);
-                          saveSettingsToStorage(0);
-                          Provider.of<UserData>(context, listen: false).clear();
-                          Navigator.pop(context);
-                          Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
-                          //Navigator.pushReplacement(context, '/loginSignup');
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.signOutAlt,
-                          color: Colors.white,
-                        ),
-                      ),
                     ],
                   ),
                 ],
@@ -252,7 +266,9 @@ class CryptoWallet extends StatelessWidget {
       ):Center(
         child: Row(
           children: [
-            Text("Wallet is empty :("),
+            Text('Wallet is Empty :(',
+                style: TextStyle(
+                    fontSize: getFontSize(context, 4), fontWeight: FontWeight.bold,color: domColor)),
 
           ],
         ),

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/transaction.dart';
@@ -11,7 +12,7 @@ class UserData extends ChangeNotifier {
   List<CryptoCurrency> wallet;
   List<CoinData> bookmarks = [];
   String name;
-  String emailID = "baighamza02@gmail.com";
+  String emailID = "Guest";
   double balance;
   double profit;
   int points = 0;
@@ -108,6 +109,88 @@ class UserData extends ChangeNotifier {
 
   }
 
+  void addBookmark(CoinData coin){
+    for(int i = 0;i < bookmarks.length;i++){
+      if(bookmarks[i].id == coin.id){
+        return;
+      }
+    }
+    bookmarks.add(coin);
+    notifyListeners();
+  }
+  void removeBookmark(CoinData coin){
+    bookmarks.remove(coin);
+    notifyListeners();
+  }
+
+  Map<String,double> calculateIndividualRates(String coinId){
+
+    int buyCount = 0;
+    int sellCount = 0;
+    double buyingSum = 0;
+    double sellingSum = 0;
+    double avgBuyingRate = 0;
+    double avgSellingRate = 0;
+
+      for (int j = 0; j < this.transactions.length; j++) {
+        if (coinId == transactions[j].crypto.coin.id) {
+          if (transactions[j].type == 'Bought') {
+            buyingSum = buyingSum + transactions[j].crypto.buyingPricePerCoin;
+            buyCount++;
+          }
+          else if (transactions[j].type == 'Sold') {
+            sellingSum = sellingSum + transactions[j].crypto.coin.value;
+            sellCount++;
+          }
+        }
+      }
+
+      avgBuyingRate = buyingSum / buyCount;
+      avgSellingRate = sellingSum / sellCount;
+
+  return {'buying': avgBuyingRate, 'selling': avgSellingRate.isNaN ? 0 : avgSellingRate};
+  }
+
+  Map<String,Map<String,double>> calculateRates(){
+    Map<String,Map<String,double>> myMap= {};
+    int buyCount = 0;
+    int sellCount = 0;
+    double buyingSum = 0;
+    double sellingSum = 0;
+    double avgBuyingRate = 0;
+    double avgSellingRate = 0;
+    for(int i = 0;i < this.wallet.length;i++) {
+      for (int j = 0; j < this.transactions.length; j++) {
+        if (wallet[i].coin.id == transactions[j].crypto.coin.id) {
+          if (transactions[j].type == 'Bought') {
+            buyingSum = buyingSum + transactions[j].crypto.buyingPricePerCoin;
+            buyCount++;
+          }
+          else if (transactions[j].type == 'Sold') {
+            sellingSum = sellingSum + transactions[j].crypto.coin.value;
+            sellCount++;
+          }
+        }
+      }
+
+      avgBuyingRate = buyingSum / buyCount;
+      avgSellingRate = sellingSum / sellCount;
+      myMap[wallet[i].coin.id] =
+      {'buying': avgBuyingRate, 'selling': avgSellingRate};
+
+      buyCount = 0;
+      sellCount = 0;
+      buyingSum = 0;
+      sellingSum = 0;
+      avgBuyingRate = 0;
+      avgSellingRate = 0;
+    }
+
+    print(myMap);
+    return myMap;
+  }
+
+
 
 
   Map<String, dynamic> toJson() {
@@ -170,7 +253,7 @@ class UserData extends ChangeNotifier {
     this.profit = 0;
     this.points = 0;
     this.transactions = [];
-    this.emailID = '';
+    this.emailID = 'Guest User';
     this.bookmarks = [];
     notifyListeners();
   }
@@ -182,7 +265,7 @@ class UserData extends ChangeNotifier {
     this.profit = user.profit ?? 0;
     this.points = user.points ?? 0;
     this.transactions = user.transactions ?? [];
-    this.emailID = user.emailID ?? '';
+    this.emailID = user.emailID ?? 'Guest User';
     this.bookmarks = user.bookmarks ?? [];
     notifyListeners();
   }
@@ -204,6 +287,6 @@ class UserData extends ChangeNotifier {
 
 
     return UserData(json['name'] as String, wallet, json['balance'] as double,
-        json['profit'] as double, json['points'] as int, transactions,"baighmza02@gmail.com", bookmarks);
+        json['profit'] as double, json['points'] as int, transactions,"Guest User", bookmarks);
   }
 }

@@ -3,7 +3,10 @@ import 'dart:async';
 import 'package:crypto_trainer/Utilities/ErrorSnackBar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../models/user_data.dart';
+import '../services/functions.dart';
 import 'loading.dart';
 import 'login_signup.dart';
 
@@ -34,7 +37,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
         isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
       });
     }
-    if(isEmailVerified) timer?.cancel();
+    if(isEmailVerified){
+      Provider.of<UserData>(context,
+          listen: false).emailID = FirebaseAuth.instance.currentUser?.email ?? '';
+      timer?.cancel();
+    }
   }
 
   @override
@@ -56,6 +63,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
   }
   @override
   Widget build(BuildContext context) {
+    if(isEmailVerified){
+      timer?.cancel();
+    }
     return isEmailVerified?
     Loading():
     Scaffold(body: SafeArea(child: Container(
@@ -69,16 +79,11 @@ class _VerifyEmailState extends State<VerifyEmail> {
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                    child: Text('Verification',
+                    child: Text('Verification Email Sent',
                         style: TextStyle(
-                            fontSize: 60.0, fontWeight: FontWeight.bold,color: domColor)),
+                            fontSize: getFontSize(context, 7), fontWeight: FontWeight.bold,color: domColor)),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                    child: Text('Email Sent',
-                        style: TextStyle(
-                            fontSize: 60.0, fontWeight: FontWeight.bold,color: domColor)),
-                  ),
+
                 ],
               ),
             ),
@@ -89,7 +94,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   Text(
                     'An email containing a link to verify your account has been sent.',
                     style: TextStyle(
-                        fontSize: 25.0,
+                        fontSize: getFontSize(context,4 ),
                         fontWeight: FontWeight.bold,
                         color: Colors.blueGrey),
                   ),
@@ -109,10 +114,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               loading = true;
                               if(!isEmailVerified){
                                 sendVerificationEmail();
-                                timer = Timer.periodic(Duration(seconds: 3), (_)=>checkEmailVerified());
+                                timer = Timer.periodic(Duration(seconds: 5), (_)=>checkEmailVerified());
                               }
-                              loading = false;
-                            });
+                              else {
+
+                                loading = false;
+                                timer?.cancel();
+                                          }
+                                        });
 
 
                           },

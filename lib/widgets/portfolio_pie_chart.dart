@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:crypto_trainer/constants/colors.dart';
 import '../models/user_data.dart';
+import '../screens/login_signup.dart';
 
 class PortfolioPieChart extends StatefulWidget {
   const PortfolioPieChart({Key? key}) : super(key: key);
@@ -51,7 +52,7 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
       final fontSize = isTouched ? getFontSize(context, 2.5) : getFontSize(context, 1.8);
       final radius = isTouched ? MediaQuery.of(context).size.height * 0.11 : MediaQuery.of(context).size.height * 0.09;
       final widgetSize = isTouched ? MediaQuery.of(context).size.height * 0.065 : MediaQuery.of(context).size.height * 0.045;
-      final titlePositionPercentageOffset = isTouched ? 0.4 : 0.5;
+      final titlePositionPercentageOffset = isTouched ? 0.4 : 0.4;
 
 
       return PieChartSectionData(
@@ -84,57 +85,116 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
   }
   @override
   Widget build(BuildContext context) {
-    double height = MediaQuery.of(context).size.height;
-    double width = MediaQuery.of(context).size.width;
-    return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Flexible(
-            fit: FlexFit.tight,
-            flex: 5,
-            child: Container(
-              child: PieChart(
-                PieChartData(
-                    pieTouchData: PieTouchData(
-                        touchCallback: (FlTouchEvent event, pieTouchResponse) {
-                          setState(() {
-                            if (!event.isInterestedForInteractions ||
-                                pieTouchResponse == null ||
-                                pieTouchResponse.touchedSection == null) {
-                              touchedIndex = -1;
-                              return;
-                            }
-                            touchedIndex =
-                                pieTouchResponse.touchedSection!.touchedSectionIndex;
-                          });
-                        }),
-                    borderData: FlBorderData(
-                      show: false,
-                    ),
-                    sectionsSpace: 0,
-                    centerSpaceRadius: 40,
-                    sections: showingSections()),
-              ),
-            ),
-          ),
-          SizedBox(height: 5,),
-          Flexible(
-            flex: 2,
-            fit: FlexFit.loose,
-            child: Container(
-              child: Wrap(
-                runSpacing: 5,
-                direction: Axis.horizontal,
-                children: List.generate(assetData.length, (index) {
-                  return PieChartKey(name: assetData[index].name, color: pieChartColors[index]);
-                }
+    return SingleChildScrollView(
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
+        padding: EdgeInsets.only(left: 5,top: 5,right: 5),
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Flexible(
+              fit: FlexFit.loose,
+              flex: 4,
+              child: Container(
+                child: PieChart(
+                  PieChartData(
+                      pieTouchData: PieTouchData(
+                          touchCallback: (FlTouchEvent event, pieTouchResponse) {
+                            setState(() {
+                              if (!event.isInterestedForInteractions ||
+                                  pieTouchResponse == null ||
+                                  pieTouchResponse.touchedSection == null) {
+                                touchedIndex = -1;
+                                return;
+                              }
+                              touchedIndex =
+                                  pieTouchResponse.touchedSection!.touchedSectionIndex;
+                            });
+                          }),
+                      borderData: FlBorderData(
+                        show: false,
+                      ),
+                      sectionsSpace: 0,
+                      centerSpaceRadius: 40,
+                      sections: showingSections()),
                 ),
               ),
             ),
-          )
+            SizedBox(height: 5,),
+            Flexible(
+              flex: 2,
+              fit: FlexFit.loose,
+              child: Container(
+                child: Wrap(
+                  runSpacing: 5,
+                  direction: Axis.horizontal,
+                  children: List.generate(assetData.length, (index) {
+                    return PieChartKey(name: assetData[index].name, color: pieChartColors[index]);
+                  }
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 5,),
+            Provider.of<UserData>(context).wallet.isEmpty?SizedBox():Flexible(
+              flex: 4,
+              fit: FlexFit.loose,
+              child: Container(
+                  alignment:Alignment.centerLeft,child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(height: 10,),
+                  Text('Buying/Selling Rates',style: TextStyle(fontSize: getFontSize(context, 4),fontWeight: FontWeight.bold,color: domColor),),
+                  SizedBox(height: 4,),
+                  Container(
+                    height: 120,
+                    child: ListView.builder(itemBuilder: (context,index){
+                      List wallet = Provider.of<UserData>(context).wallet;
+                      Map myMap = Provider.of<UserData>(context).calculateIndividualRates(wallet[index].coin.id);
+                      return Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xff2e3340),
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Color(0xff8b4a6c), width: 2),
+                        ),
+                        margin: EdgeInsets.all(2),
+                        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
 
-      ],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                          CircleAvatar(backgroundColor: Colors.transparent,foregroundImage: NetworkImage(Provider.of<UserData>(context).wallet[index].coin.imageUrl),radius: 15,),
+                          Text(wallet[index].coin.name,style: TextStyle(color: Colors.white),),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Buying: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
+                              Text('\$${myMap['buying']}',style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Selling: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
+                              Text('\$${myMap['selling']==0?'N/A':myMap['selling']}',style: TextStyle(color: Colors.white)),
+                            ],
+                          )
+                        ],),
+                      );
+                    },itemCount: Provider.of<UserData>(context).wallet.length,
+                        scrollDirection: Axis.horizontal),
+                  )
+
+                ],
+              )),
+            )
+
+
+        ],
+        ),
       ),
     );
   }
@@ -234,3 +294,5 @@ class PieChartKey extends StatelessWidget {
     );
   }
 }
+
+

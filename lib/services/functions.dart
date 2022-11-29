@@ -195,7 +195,7 @@ fetchDataFromDisk()async{
     Map json = jsonDecode(data);
     user = UserData.fromJson(json);
   } else {
-    user = UserData('Hi, User', [], 10000, 0, 0, [],"baighamza02@gmail.com",[]);
+    user = UserData('Hi, User', [], 10000, 0, 0, [],"Guest User",[]);
   }
  return user;
 }
@@ -284,3 +284,6 @@ double doubleNullCheck(dynamic x){
   }
 
 }
+
+
+

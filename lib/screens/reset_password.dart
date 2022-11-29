@@ -1,4 +1,5 @@
 import 'package:crypto_trainer/Utilities/ErrorSnackBar.dart';
+import 'package:crypto_trainer/services/functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -43,24 +44,11 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                 children: <Widget>[
                   Container(
                     padding: EdgeInsets.fromLTRB(15.0, 110.0, 0.0, 0.0),
-                    child: Text('Reset',
+                    child: Text('Reset Password ?',
                         style: TextStyle(
-                            fontSize: 60.0, fontWeight: FontWeight.bold,color: domColor)),
+                            fontSize: getFontSize(context, 8), fontWeight: FontWeight.bold,color: domColor)),
                   ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(16.0, 175.0, 0.0, 0.0),
-                    child: Text('Password',
-                        style: TextStyle(
-                            fontSize: 60.0, fontWeight: FontWeight.bold,color: domColor)),
-                  ),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(285.0, 175.0, 0.0, 0.0),
-                    child: Text('?',
-                        style: TextStyle(
-                            fontSize: 60.0,
-                            fontWeight: FontWeight.bold,
-                            )),
-                  )
+
                 ],
               ),
             ),
@@ -71,7 +59,7 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
                   Text(
                     'Enter the email address associated with your account.',
                     style: TextStyle(
-                        fontSize: 25.0,
+                        fontSize: getFontSize(context, 4),
                         fontWeight: FontWeight.bold,
                         color: Colors.blueGrey),
                   ),

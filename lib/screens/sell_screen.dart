@@ -11,6 +11,7 @@ import 'dart:convert';
 
 import '../models/settings.dart';
 import '../services/functions.dart';
+import '../widgets/transaction_reciept.dart';
 
 class Sell extends StatefulWidget {
   CryptoCurrency ownedCrypto;
@@ -274,8 +275,15 @@ class _SellState extends State<Sell> {
                           else{
                             Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
                           }
-
                           Navigator.pop(context);
+                          showModalBottomSheet(context: context,backgroundColor: Colors.transparent, builder: (BuildContext context) {
+                            return TransactionInvoice(transaction: transaction);
+
+                          });
+
+
+
+
                         }
                       }, Colors.green.shade400),
                       SizedBox(

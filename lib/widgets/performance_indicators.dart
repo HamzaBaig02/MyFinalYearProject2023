@@ -73,6 +73,7 @@ class _PerformanceIndicatorsState extends State<PerformanceIndicators> {
               Wrap(
                 alignment: WrapAlignment.center,
                 spacing: 8,
+                runSpacing: 5,
                 children: indicatorTiles,
               ),
               SizedBox(height: 10,),

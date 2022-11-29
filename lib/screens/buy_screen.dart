@@ -1,6 +1,7 @@
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/services/functions.dart';
+import 'package:crypto_trainer/widgets/transaction_reciept.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class Buy extends StatefulWidget {
 
 class _BuyState extends State<Buy> {
   double amount = 0;
+
 
 
   double userInput = 0;
@@ -52,6 +54,7 @@ class _BuyState extends State<Buy> {
                       ),
                     ),
                     child: TextField(
+
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
@@ -107,7 +110,7 @@ class _BuyState extends State<Buy> {
                           print('Transaction: $transaction');
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
-                          Navigator.pop(context);
+
 
                           if (Provider.of<Settings>(context,
                               listen: false).isGuest == false) {
@@ -116,7 +119,18 @@ class _BuyState extends State<Buy> {
                           else{
                             Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
                           }
+                          Navigator.pop(context);
+                           showModalBottomSheet(context: context,backgroundColor: Colors.transparent, builder: (BuildContext context) {
+                            return TransactionInvoice(transaction: transaction);
+
+                          });
+
+
+
                         }
+
+
+
                       }, Colors.green.shade400),
                       SizedBox(
                         width: 40,

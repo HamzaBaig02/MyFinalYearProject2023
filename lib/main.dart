@@ -23,7 +23,7 @@ Future main() async {
       MultiProvider(
         providers: [
           ChangeNotifierProvider(
-            create: (context) => UserData('',[],10000,0,0,[],'',[]),
+            create: (context) => UserData('',[],10000,0,0,[],'Guest User',[]),
           ),
           ChangeNotifierProvider(
             create: (context) => coinInfo ,

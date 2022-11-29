@@ -10,8 +10,9 @@ import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
-
+import 'package:crypto_trainer/models/settings.dart' as mySettings;
 import '../services/functions.dart';
+import 'package:widget_circular_animator/widget_circular_animator.dart';
 
 
 List<CoinData> fetchCoinList(String response) {
@@ -136,23 +137,26 @@ class _LoadingState extends State<Loading> {
             listen: false).load(user);
       }
       else{
-        Provider.of<UserData>(context,
-            listen: false).emailID = currentUser?.email??'';
-        final docUser = FirebaseFirestore.instance.collection('users').doc(currentUser?.email);
-        var snapShot;
-        await docUser.get()
-            .then((doc) {
-          if(doc.exists) {
-            print("exists");
-            snapShot = doc;
-            Provider.of<UserData>(context,
-                listen: false).loadFromCloud(doc);
+        if (Provider.of<mySettings.Settings>(context,
+            listen: false).isGuest == false) {
+          Provider.of<UserData>(context,
+              listen: false).emailID = currentUser?.email??'';
+          final docUser = FirebaseFirestore.instance.collection('users').doc(currentUser?.email);
+          var snapShot;
+          await docUser.get()
+              .then((doc) {
+            if(doc.exists) {
+              print("exists");
+              snapShot = doc;
+              Provider.of<UserData>(context,
+                  listen: false).loadFromCloud(doc);
 
 
-          } else {
-            print("doesnt exists");
-          }
-        });
+            } else {
+              print("doesnt exists");
+            }
+          });
+        }
       }
 
 
@@ -173,11 +177,24 @@ class _LoadingState extends State<Loading> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.grey.shade300,
-      child: Center(
-        child: SpinKitCircle(
-          color: Colors.black,
-          size: 70,
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          WidgetCircularAnimator(size: 200,
+              innerIconsSize: 3,
+              outerIconsSize: 3,
+              innerAnimation: Curves.easeInOutBack,
+              outerAnimation: Curves.easeInOutBack,
+              innerColor: Colors.deepPurple,
+              outerColor: Colors.orangeAccent.shade700,
+              innerAnimationSeconds: 10,
+              outerAnimationSeconds: 10,child: Image.asset('assets/images/cryptotrainer.png',height: 120,)),
+          // SpinKitCircle(
+          //   color: Colors.black,
+          //   size: 70,
+          // ),
+        ],
       ),
     );
   }

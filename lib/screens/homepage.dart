@@ -1,5 +1,6 @@
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:crypto_trainer/screens/loading.dart';
+import 'package:crypto_trainer/screens/user_page.dart';
 import 'package:crypto_trainer/widgets/bookmark_list.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/portfolio_pie_chart.dart';
@@ -52,7 +53,7 @@ class _UserHomePageState extends State<UserHomePage> {
                       controller: _pageController,
                       children: <Widget>[
                         CryptoList(widget.coinList),
-                        PortfolioPieChart(),
+                        UserPage(),
                         TransactionList(),
                         BookMarkList(),
                       ],
