@@ -61,14 +61,17 @@ class _LoginSignUpState extends State<LoginSignUp> {
     );
     Future logIn(LoginData loginData) async{
       try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-            email: loginData.email, password: loginData.password);
-        return Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return Loading();
-          }),
-        );
+
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: loginData.email, password: loginData.password);
+
+          return Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) {
+              return Loading();
+            }),
+          );
+
       }
       catch(e){
         print(e);

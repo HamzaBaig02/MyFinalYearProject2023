@@ -1,18 +1,22 @@
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/user_data.dart';
+import 'package:crypto_trainer/screens/asset_details.dart';
 import 'package:crypto_trainer/screens/login_signup.dart';
-import 'package:crypto_trainer/screens/sell_screen.dart';
 import 'package:crypto_trainer/services/functions.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-import '../models/settings.dart';
 
 class UserInfoCard extends StatefulWidget {
+  Function callback;
+
+
+  UserInfoCard({required this.callback});
+
   @override
   _UserInfoCardState createState() => _UserInfoCardState();
 }
@@ -21,6 +25,8 @@ class _UserInfoCardState extends State<UserInfoCard>
     with TickerProviderStateMixin {
   double balance = 0;
   double profit = 0;
+
+
 
 
 
@@ -83,7 +89,9 @@ class _UserInfoCardState extends State<UserInfoCard>
                       )),
                   Text(Provider.of<UserData>(context, listen: true).emailID,
                       style: GoogleFonts.patuaOne(
+
                         textStyle: TextStyle(
+                          overflow: TextOverflow.ellipsis,
                             color: Colors.white,
                             letterSpacing: .75,
                             fontSize: getFontSize(context,2.8)),
@@ -147,28 +155,14 @@ class _UserInfoCardState extends State<UserInfoCard>
                           height: 10,
                           child: GestureDetector(child: Text('Logout',style: TextStyle(fontSize: 16),),
                           onTap:(){
-
-                            FirebaseAuth.instance.signOut();
-                            Provider.of<Settings>(context, listen: false).setGuestUser(0);
-                            saveSettingsToStorage(0);
-                            Provider.of<UserData>(context, listen: false).clear();
-                            //Navigator.pop(context);
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+                            print("Logging out...");
+                            widget.callback();
                           }
                             ,),
                         );
                       });
                     },
                   ),
-                  // CircleAvatar(
-                  //   radius: 50,
-                  //   backgroundColor: Colors.white,
-                  //   child: CircleAvatar(
-                  //     backgroundColor: Colors.grey.shade400,
-                  //     radius: 45,
-                  //     foregroundImage: AssetImage('assets/images/mfaraday.jpg'),
-                  //   ),
-                  // ),
                   SizedBox(
                     height: 15,
                   ),
@@ -263,15 +257,17 @@ class CryptoWallet extends StatelessWidget {
             ),
           ],
         ),
-      ):Center(
-        child: Row(
-          children: [
-            Text('Wallet is Empty :(',
-                style: TextStyle(
-                    fontSize: getFontSize(context, 4), fontWeight: FontWeight.bold,color: domColor)),
+      ):Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Lottie.asset('assets/images/wallet.json',height: 100),
+          // SizedBox(width: 4,),
+          Text('Wallet is Empty',
+              style: TextStyle(
+                  fontSize: getFontSize(context, 4), fontWeight: FontWeight.bold,color: domColor)),
 
-          ],
-        ),
+        ],
       ),
     );
   }
@@ -297,7 +293,7 @@ class WalletTile extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) {
-            return Sell(currency);
+            return AssetDetailsScreen(asset: currency,);
           }),
         );
       },

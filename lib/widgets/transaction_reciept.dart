@@ -26,9 +26,9 @@ class TransactionInvoice extends StatelessWidget {
           SizedBox(height: 10,),
           Center(child: Text('Transaction Complete',style: TextStyle(fontSize: getFontSize(context, 4),fontWeight: FontWeight.w500),)),
           SizedBox(height: 10,),
-          Text('\$${transaction.crypto.valueUsd}',style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w400),),
+          Text('\$${formatNumber(transaction.crypto.valueUsd)}',style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w400),),
           Text(transaction.type,style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w500),),
-          Text('@\$${transaction.crypto.coin.value}',style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w400),),
+          Text('@\$${formatNumber(transaction.crypto.coin.value)}',style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w400),),
           Text(
             '${DateFormat('kk:mm').format(transaction.date)}',
             style: TextStyle(fontSize: getFontSize(context, 2.2), color: Colors.grey.shade600),

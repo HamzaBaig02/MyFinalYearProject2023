@@ -5,13 +5,17 @@ import 'package:crypto_trainer/widgets/bookmark_list.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/portfolio_pie_chart.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:crypto_trainer/widgets/useInfo_card.dart';
 import 'package:provider/provider.dart';
 
+import '../models/settings.dart';
 import '../models/user_data.dart';
+import '../services/functions.dart';
+import 'login_signup.dart';
 
 class UserHomePage extends StatefulWidget {
   List<CoinData> coinList;
@@ -40,7 +44,15 @@ class _UserHomePageState extends State<UserHomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                UserInfoCard(),
+                UserInfoCard(callback: (){
+
+                  FirebaseAuth.instance.signOut();
+                  Provider.of<Settings>(context, listen: false).setGuestUser(0);
+                  saveSettingsToStorage(0);
+                  Provider.of<UserData>(context, listen: false).clear();
+                  Navigator.pop(context);
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+                },),
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(

@@ -92,9 +92,11 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
         padding: EdgeInsets.only(left: 5,top: 5,right: 5),
         height: MediaQuery.of(context).size.height,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
+            Text('Portfolio',style: TextStyle(fontSize: getFontSize(context, 4),fontWeight: FontWeight.bold,color: domColor),),
+            SizedBox(height: 4,),
             Flexible(
               fit: FlexFit.loose,
               flex: 4,
@@ -128,6 +130,7 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
               flex: 2,
               fit: FlexFit.loose,
               child: Container(
+                alignment: Alignment.center,
                 child: Wrap(
                   runSpacing: 5,
                   direction: Axis.horizontal,
@@ -172,14 +175,14 @@ class _PortfolioPieChartState extends State<PortfolioPieChart> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Buying: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
-                              Text('\$${myMap['buying']}',style: TextStyle(color: Colors.white)),
+                              Text('\$${formatNumber(myMap['buying'])}',style: TextStyle(color: Colors.white)),
                             ],
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text('Selling: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
-                              Text('\$${myMap['selling']==0?'N/A':myMap['selling']}',style: TextStyle(color: Colors.white)),
+                              Text('\$${myMap['selling']==0?'N/A':formatNumber(myMap['selling'])}',style: TextStyle(color: Colors.white)),
                             ],
                           )
                         ],),

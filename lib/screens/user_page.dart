@@ -35,7 +35,7 @@ class _UserPageState extends State<UserPage> {
           // margin: EdgeInsets.symmetric(vertical: 5),
           // decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
           // padding: EdgeInsets.only(left: 5,top: 5,right: 5),
-            height: MediaQuery.of(context).size.height - 170,
+            height: MediaQuery.of(context).size.height-200,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -7,9 +7,10 @@ import '../services/functions.dart';
 
 
 class TransactionTile extends StatelessWidget {
-  Transaction transaction;
+  final Transaction transaction;
+  final bool showPercent;
 
-  TransactionTile(this.transaction);
+  TransactionTile({required this.transaction,this.showPercent = false});
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +55,15 @@ class TransactionTile extends StatelessWidget {
             flex: 10,
             fit: FlexFit.tight,
             child: Container(
-              child: Text(
-                '\$${formatNumber(transaction.crypto.valueUsd)}',
-                style: TextStyle(fontSize: 15),
+              child: Row(
+                children: [
+                  Text(
+                    '\$${formatNumber(transaction.crypto.valueUsd)}',
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  showPercent?transPercentWidget(transaction):SizedBox()
+
+                ],
               ),
             ),
           ),
@@ -88,4 +95,21 @@ class TransactionTile extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget transPercentWidget(Transaction transaction){
+
+
+      return transaction.type == 'Sold' ? Container(
+        margin: EdgeInsets.only(left: 5),
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+        child: Text(
+          '${transaction.percentChange.toStringAsFixed(2)}%',
+          style: TextStyle(fontSize: 14,color: percentColor(transaction.percentChange)),
+        ),
+      ):SizedBox();
+
+
+
 }

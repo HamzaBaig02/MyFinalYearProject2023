@@ -261,12 +261,11 @@ class _SellState extends State<Sell> {
                               DateTime.now(),
                               CryptoCurrency(widget.ownedCrypto.coin,
                                   widget.ownedCrypto.amount - widget.amount),
-                              'Sold');
+                              'Sold',widget.ownedCrypto.percentChange);
                           Provider.of<UserData>(context, listen: false)
                               .sellCrypto(currency);
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);
-                          print('Transaction: $transaction');
 
                           if (Provider.of<Settings>(context,
                               listen: false).isGuest == false) {
@@ -276,10 +275,15 @@ class _SellState extends State<Sell> {
                             Provider.of<UserData>(context,listen: false).saveToStorage(Provider.of<UserData>(context,listen:false));
                           }
                           Navigator.pop(context);
-                          showModalBottomSheet(context: context,backgroundColor: Colors.transparent, builder: (BuildContext context) {
-                            return TransactionInvoice(transaction: transaction);
 
-                          });
+
+                            showModalBottomSheet(context: context,backgroundColor: Colors.transparent, builder: (BuildContext context) {
+                              return TransactionInvoice(transaction: transaction);
+
+                            });
+
+                            Provider.of<Settings>(context,listen: false).setSold(true);
+
 
 
 

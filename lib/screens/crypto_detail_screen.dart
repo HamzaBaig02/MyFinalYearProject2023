@@ -97,7 +97,7 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
             onPress: () {
               showModalBottomSheet(context: context, builder: (BuildContext context) {
                 return Container(
-                  child : CryptoBottomSheet(coin: widget.coinData,name: "Price Prediction",),
+                  child : CryptoBottomSheet(coin: widget.coinData,name: "Price Prediction",developerData: coinDetails['developer_data'],),
                 );
 
               },backgroundColor: Colors.transparent);
@@ -114,7 +114,7 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
             onPress: () {
               showModalBottomSheet(context: context,isScrollControlled: true, builder: (BuildContext context) {
                 return Wrap(
-                    children:[ CryptoBottomSheet(coin: widget.coinData,name: "Performance Indicators",)]);
+                    children:[ CryptoBottomSheet(coin: widget.coinData,name: "Performance Indicators",developerData: coinDetails['developer_data'],)]);
 
               },backgroundColor: Colors.transparent);
               _animationController.reverse();
@@ -129,10 +129,8 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
             titleStyle:TextStyle(fontSize: 16 , color: Colors.white),
             onPress: () {
               //Navigator.push(context, new MaterialPageRoute(builder: (BuildContext context) => Homepage()));
-              showModalBottomSheet(context: context, builder: (BuildContext context) {
-                return Container(
-                  child : CryptoBottomSheet(coin: widget.coinData,name: "Developer Sentiment",),
-                );
+              showModalBottomSheet(context: context,isScrollControlled: true, builder: (BuildContext context) {
+                return Wrap(children: [CryptoBottomSheet(coin: widget.coinData,name: "Developer Sentiment",developerData: coinDetails['developer_data'],)]);
 
               },backgroundColor: Colors.transparent);
               _animationController.reverse();
@@ -209,49 +207,6 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
   }
 }
 
-class CryptoMenuButton extends StatelessWidget {
- final String text;
- final IconData icon;
- final CoinData coin;
-
-
-
- CryptoMenuButton({required this.text, required this.icon, required this.coin});
-
-  @override
-  Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height;
-    return Container(
-      width: width*0.25,
-      height: width*0.20,
-      padding: EdgeInsets.all(2),
-      margin: EdgeInsets.symmetric(vertical: 5),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey.shade300,
-      ),
-      child : GestureDetector(
-        onTap: (){
-          showModalBottomSheet(context: context, builder: (BuildContext context) {
-            return Container(
-              child : CryptoBottomSheet(coin: coin,name: text,),
-            );
-
-        });
-        },
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-          Icon(icon,color: Colors.black,size: 20,),
-          SizedBox(height: 8,),
-          Text(text,style: TextStyle(color: Colors.black87),textAlign: TextAlign.center,)
-        ],),
-      )
-    );
-  }
-}
 
 
 

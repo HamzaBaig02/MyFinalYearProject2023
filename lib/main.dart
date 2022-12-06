@@ -1,5 +1,4 @@
 import 'package:crypto_trainer/models/user_data.dart';
-import 'package:crypto_trainer/screens/loading.dart';
 import 'package:crypto_trainer/screens/login_signup.dart';
 import 'package:crypto_trainer/screens/verify_email_page.dart';
 import 'package:crypto_trainer/services/coin_information_stats.dart';

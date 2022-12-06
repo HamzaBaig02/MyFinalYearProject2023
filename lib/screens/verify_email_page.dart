@@ -104,30 +104,57 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     height: 40.0,
                     child: Material(
                       borderRadius: BorderRadius.circular(20.0),
-                      shadowColor: Colors.blueAccent,
+                      shadowColor: Colors.purpleAccent,
                       color: domColor,
                       elevation: 7.0,
                       child: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
 
                             setState(() {
                               loading = true;
-                              if(!isEmailVerified){
-                                sendVerificationEmail();
-                                timer = Timer.periodic(Duration(seconds: 5), (_)=>checkEmailVerified());
-                              }
-                              else {
+                            });
 
+                              if(!isEmailVerified){
+                                await sendVerificationEmail();
+                                //timer = Timer.periodic(Duration(seconds: 5), (_)=>checkEmailVerified());
+                              }
+
+                              setState(() {
                                 loading = false;
-                                timer?.cancel();
-                                          }
-                                        });
+                                ErrorSnackBar().errorSnackBar(error: 'Verification Email Resent', context: context,color: Colors.black87);
+                              });
+
+
 
 
                           },
                           child: Center(
                               child: Text(
                                 'Resend Verification Email',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, color: Colors.white),
+                              ))),
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 40.0,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20.0),
+                      shadowColor: Colors.purpleAccent,
+                      color: domColor,
+                      elevation: 7.0,
+                      child: GestureDetector(
+                          onTap: (){
+                            timer?.cancel();
+                            FirebaseAuth.instance.signOut();
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+
+
+                          },
+                          child: Center(
+                              child: Text(
+                                'Cancel',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, color: Colors.white),
                               ))),

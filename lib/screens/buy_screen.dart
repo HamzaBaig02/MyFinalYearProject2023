@@ -106,7 +106,7 @@ class _BuyState extends State<Buy> {
                           Transaction transaction = Transaction(
                               DateTime.now(),
                               CryptoCurrency(widget.coinData, amount),
-                              'Bought');
+                              'Bought',0);
                           print('Transaction: $transaction');
                           Provider.of<UserData>(context, listen: false)
                               .addTransaction(transaction);

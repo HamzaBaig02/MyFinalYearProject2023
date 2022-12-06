@@ -50,3 +50,23 @@ List<String> performanceIndicatorAnalyzer({required double currentPrice,required
 
 return ['','',''];
 }
+
+String developerSentimentAnalyzer(int metricIndex){
+
+  switch(metricIndex){
+    case 0:
+      return 'A fork creates a completely independent copy of the Git repository. This allows anyone to copy the code and tweak some parameters to launch their own version of the project. For example, Litecoin and Peercoin are forks of Bitcoin\nA high fork count indicates that a large number of developers are interested in copying or contributing to the projects source code.';
+    case 1:
+      return 'A star is similar to a like button on Instagram or Facebook, high number of stars indicate that more developers appreciate the work being done on the project';
+    case 2:
+      return 'Subscribers are developers with a github account who want to keep track of the project\'s development and be up to date on its progress.\n';
+    case 3:
+      return 'Commits are the number of times the source code has been updated. A high commit count indicate high development activity';
+      default:
+        return '';
+
+
+  }
+
+
+}
