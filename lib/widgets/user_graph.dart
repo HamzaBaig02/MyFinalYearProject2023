@@ -1,159 +1,127 @@
+import 'package:crypto_trainer/models/transaction.dart';
+import 'package:crypto_trainer/widgets/price_graph.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../models/graph_persistant_value.dart';
-import '../services/functions.dart';
-import 'graph.dart';
+import '../models/user_data.dart';
+import 'graph_button.dart';
 
-class UserGraph extends StatelessWidget {
-  const UserGraph({
-    Key? key,
-    required this.nodesList,
-    required this.nodeIndex,
-    required this.widget,
-    required this.showTooltipIndicatorsAtIndexes,
-  }) : super(key: key);
+Future<List<FlSpot>> fetchUserGraphData(UserGraphData userGraphData) async{
+  List<FlSpot> graphList = [];
 
-  final List<List<FlSpot>> nodesList;
-  final int nodeIndex;
-  final Graph widget;
-  final bool showTooltipIndicatorsAtIndexes;
+  double x = 0;
+  double y = 0;
+  try {
+    for(int i = 1;i < userGraphData.numberOfTrades;i++){
 
+      y = userGraphData.transactions[userGraphData.transactions.length - i].percentChange;
+      x = double.parse(userGraphData.transactions[userGraphData.transactions.length - i ].date.millisecondsSinceEpoch.toString());
+
+      FlSpot spot = FlSpot(x, y);
+
+      graphList.add(spot);
+    }
+  } on Exception catch (e) {
+    print("User Graph Error:$e");
+    graphList = [];
+  }
+
+  return graphList;
+}
+
+
+
+class UserGraph extends StatefulWidget {
+  const UserGraph({Key? key}) : super(key: key);
+
+  @override
+  _UserGraphState createState() => _UserGraphState();
+}
+
+class _UserGraphState extends State<UserGraph> {
+  List<List<FlSpot>> nodesList = [];
+  int nodeIndex = 0;
+  int currentSelectedIndex = 0;
+  bool enableTouch = false;
+  List<String> names = ['7','30','60','100'];
+
+  void getUserGraphData() async {
+
+  nodesList.add(await compute(fetchUserGraphData,UserGraphData(transactions: Provider.of<UserData>(context, listen: false).transactions, numberOfTrades: 10)));
+  setState(() {});
+
+
+}
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserGraphData();
+  }
 
 
   @override
   Widget build(BuildContext context) {
-    Map minMax = maxminDot(nodesList[nodeIndex]);
-    final List<int> showIndexes =  [minMax['max'],minMax['min']];
-    final lineBarsData = [LineChartBarData(
-        showingIndicators: showIndexes,
-        dotData: FlDotData(checkToShowDot: showDot),
-        spots: nodesList[nodeIndex], colors: [
-      showTooltipIndicatorsAtIndexes?(nodesList[nodeIndex].first.y < nodesList[nodeIndex].last.y
-          ? Colors.green.shade300
-          : Colors.red.shade400):Colors.transparent
-    ])];
-
-    final tooltipsOnBar = lineBarsData[0];
-    var lineTouchTooltipData = LineTouchTooltipData(
-                    tooltipBgColor: showTooltipIndicatorsAtIndexes?Colors.blueGrey:Colors.transparent,
-                    tooltipPadding: EdgeInsets.all(8),
-                    fitInsideVertically: showTooltipIndicatorsAtIndexes?false:true,
-                    fitInsideHorizontally: true,
-                    getTooltipItems: (List<LineBarSpot> touchedSpots) {
-                      List<LineTooltipItem> list = [];
-                      touchedSpots.forEach((element) {
-
-                        String price = formatNumber(element.y);
-
-                        var date = DateTime.fromMillisecondsSinceEpoch(
-                            element.x.toInt());
-                        date = date.toLocal();
-                        String formattedDate = DateFormat('yyyy-MM-dd \n kk:mm').format(date);
-
-                        String data = "\$$price\n$formattedDate";
-
-                        showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
-
-                        list.add(LineTooltipItem(
-                            data, TextStyle(fontWeight: FontWeight.w500,color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.grey.shade700,height: 1.5,shadows: showTooltipIndicatorsAtIndexes?[]:[
-                          Shadow( // bottomLeft
-                              offset: Offset(-1.5, -1.5),
-                              color: Colors.white
-                          ),
-                          Shadow( // bottomRight
-                              offset: Offset(1.5, -1.5),
-                              color: Colors.white
-                          ),
-                          Shadow( // topRight
-                              offset: Offset(1.5, 1.5),
-                              color: Colors.white
-                          ),
-                          Shadow( // topLeft
-                              offset: Offset(-1.5, 1.5),
-                              color: Colors.white
-                          ),
-                        ])));
-                      });
-
-                      return list;
-                    },
-                  );
-    var lineTouchTooltipData2 = LineTouchTooltipData(
-      tooltipBgColor: showTooltipIndicatorsAtIndexes?Colors.blueGrey:Colors.transparent,
-      tooltipPadding: EdgeInsets.all(8),
-      fitInsideVertically: showTooltipIndicatorsAtIndexes?false:true,
-      fitInsideHorizontally: true,
-      getTooltipItems: (List<LineBarSpot> touchedSpots) {
-        List<LineTooltipItem> list = [];
-        touchedSpots.forEach((element) {
-
-          String price = formatNumber(element.y);
-          var date = DateTime.fromMillisecondsSinceEpoch(
-              element.x.toInt());
-          date = date.toLocal();
-          String formattedDate = DateFormat('yyyy-MM-dd \n kk:mm').format(date);
-
-          String data = "\$$price\n$formattedDate";
-
-          showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
-
-          list.add(LineTooltipItem(
-              data, TextStyle(color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.transparent,height: 1.5 )));
-        });
-
-        return list;
-      },
-    );
-
     return Container(
-      padding: EdgeInsets.all(5),
-      child: LineChart(
-          LineChartData(
-              showingTooltipIndicators: showIndexes.map((index) {
-                return ShowingTooltipIndicators([
-                  LineBarSpot(tooltipsOnBar, lineBarsData.indexOf(tooltipsOnBar),
-                      tooltipsOnBar.spots[index]),
-                ]);
-              }).toList(),
-              titlesData: FlTitlesData(
-                show: false,
+      height: 300,
+      child: Column(
+        children: [
+          Flexible(
+              fit: FlexFit.tight,
+              flex: 1,
+              child: Container(
+                child: ListView.builder(
+                    itemExtent: 85,
+                    scrollDirection: Axis.horizontal,
+                    itemCount: 4,
+                    itemBuilder: (context, index) {
+                      return GraphButton(
+                          text: names[index],
+                          index: index,
+                          isSelected: currentSelectedIndex == index,
+                          onSelect: () {
+                            setState(() {
+                              currentSelectedIndex = index;
+                              nodeIndex = index;
+                            });
 
-              ),
-              borderData: FlBorderData(show: false),
-              gridData: FlGridData(
-                show: showTooltipIndicatorsAtIndexes?true:false,
-              ),
-              lineBarsData: lineBarsData,
-              lineTouchData: LineTouchData(
-                  touchCallback: (FlTouchEvent touchEvent,LineTouchResponse? lineTouch) {
-                    if(touchEvent.isInterestedForInteractions)
-                      Provider.of<GraphPersistentValue>(context, listen: false).display(false);
-                    else
-                      Provider.of<GraphPersistentValue>(context, listen: false).display(true);
-                  },
-                  enabled: showTooltipIndicatorsAtIndexes,
-                  touchSpotThreshold: 12,
-                  getTouchedSpotIndicator: (LineChartBarData barData, List<int> spotIndexes) {
-                    return spotIndexes.map((index) {
-                      return TouchedSpotIndicatorData(
 
-                        FlLine(
-                          color: showTooltipIndicatorsAtIndexes?barData.colors[0]:Colors.transparent,
-                          strokeWidth: 2.3,
-                        ),
-                        FlDotData(
-                          show: true,
-                        ),
+                          });
+                    }),
+              )),
+          SizedBox(
+            height: 18,
+          ),
+          Flexible(
+            flex: 10,
+            fit: FlexFit.tight,
+            child: nodesList.isEmpty
+                ? Center(child: CircularProgressIndicator())
+                : ChangeNotifierProvider(
+              create:(context)=>GraphPersistentValue(displayPersistent: true),
+              child: Stack(children: [
 
-                      );
-                    }).toList();
-                  },
-                  touchTooltipData: Provider.of<GraphPersistentValue>(context, listen: true).displayPersistent?lineTouchTooltipData:lineTouchTooltipData2,)
+                PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex),
+                IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex),),
 
-          )),
+              ],),
+            ),
+          ),
+        ],
+      ),
     );
   }
+}
+
+class UserGraphData{
+  final List<Transaction> transactions;
+  final int numberOfTrades;
+
+  UserGraphData({required this.transactions,required this.numberOfTrades});
+
+
 }

@@ -5,6 +5,7 @@ import 'package:crypto_trainer/services/functions.dart';
 import 'package:crypto_trainer/widgets/community_sentiment_bar.dart';
 import 'package:crypto_trainer/widgets/crypto_menu_bottom_sheet.dart';
 import 'package:crypto_trainer/widgets/expandable_widget.dart';
+import 'package:crypto_trainer/widgets/news_list.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -188,8 +189,13 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
                         CoinLowHighVolume(coinData: widget.coinData,),
                         CryptoGraph(widget.coinData),
                         CryptoPercentages(coinData: widget.coinData,),
-                        CommunitySentimentBar(pos:doubleNullCheck(coinDetails['sentiment_votes_up_percentage']), neg: doubleNullCheck(coinDetails['sentiment_votes_down_percentage'])),
-                        Container(height: 68,)
+                        GestureDetector(
+                          onDoubleTap: (){
+                            print("Sentiment Button Pressed");
+                            compute(getCoinSentiment,widget.coinData.id);
+                          },
+                            child: CommunitySentimentBar(pos:doubleNullCheck(coinDetails['sentiment_votes_up_percentage']), neg: doubleNullCheck(coinDetails['sentiment_votes_down_percentage']))),
+                        NewsList(widget.coinData),
 
 
 

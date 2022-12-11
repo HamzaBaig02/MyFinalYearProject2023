@@ -12,13 +12,13 @@ class PriceGraph extends StatelessWidget {
     Key? key,
     required this.nodesList,
     required this.nodeIndex,
-    required this.widget,
+    //required this.widget,
     required this.showTooltipIndicatorsAtIndexes,
   }) : super(key: key);
 
   final List<List<FlSpot>> nodesList;
   final int nodeIndex;
-  final Graph widget;
+  //final Graph widget;
   final bool showTooltipIndicatorsAtIndexes;
 
 

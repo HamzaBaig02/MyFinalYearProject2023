@@ -10,8 +10,10 @@ import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sentiment_dart/sentiment_dart.dart';
 
 import '../models/user_data.dart';
+import 'network.dart';
 
 double calculateRSI(List response){
   List<double> temp = [];
@@ -282,6 +284,40 @@ double doubleNullCheck(dynamic x){
 
     return 0;
   }
+
+}
+
+void getCoinSentiment(String coinId) async {
+  try {
+    Uri link = Uri.parse("https://api.pushshift.io/reddit/comment/search/?q=$coinId&subreddit=$coinId&before=2d&size=25&score=%3E25&filter=body");
+    Network cryptoNetwork = Network(link, {"accept": "application/json"});
+    String _cryptoData = '';
+
+    _cryptoData = await cryptoNetwork.getData() ?? " ";
+    List response = jsonDecode(_cryptoData)['data'];
+ double score = 0;
+ int positive = 0;
+ int negative = 0;
+ int neutral = 0;
+    for(int i = 0;i < 25;i++) {
+      SentimentResult x = Sentiment.analysis(response[i]['body']);
+      if(x.score > 0)
+        positive++;
+      else if(x.score < 0)
+        negative++;
+      else
+        neutral++;
+
+    }
+ int total = 25;
+    print("$positive $negative");
+  print("Positive : ${positive/total * 100}  Negative: ${negative/total * 100}");
+
+
+  } on Exception catch (e) {
+    print(e);
+  }
+
 
 }
 

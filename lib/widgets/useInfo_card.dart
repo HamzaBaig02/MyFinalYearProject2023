@@ -64,7 +64,7 @@ class _UserInfoCardState extends State<UserInfoCard>
     return Column(
       children: [
         Container(
-          height: 200,
+          height: 205,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             image: DecorationImage(

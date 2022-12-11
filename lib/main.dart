@@ -57,14 +57,7 @@ class MyApp extends StatelessWidget {
             }),
         '/loginSignup':(context)=>LoginSignUp()
       },
-      // home: StreamBuilder<User?>(
-      //   stream: FirebaseAuth.instance.authStateChanges(),
-      //     builder: (context, snapshot){
-      //     if(snapshot.hasData)
-      //       return VerifyEmail();
-      //     else
-      //       return LoginSignUp();
-      //     }),
+
 
     );
   }

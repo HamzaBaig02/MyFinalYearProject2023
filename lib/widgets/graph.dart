@@ -131,8 +131,8 @@ class _GraphState extends State<Graph> {
                 create:(context)=>GraphPersistentValue(displayPersistent: true),
                 child: Stack(children: [
 
-                  PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex, widget: widget),
-                  IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex, widget: widget),),
+                  PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex),
+                  IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex),),
 
           ],),
               ),

@@ -49,6 +49,8 @@ dependencies:
   firebase_auth: ^3.11.2
   widget_circular_animator: ^1.0.0
   lottie: ^1.4.2
+  sentiment_dart: ^0.0.5
+  url_launcher: ^6.1.7
 
 
 dev_dependencies:
