@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:crypto_trainer/models/coin_data.dart';
@@ -42,6 +43,10 @@ class NewsList extends StatefulWidget {
 class _NewsListState extends State<NewsList> {
 
   List<NewsData> news = [];
+  late PageController pageController;
+  double pageOffset = 0;
+  int _currentPage = 0;
+  late Timer _timer;
   void getNews()async{
 
     news = await compute(fetchNews,widget.coin);
@@ -56,6 +61,32 @@ class _NewsListState extends State<NewsList> {
     // TODO: implement initState
     super.initState();
     getNews();
+    pageController = PageController(viewportFraction: 1);
+    pageController.addListener(() {
+      setState(() {
+        pageOffset = pageController.page!;
+      });
+
+
+
+    });
+    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
+      if (_currentPage < news.length) {
+        _currentPage++;
+      } else {
+        _currentPage = 0;
+      }
+
+      if (pageController.hasClients) {
+        pageController.animateToPage(
+          _currentPage,
+          duration: Duration(milliseconds: 650),
+          curve: Curves.easeIn,
+        );
+      }
+    });
+
+
   }
 
 
@@ -68,25 +99,40 @@ class _NewsListState extends State<NewsList> {
           Icon(FontAwesomeIcons.newspaper,color: Color(0xff8b4a6c))
         ]),
         SizedBox(height: 8,),
-        news.isEmpty?Center(child: CircularProgressIndicator(),):Container(
-          height: 250,
-          child: ListView.separated(
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 1,
-                thickness: 1,
-                color: Colors.grey.shade300,
-              );
-            },
-            physics: ClampingScrollPhysics(),
-            scrollDirection: Axis.vertical,
-            itemBuilder: (context, index) {
-              return NewsTile(news: news[index] ,);
-            },
-            itemCount: news.length,
-          ),
-        ),
+        news.isEmpty?Center(child: CircularProgressIndicator(),):
+        Container(
+          height: 290,
+
+          child: PageView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: news.length,
+              controller: pageController,
+              itemBuilder: (context, i) {
+                return NewsTile(news: news[i], alignment: Alignment(-pageOffset.abs() + i,
+                    -pageOffset.abs() + i));
+              }),
+        )
       ],
     );
   }
 }
+
+
+// Container(
+// height: 250,
+// child: ListView.separated(
+// separatorBuilder: (context, index) {
+// return Divider(
+// height: 1,
+// thickness: 1,
+// color: Colors.grey.shade300,
+// );
+// },
+// physics: ClampingScrollPhysics(),
+// scrollDirection: Axis.vertical,
+// itemBuilder: (context, index) {
+// return NewsTile(news: news[index] ,);
+// },
+// itemCount: news.length,
+// ),
+// ),

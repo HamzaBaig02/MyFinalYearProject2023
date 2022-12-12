@@ -2,15 +2,17 @@ import 'package:crypto_trainer/models/news_data.dart';
 import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class NewsTile extends StatelessWidget {
 final NewsData news;
+final Alignment alignment;
 
-NewsTile({required this.news});
+NewsTile({required this.news,required this.alignment});
 
 Future<void> _launchUrl() async {
   print("Launching News Url Browser");
-  if (!await launchUrl(Uri.parse(news.articleUrl))) {
+  if (!await launchUrl(Uri.parse(news.articleUrl),mode: LaunchMode.externalApplication)) {
     throw 'Could not launch ${news.articleUrl}';
   }
 }
@@ -20,49 +22,59 @@ Future<void> _launchUrl() async {
     return GestureDetector(
       onTap: _launchUrl,
       child: Container(
-
-        margin: EdgeInsets.symmetric(vertical: 8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        margin: EdgeInsets.symmetric(horizontal: 5),
+        child: Stack(
           children: [
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 4,
-              child: Container(
-                  height: 85,
-                  decoration: BoxDecoration(
-                //borderRadius: BorderRadius.circular(15),
-                color: Colors.white,
-                image: DecorationImage(
-                  image: NetworkImage(news.imageUrl),
-                  fit: BoxFit.fill,
-                )
-              )),
-            ),
-            SizedBox(width: 4,),
-            Flexible(
-              fit: FlexFit.tight,
-              flex: 6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(news.title,style: TextStyle(fontSize: getFontSize(context, 2.3),fontWeight: FontWeight.w400)),
-                  SizedBox(height: 10,),
-                  Container(
-                    alignment: Alignment.bottomRight,
-                      child: Text(news.source,style: TextStyle(fontSize: getFontSize(context, 2.2),fontWeight: FontWeight.w400,letterSpacing: 2)))
-                ],
+            ClipRRect(
+              borderRadius: BorderRadius.circular(15),
+              child: Image.network(
+                news.imageUrl,
+                //width: 370,
+                height: 310,
+                fit: BoxFit.cover,
+                alignment: alignment,
               ),
             ),
+            Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(15),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      const Color(0xCC000000),
+                      const Color(0x00000000),
+                      const Color(0x00000000),
+                      const Color(0xCC000000),
+                    ],
+                  ),
+                )
+            ),
+            Positioned(
+              left: 10,
+              bottom: 20,
+              right: 10,
+              child: Text(
+                  news.title,
+                  style: TextStyle(fontSize: getFontSize(context, 3.3),fontWeight: FontWeight.w400,color: Colors.white)
+              ),
+            ),
+            Positioned(
+              top: 20,
+              right: 10,
+              child: Text(
+                  news.source,
+                  style: TextStyle(fontSize: getFontSize(context, 2.4),fontWeight: FontWeight.w500,color: Colors.white)
+              ),
+            )
           ],
         ),
-      ),
+      )
     );
   }
 }
+
+
+
+
 
