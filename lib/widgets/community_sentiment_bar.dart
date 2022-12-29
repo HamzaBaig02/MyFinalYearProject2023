@@ -23,7 +23,7 @@ class _CommunitySentimentBarState extends State<CommunitySentimentBar> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [Text('Community Sentiment',style: TextStyle(fontSize: getFontSize(context, 2.7),letterSpacing:1)),
+            Row(children: [Text('Community Sentiment',style: TextStyle(fontSize: getFontSize(context, 2.8),letterSpacing: 1)),
               SizedBox(width: 4,),
               Icon(FontAwesomeIcons.solidComments,color: Color(0xff8b4a6c))
             ]),

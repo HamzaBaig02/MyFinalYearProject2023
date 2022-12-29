@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/colors.dart';
 import '../models/user_data.dart';
 import '../services/functions.dart';
 import 'loading.dart';

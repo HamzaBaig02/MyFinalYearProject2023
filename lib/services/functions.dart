@@ -202,6 +202,32 @@ fetchDataFromDisk()async{
  return user;
 }
 
+void storeShowedTutorial({required int value,required String name}) async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String json = jsonEncode({name: value});
+  prefs.setString(name, json);
+}
+
+Future<int> loadShowedTutorial({required String name}) async {
+   SharedPreferences pref = await SharedPreferences.getInstance();
+   String data = '';
+   int x= 0;
+   try {
+     data = pref.getString(name) ?? '';
+   } catch (e) {
+     print(e);
+   }
+   if (data.isNotEmpty) {
+     Map json = jsonDecode(data);
+     print(data);
+     x = json[name];
+   } else {
+     x = 0;
+   }
+   return x;
+
+ }
+
 fetchSettingsFromDisk()async{
   SharedPreferences pref = await SharedPreferences.getInstance();
   String data = '';

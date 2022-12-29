@@ -19,7 +19,7 @@ class CoinImageAndName extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(10)
+
       ),
       child: Row(
         children: [

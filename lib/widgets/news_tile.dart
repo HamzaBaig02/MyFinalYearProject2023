@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:crypto_trainer/models/news_data.dart';
 import 'package:crypto_trainer/services/functions.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +18,13 @@ Future<void> _launchUrl() async {
   }
 }
 
+
+
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+  double height = MediaQuery.of(context).size.height;
+  return GestureDetector(
       onTap: _launchUrl,
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 5),
@@ -27,13 +32,17 @@ Future<void> _launchUrl() async {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(15),
-              child: Image.network(
-                news.imageUrl,
-                //width: 370,
-                height: 310,
+              child:CachedNetworkImage(imageUrl: news.imageUrl, height: height*0.4,
                 fit: BoxFit.cover,
                 alignment: alignment,
-              ),
+                placeholder: (context,url) => Center(child: CircularProgressIndicator()),
+                errorWidget: (context,url,error) => Center(child: Icon(Icons.error)),
+
+
+
+
+              )
+
             ),
             Container(
                 decoration: BoxDecoration(
@@ -56,7 +65,20 @@ Future<void> _launchUrl() async {
               right: 10,
               child: Text(
                   news.title,
-                  style: TextStyle(fontSize: getFontSize(context, 3.3),fontWeight: FontWeight.w400,color: Colors.white)
+                  style: TextStyle(fontSize: getFontSize(context, 2.8),fontWeight: FontWeight.w400,color: Colors.white,shadows: <Shadow>[
+                    Shadow(
+                      offset: Offset(0,0),
+                      blurRadius: 6.0,
+                      color: Colors.black,
+                    ),
+                    Shadow(
+                      offset: Offset(0,0),
+                      blurRadius: 16.0,
+                      color: Colors.black,
+                    ),
+                  ],
+
+                  )
               ),
             ),
             Positioned(
@@ -64,7 +86,7 @@ Future<void> _launchUrl() async {
               right: 10,
               child: Text(
                   news.source,
-                  style: TextStyle(fontSize: getFontSize(context, 2.4),fontWeight: FontWeight.w500,color: Colors.white)
+                  style: TextStyle(fontSize: getFontSize(context, 1.95),fontWeight: FontWeight.w500,color: Colors.white)
               ),
             )
           ],

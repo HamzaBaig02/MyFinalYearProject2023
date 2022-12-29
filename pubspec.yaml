@@ -51,6 +51,7 @@ dependencies:
   lottie: ^1.4.2
   sentiment_dart: ^0.0.5
   url_launcher: ^6.1.7
+  showcaseview: ^2.0.0+1
 
 
 dev_dependencies:

@@ -132,6 +132,7 @@ class UserData extends ChangeNotifier {
     double avgBuyingRate = 0;
     double avgSellingRate = 0;
 
+
       for (int j = 0; j < this.transactions.length; j++) {
         if (coinId == transactions[j].crypto.coin.id) {
           if (transactions[j].type == 'Bought') {

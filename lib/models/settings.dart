@@ -5,6 +5,7 @@ class Settings extends ChangeNotifier {
   bool signedOut = false;
   bool sold = false;
 
+
   void setGuestUser(int isGuest){
     if(isGuest == 0)
     this.isGuest = false;

@@ -9,3 +9,4 @@ final List pieChartColors = [
   const Color(0xff3B3B3B)
 
 ];
+final Color domColor = Color(0xff8b4a6c);

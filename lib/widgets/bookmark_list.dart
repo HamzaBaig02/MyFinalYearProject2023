@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/colors.dart';
 import '../models/coin_data.dart';
 import '../models/user_data.dart';
+import '../services/functions.dart';
 import 'coin_tile.dart';
 
 class BookMarkList extends StatelessWidget {
@@ -12,7 +15,20 @@ class BookMarkList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Provider.of<UserData>(context,listen:true).bookmarks.isEmpty?
+    Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+
+      children: [
+        Lottie.asset('assets/images/astronaut.json',
+            height: MediaQuery.of(context).size.height * 0.3),
+        // SizedBox(width: 4,),
+        Text('Nothing to see here...',
+            style: TextStyle(
+                fontSize: getFontSize(context, 2), fontWeight: FontWeight.bold,color: domColor)),
+      ],
+    )
+    :Container(
       margin: EdgeInsets.fromLTRB(0, 5, 0, 0),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.only(

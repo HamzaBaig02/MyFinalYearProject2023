@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:async/async.dart';
+import '../constants/colors.dart';
 import '../models/coin_data.dart';
 import '../models/settings.dart';
 import '../models/user_data.dart';

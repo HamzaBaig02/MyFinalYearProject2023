@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:crypto_trainer/constants/showcase_keys.dart';
+import 'package:crypto_trainer/widgets/custom_showcase.dart';
 import 'package:flutter/material.dart';
 import 'package:crypto_trainer/services/crypto_network.dart';
 import 'package:crypto_trainer/widgets/coin_tile.dart';
@@ -181,47 +183,52 @@ class _CryptoListState extends State<CryptoList>
     super.build(context);
     return Column(
       children: [
-        Container(
+        CustomShowCase(
+          refKey: searchBarKey,
+          description: showCaseDescriptions['search'].toString(),
+          opacity: 0.1,
+          child: Container(
 
-          margin: EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(
-            color: Colors.white70,
-            borderRadius: BorderRadius.circular(10),
+            margin: EdgeInsets.symmetric(vertical: 5),
+            decoration: BoxDecoration(
+              color: Colors.white70,
+              borderRadius: BorderRadius.circular(10),
 
-          ),
-          child: TextField(
-            controller: _textController,
-            style: TextStyle(
-                fontSize: 14.0,
-                height: 1.0,
-                color: Colors.black
             ),
-
-            // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
-            onChanged:Search,
-            decoration: InputDecoration(
-              contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
-              hintText: 'Search...',
-              prefixIcon: Icon(
-                FontAwesomeIcons.search,
-                size: 18,
-                color: Colors.black12,
+            child: TextField(
+              controller: _textController,
+              style: TextStyle(
+                  fontSize: 14.0,
+                  height: 1.0,
+                  color: Colors.black
               ),
-              suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
-                size: 18,
-                color: _textController.text.isNotEmpty ? Colors.red : Colors.black12,),onPressed:(){setState(() {
-                _textController.clear();
-                filteredList.clear();
-              });}
 
+              // inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+              onChanged:Search,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.fromLTRB(0, 20, 0,15),
+                hintText: 'Search...',
+                prefixIcon: Icon(
+                  FontAwesomeIcons.search,
+                  size: 18,
+                  color: Colors.black12,
+                ),
+                suffixIcon: IconButton(icon:Icon(FontAwesomeIcons.timesCircle,
+                  size: 18,
+                  color: _textController.text.isNotEmpty ? Colors.red : Colors.black12,),onPressed:(){setState(() {
+                  _textController.clear();
+                  filteredList.clear();
+                });}
+
+                ),
+                border:InputBorder.none,
+                focusedBorder:OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                //enabledBorder: InputBorder.none,
               ),
-              border:InputBorder.none,
-              focusedBorder:OutlineInputBorder(
-                borderSide: const BorderSide(color: Color(0xff8b4a6c), width: 2.0),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              //enabledBorder: InputBorder.none,
             ),
           ),
         ),//Search Bar

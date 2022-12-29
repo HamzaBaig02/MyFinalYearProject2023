@@ -30,7 +30,7 @@ class _GraphButtonState extends State<GraphButton> {
             borderRadius: BorderRadius.circular(5)),
         child: Text(
           "${widget.text}",
-          style: TextStyle(color: Colors.white),
+          style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,letterSpacing: 1),
         ),
       ),
     );

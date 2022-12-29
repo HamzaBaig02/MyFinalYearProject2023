@@ -174,6 +174,7 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
 
       body: SafeArea(
         child: Container(
+          color: Colors.grey.shade200,
           padding: EdgeInsets.symmetric(horizontal: 5,vertical: 5),
           child: ScrollConfiguration(
             behavior: MyBehavior(),
@@ -182,20 +183,64 @@ class _CryptoDetailsState extends State<CryptoDetails> with SingleTickerProvider
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Wrap(
-                    runSpacing: 5,
+                    runSpacing: 8,
                       children: [
-                        CoinImageAndName(coinData: widget.coinData,),
-                        PriceAndPercentage(coinData: widget.coinData,),
-                        CoinLowHighVolume(coinData: widget.coinData,),
-                        CryptoGraph(widget.coinData),
-                        CryptoPercentages(coinData: widget.coinData,),
-                        GestureDetector(
-                          onDoubleTap: (){
-                            print("Sentiment Button Pressed");
-                            compute(getCoinSentiment,widget.coinData.id);
-                          },
-                            child: CommunitySentimentBar(pos:doubleNullCheck(coinDetails['sentiment_votes_up_percentage']), neg: doubleNullCheck(coinDetails['sentiment_votes_down_percentage']))),
-                        NewsList(widget.coinData),
+                        Material(
+                          elevation: 1.75,
+                          borderRadius:BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+
+                            child: Column(
+                              children: [
+                                CoinImageAndName(coinData: widget.coinData,),
+                                SizedBox(height: 5,),
+                                PriceAndPercentage(coinData: widget.coinData,),
+                                SizedBox(height: 5,),
+                                CoinLowHighVolume(coinData: widget.coinData,)
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        Material(
+                          elevation: 1.5,
+                          borderRadius:BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: Container(
+                              padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
+                              child: Column(
+                                children: [
+                                  CryptoGraph(widget.coinData),
+                                  SizedBox(height: 5,),
+                                  CryptoPercentages(coinData: widget.coinData,)
+                                ],
+                              )),
+                        ),
+
+                        Material(
+                          elevation: 1.5,
+                          borderRadius:BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            child: GestureDetector(
+                              onDoubleTap: (){
+                                print("Sentiment Button Pressed");
+                                compute(getCoinSentiment,widget.coinData.id);
+                              },
+                                child: CommunitySentimentBar(pos:doubleNullCheck(coinDetails['sentiment_votes_up_percentage']), neg: doubleNullCheck(coinDetails['sentiment_votes_down_percentage']))),
+                          ),
+                        ),
+                        Material(
+                          elevation: 1.5,
+                          borderRadius:BorderRadius.circular(10),
+                          color: Colors.white,
+                          child: Container(
+                              padding: EdgeInsets.all(5),
+                              child: NewsList(widget.coinData)),
+                        ),
 
 
 

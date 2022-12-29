@@ -172,5 +172,5 @@ class _LoginSignUpState extends State<LoginSignUp> {
 
 }
 
-final Color domColor = Color(0xff8b4a6c);
+
 

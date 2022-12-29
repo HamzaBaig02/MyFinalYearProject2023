@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import '../constants/colors.dart';
+import '../services/functions.dart';
 import 'transaction_tile.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 
@@ -40,9 +43,18 @@ class TransactionList extends StatelessWidget {
                   .transactions
                   .length,
             )
-          : Center(
-              child: Text('Transaction history is empty'),
-            ),
+          : Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+
+        children: [
+          Lottie.asset('assets/images/astronaut.json',
+              height: MediaQuery.of(context).size.height * 0.3),
+          // SizedBox(width: 4,),
+          Text('Nothing to see here...',
+              style: TextStyle(
+                  fontSize: getFontSize(context, 2), fontWeight: FontWeight.bold,color: domColor)),
+        ],
+      ),
     );
   }
 }

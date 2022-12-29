@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:crypto_trainer/screens/homepage.dart';
 import 'package:crypto_trainer/models/settings.dart' as mySettings;
+import 'package:showcaseview/showcaseview.dart';
 import '../services/functions.dart';
 import 'package:widget_circular_animator/widget_circular_animator.dart';
 
@@ -112,15 +113,14 @@ class _LoadingState extends State<Loading> {
     Provider.of<UserData>(context,listen: false).updateBookmarks(coinList: coinList);
     Provider.of<UserData>(context, listen: false).calculateNetExpectedProfit();
 
-    Navigator.push(
-      context,
+    Navigator.of(context).pushReplacement(
       MaterialPageRoute(builder: (context) {
         return MultiProvider(providers: [
           ChangeNotifierProvider(
             create: (context) => BottomNavigationBarProvider(),
           ),
         ],
-          child: UserHomePage(coinList),
+          child: ShowCaseWidget(builder: Builder(builder: (context) => UserHomePage(coinList))),
 
         );
       }),
@@ -166,11 +166,15 @@ class _LoadingState extends State<Loading> {
     }
   }
 
+  void fetchData()async{
+    await getUserDataFromCloud();
+    await getCryptoData();
+  }
   @override
   void initState() {
     super.initState();
-    getCryptoData();
-    getUserDataFromCloud();
+    fetchData();
+
   }
 
   @override

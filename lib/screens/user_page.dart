@@ -2,8 +2,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
+import '../constants/colors.dart';
 import '../models/user_data.dart';
 import '../services/functions.dart';
 import '../widgets/buying_selling_rates.dart';
@@ -34,8 +36,20 @@ class _UserPageState extends State<UserPage> {
   @override
   Widget build(BuildContext context) {
 
-    return SingleChildScrollView(
-        child: Container(
+    return Provider.of<UserData>(context,listen:true).wallet.isEmpty?
+    Column(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+    Lottie.asset('assets/images/astronaut.json',
+    height: MediaQuery.of(context).size.height * 0.3),
+    // SizedBox(width: 4,),
+    Text('Nothing to see here...\nBuy crypto to get started',
+    style: TextStyle(
+    fontSize: getFontSize(context, 2), fontWeight: FontWeight.bold,color: domColor)),
+    ],
+    ):SingleChildScrollView(
+
+           child: Container(
           margin: EdgeInsets.symmetric(vertical: 5),
           decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
           padding: EdgeInsets.only(left: 5,top: 5,right: 5),
@@ -47,6 +61,7 @@ class _UserPageState extends State<UserPage> {
                 PortfolioPieChart(),
                 Text('Buying/Selling Rates',style: TextStyle(fontSize: getFontSize(context, 4),fontWeight: FontWeight.bold,color: domColor),),
                 Provider.of<UserData>(context).wallet.isEmpty?SizedBox():BuyingSellingRates(),
+                UserGraph()
 
               ],
             ),),);

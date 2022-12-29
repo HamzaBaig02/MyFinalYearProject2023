@@ -1,14 +1,19 @@
+import 'package:crypto_trainer/constants/showcase_keys.dart';
 import 'package:crypto_trainer/models/crypto_currency.dart';
 import 'package:crypto_trainer/models/user_data.dart';
 import 'package:crypto_trainer/screens/asset_details.dart';
 import 'package:crypto_trainer/screens/login_signup.dart';
 import 'package:crypto_trainer/services/functions.dart';
+
 import 'package:lottie/lottie.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../constants/colors.dart';
+import 'custom_showcase.dart';
 
 
 class UserInfoCard extends StatefulWidget {
@@ -168,15 +173,22 @@ class _UserInfoCardState extends State<UserInfoCard>
                   ),
                   Row(
                     children: [
-                      MaterialButton(
-                        shape: CircleBorder(),
-                        onPressed: () {
-                          print('Wallet Button Pressed');
-                          _toggleContainer();
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.wallet,
-                          color: Colors.white,
+                      CustomShowCase(
+                        refKey: walletButtonKey,
+                        opacity:0.1,
+                        description: showCaseDescriptions['walletButton'].toString(),
+                        onTargetClick: () => _toggleContainer() ,
+                        disposeOnTap: false,
+                        child: MaterialButton(
+                          shape: CircleBorder(),
+                          onPressed: () {
+                            print('Wallet Button Pressed');
+                            _toggleContainer();
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.wallet,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
 

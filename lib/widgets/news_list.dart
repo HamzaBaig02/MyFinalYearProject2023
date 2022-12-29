@@ -20,9 +20,15 @@ Future<List<NewsData>> fetchNews(CoinData coin) async {
 
   _cryptoData = await cryptoNewsNetwork.getData() ?? " ";
   List response = jsonDecode(_cryptoData)['articles'];
-
-  for(int i = 0;i < 10;i++){
-    news.add(NewsData(title: response[i]['title'],body: response[i]['content'],source: response[i]['source']['name'],imageUrl: response[i]['urlToImage'],articleUrl: response[i]['url'],date: response[i]['publishedAt']));
+print(response.length);
+  try {
+    for(int i = 0;i < response.length;i++){
+      news.add(NewsData(title: response[i]['title'],body: response[i]['content'],source: response[i]['source']['name'],imageUrl: response[i]['urlToImage'],articleUrl: response[i]['url'],date: response[i]['publishedAt']));
+    }
+  }catch (e) {
+    print(e);
+    news = [];
+    // TODO
   }
 
 return news;
@@ -41,18 +47,20 @@ class NewsList extends StatefulWidget {
 }
 
 class _NewsListState extends State<NewsList> {
-
+  bool newsFail = false;
   List<NewsData> news = [];
   late PageController pageController;
   double pageOffset = 0;
   int _currentPage = 0;
   late Timer _timer;
+  bool changePage = true;
   void getNews()async{
 
     news = await compute(fetchNews,widget.coin);
 
     setState(() {
-
+        if(news.isEmpty)
+          newsFail = true;
     });
   }
 
@@ -67,23 +75,25 @@ class _NewsListState extends State<NewsList> {
         pageOffset = pageController.page!;
       });
 
-
-
     });
-    _timer = Timer.periodic(Duration(seconds: 5), (Timer timer) {
-      if (_currentPage < news.length) {
-        _currentPage++;
-      } else {
-        _currentPage = 0;
-      }
+    _timer = Timer.periodic(Duration(milliseconds: 6700), (Timer timer) {
 
-      if (pageController.hasClients) {
-        pageController.animateToPage(
-          _currentPage,
-          duration: Duration(milliseconds: 650),
-          curve: Curves.easeIn,
-        );
-      }
+
+          if (_currentPage < news.length) {
+            _currentPage++;
+          } else {
+            _currentPage = 0;
+          }
+
+          if (pageController.hasClients) {
+            pageController.animateToPage(
+              _currentPage,
+              duration: Duration(milliseconds: 650),
+              curve: Curves.easeIn,
+            );
+          }
+
+
     });
 
 
@@ -92,16 +102,17 @@ class _NewsListState extends State<NewsList> {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        Row(children: [Text('${widget.coin.name} News',style: TextStyle(fontSize: getFontSize(context, 2.7),letterSpacing:1)),
+        Row(children: [Text('${widget.coin.name} News',style: TextStyle(fontSize: getFontSize(context, 2.8),letterSpacing: 1)),
           SizedBox(width: 4,),
           Icon(FontAwesomeIcons.newspaper,color: Color(0xff8b4a6c))
         ]),
         SizedBox(height: 8,),
-        news.isEmpty?Center(child: CircularProgressIndicator(),):
+        news.isEmpty?Center(child: newsFail?Text("Unable to Fetch News"):CircularProgressIndicator(),):
         Container(
-          height: 290,
+          height: height*0.4,
 
           child: PageView.builder(
               scrollDirection: Axis.horizontal,
