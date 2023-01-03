@@ -4,7 +4,6 @@ import 'package:crypto_trainer/services/coin_information_stats.dart';
 import 'package:crypto_trainer/services/functions.dart';
 import 'package:crypto_trainer/widgets/community_sentiment_bar.dart';
 import 'package:crypto_trainer/widgets/crypto_menu_bottom_sheet.dart';
-import 'package:crypto_trainer/widgets/expandable_widget.dart';
 import 'package:crypto_trainer/widgets/news_list.dart';
 import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/cupertino.dart';

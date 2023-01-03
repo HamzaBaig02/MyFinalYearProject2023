@@ -1,16 +1,18 @@
 import 'package:crypto_trainer/constants/showcase_keys.dart';
-import 'package:crypto_trainer/models/crypto_currency.dart';
-import 'package:crypto_trainer/models/user_data.dart';
-import 'package:crypto_trainer/screens/asset_details.dart';
-import 'package:crypto_trainer/screens/login_signup.dart';
-import 'package:crypto_trainer/services/functions.dart';
 
-import 'package:lottie/lottie.dart';
+import 'package:crypto_trainer/models/user_data.dart';
+
+import 'package:crypto_trainer/services/functions.dart';
+import 'package:crypto_trainer/widgets/wallet_tile.dart';
+import 'package:crypto_trainer/widgets/wallet_tile_placeholder.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import '../constants/colors.dart';
 import 'custom_showcase.dart';
@@ -92,15 +94,18 @@ class _UserInfoCardState extends State<UserInfoCard>
                             letterSpacing: .75,
                             fontSize: getFontSize(context,4)),
                       )),
-                  Text(Provider.of<UserData>(context, listen: true).emailID,
-                      style: GoogleFonts.patuaOne(
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.65,
+                    child: Text(Provider.of<UserData>(context, listen: true).emailID,
+                        style: GoogleFonts.patuaOne(
 
-                        textStyle: TextStyle(
-                          overflow: TextOverflow.ellipsis,
-                            color: Colors.white,
-                            letterSpacing: .75,
-                            fontSize: getFontSize(context,2.8)),
-                      )),
+                          textStyle: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                              color: Colors.white,
+                              letterSpacing: .75,
+                              fontSize: MediaQuery.of(context).size.width *0.05),
+                        )),
+                  ),
                   SizedBox(
                     height: 5,
                   ),
@@ -154,18 +159,55 @@ class _UserInfoCardState extends State<UserInfoCard>
 
                   PopupMenuButton(
                     child: Icon(FontAwesomeIcons.ellipsisV,color: Colors.white,),
+
                     itemBuilder: (context) {
-                      return List.generate(1, (index) {
-                        return PopupMenuItem(
+                        return [
+                          PopupMenuItem(
                           height: 10,
-                          child: GestureDetector(child: Text('Logout',style: TextStyle(fontSize: 16),),
+                          child: GestureDetector(child: Row(
+                            children: [
+                              Icon(FontAwesomeIcons.rightFromBracket,color: domColor,),
+                              SizedBox(width: 10,),
+                              Text('Logout',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                            ],
+                          ),
                           onTap:(){
                             print("Logging out...");
                             widget.callback();
                           }
-                            ,),
-                        );
-                      });
+                            ,),),
+                          PopupMenuItem(
+                            height: 10,
+                            child: GestureDetector(child: Text('',style: TextStyle(fontSize: 0),),
+                              onTap:(){
+
+                              }
+                              ,),),
+
+                          PopupMenuItem(
+                            height: 10,
+                            onTap: (){
+                              print("Showing Tutorial");
+                              ShowCaseWidget.of(context).startShowCase([
+                                coinTileKey,
+                                coinTileValueKey,
+                                coinTilePercentageChangeKey,
+                                coinTilePercentageChangeKey2,
+                                searchBarKey,
+                                infoCardKey,
+                                walletButtonKey
+                              ]);
+                            },
+                            child: Row(
+                              children: [
+                                Icon(FontAwesomeIcons.circleInfo,color: domColor,),
+                                SizedBox(width: 10,),
+                                Text('Tutorial',style: TextStyle(fontSize: 16,fontWeight: FontWeight.w500),),
+                              ],
+                            ),),
+
+                        ];
+
                     },
                   ),
                   SizedBox(
@@ -177,8 +219,12 @@ class _UserInfoCardState extends State<UserInfoCard>
                         refKey: walletButtonKey,
                         opacity:0.1,
                         description: showCaseDescriptions['walletButton'].toString(),
-                        onTargetClick: () => _toggleContainer() ,
-                        disposeOnTap: false,
+                        onTargetClick:() {
+                          _toggleContainer();
+                          Future.delayed(Duration(milliseconds: 500));
+                          ShowCaseWidget.of(context).startShowCase([walletKey,walletAmountKey,walletTileKey,assetAmountKey,assetValueKey,assetPercentageChangeKey,coinTileKey2]);
+                        } ,
+                        disposeOnTap: true,
                         child: MaterialButton(
                           shape: CircleBorder(),
                           onPressed: () {
@@ -269,105 +315,54 @@ class CryptoWallet extends StatelessWidget {
             ),
           ],
         ),
-      ):Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Lottie.asset('assets/images/wallet.json',height: 100),
-          // SizedBox(width: 4,),
-          Text('Wallet is Empty',
-              style: TextStyle(
-                  fontSize: getFontSize(context, 4), fontWeight: FontWeight.bold,color: domColor)),
-
-        ],
-      ),
-    );
-  }
-}
-
-class WalletTile extends StatelessWidget {
-  CryptoCurrency currency;
-
-  WalletTile(this.currency);
-
-  var cryptoFormatter = NumberFormat('0.00000');
-  var dollarFormatter = NumberFormat('0,000.00');
-
-  double dollars = 0;
-
-  @override
-  Widget build(BuildContext context) {
-    dollars = currency.valueUsd;
-
-    return GestureDetector(
-      onTap: () {
-        print('Wallet Tile pressed');
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) {
-            return AssetDetailsScreen(asset: currency,);
-          }),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          color: Color(0xff2e3340),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Color(0xff8b4a6c), width: 2),
-        ),
-        margin: EdgeInsets.all(2),
-        padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      ):CustomShowCase(
+        refKey: walletKey,
+        description: showCaseDescriptions['wallet'].toString(),
+        opacity: 0.1,
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Hero(
-                  tag: '${currency.coin.id}',
-                  child: CircleAvatar(
-                    backgroundColor: Colors.transparent,
-                    foregroundImage:
-                        NetworkImage(currency.coin.imageUrl, scale: 2),
-                    radius: 15,
+                Text(
+                  'Wallet',
+                  style: GoogleFonts.patuaOne(
+                    textStyle: TextStyle(
+                        color: Color(0xff8b4a6c),
+                        letterSpacing: 3,
+                        fontSize: 35,
+                        fontWeight: FontWeight.w700),
                   ),
                 ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  '${currency.coin.symbol.toUpperCase()}',
-                  style: TextStyle(color: Colors.white),
+                CustomShowCase(
+                  refKey: walletAmountKey,
+                  description: showCaseDescriptions['walletAmount'].toString(),
+                  child: Text(
+                    '\$${1191.28+16511.61}',
+                    style: GoogleFonts.patuaOne(
+                      textStyle: TextStyle(
+                          color: Color(0xff8b4a6c),
+                          letterSpacing: 1,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
                 ),
               ],
             ),
-            Column(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  '${cryptoFormatter.format(currency.amount)}',
-                  style: TextStyle(color: Colors.white, fontSize: 12),
-                ),
-                SizedBox(
-                  height: 2,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      '\$${dollars >= 1000 ? dollarFormatter.format(dollars) : (dollars).toStringAsFixed(2)}',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    SizedBox(width: 3),
-                    Text(
-                      '${currency.percentChange.toStringAsFixed(2)}%',
-                      style: TextStyle(
-                        fontSize: 10,
-                        color: currency.percentChange > 0
-                            ? Colors.green
-                            : Colors.red,
-                      ),
-                    )
-                  ],
-                ),
+                // Lottie.asset('assets/images/wallet.json',height: 100),
+                // SizedBox(width: 4,),
+                WalletTilePlaceHolderShowCase('BTC','16511.61','https://assets.coingecko.com/coins/images/1/large/bitcoin.png?1547033579'),
+                WalletTilePlaceHolder('ETH','1191.28','https://assets.coingecko.com/coins/images/279/large/ethereum.png?1595348880'),
+                SizedBox(width: 4,),
+                Text('Buy Crypto \nTo Get Started!',
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width*0.05, fontWeight: FontWeight.bold,color: Colors.grey.shade400)),
+
               ],
             ),
           ],
@@ -376,3 +371,5 @@ class WalletTile extends StatelessWidget {
     );
   }
 }
+
+

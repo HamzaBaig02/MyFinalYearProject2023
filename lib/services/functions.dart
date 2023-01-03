@@ -216,6 +216,7 @@ Future<int> loadShowedTutorial({required String name}) async {
      data = pref.getString(name) ?? '';
    } catch (e) {
      print(e);
+     return 0;
    }
    if (data.isNotEmpty) {
      Map json = jsonDecode(data);

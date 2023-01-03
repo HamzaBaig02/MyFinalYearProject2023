@@ -5,6 +5,7 @@ import 'package:crypto_trainer/screens/user_page.dart';
 import 'package:crypto_trainer/widgets/bookmark_list.dart';
 import 'package:crypto_trainer/widgets/crypto_list.dart';
 import 'package:crypto_trainer/widgets/transaction_list.dart';
+import 'package:crypto_trainer/widgets/welcome_bottomsheet.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -31,6 +32,17 @@ class UserHomePage extends StatefulWidget {
 class _UserHomePageState extends State<UserHomePage> {
   var searchBarBorderColor = Color(0xffc7c0c0);
   PageController _pageController = PageController();
+  void startShowCase(){
+    ShowCaseWidget.of(context).startShowCase([
+      coinTileKey,
+      coinTileValueKey,
+      coinTilePercentageChangeKey,
+      coinTilePercentageChangeKey2,
+      searchBarKey,
+      infoCardKey,
+      walletButtonKey
+    ]);
+  }
 
  @override
   void initState() {
@@ -38,18 +50,33 @@ class _UserHomePageState extends State<UserHomePage> {
 
     super.initState();
     
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   int x = await loadShowedTutorial(name: 'homePage') ;
-    //
-    //   if(x == 0){
-    //     print("Tutorial Already Showed");
-    //   }
-    //   else if(x == 1) {
-    //     ShowCaseWidget.of(context).startShowCase([infoCardKey,coinTileKey]);
-    //   }
-    // });
-    //
-    // storeShowedTutorial(value: 1, name: 'homePage');
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+
+      int x = await loadShowedTutorial(name: 'homePage') ;
+
+      if(x == 1){
+        print("Tutorial Already Showed");
+      }
+      else if(x == 0) {
+        showModalBottomSheet(context: context, builder: (BuildContext context) {
+          return Container(
+            child : Wrap(
+              children: [WelcomeSheet(onTap:() async {
+                Navigator.pop(context);
+                await Future.delayed(Duration(milliseconds: 300));
+                startShowCase();
+              } ,),],
+            ),
+          );
+
+        },backgroundColor: Colors.transparent,isScrollControlled: true);}
+      storeShowedTutorial(value: 1, name: 'homePage');
+
+    });
+
+
+
+
 
   }
   @override
@@ -70,18 +97,15 @@ class _UserHomePageState extends State<UserHomePage> {
                 CustomShowCase(
                   refKey: infoCardKey,
                   description:showCaseDescriptions['userInfoCard'].toString(),
-                  child: GestureDetector(
-                    onTap: ()=>ShowCaseWidget.of(context).startShowCase([coinTileKey,coinTileValueKey,coinTilePercentageChangeKey,coinTilePercentageChangeKey2,infoCardKey,walletButtonKey,searchBarKey,coinTileKey2]),
-                    child: UserInfoCard(callback: (){
+                  child: UserInfoCard(callback: (){
 
-                      FirebaseAuth.instance.signOut();
-                      Provider.of<Settings>(context, listen: false).setGuestUser(0);
-                      saveSettingsToStorage(0);
-                      Provider.of<UserData>(context, listen: false).clear();
-                      Navigator.pop(context);
-                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
-                    },),
-                  ),
+                    FirebaseAuth.instance.signOut();
+                    Provider.of<Settings>(context, listen: false).setGuestUser(0);
+                    saveSettingsToStorage(0);
+                    Provider.of<UserData>(context, listen: false).clear();
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => LoginSignUp()));
+                  },),
                 ),
                 Expanded(
                   child: Container(

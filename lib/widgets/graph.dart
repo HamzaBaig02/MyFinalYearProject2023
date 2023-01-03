@@ -127,7 +127,7 @@ class _GraphState extends State<Graph> {
           fit: FlexFit.tight,
           child: nodesList.isEmpty
               ? Center(child: CircularProgressIndicator())
-              : ChangeNotifierProvider(
+              : nodesList.length <= nodeIndex?Center(child: Text('Not Enough Data'),):ChangeNotifierProvider(
                 create:(context)=>GraphPersistentValue(displayPersistent: true),
                 child: Stack(children: [
 

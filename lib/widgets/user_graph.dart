@@ -1,4 +1,5 @@
 import 'package:crypto_trainer/models/transaction.dart';
+import 'package:crypto_trainer/services/user_graph_comparrison_functions.dart';
 import 'package:crypto_trainer/widgets/price_graph.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
@@ -9,39 +10,34 @@ import '../models/graph_persistant_value.dart';
 import '../models/user_data.dart';
 import 'graph_button.dart';
 
-Future<List<FlSpot>> fetchUserGraphData(UserGraphData userGraphData) async{
-  List<FlSpot> graphList = [];
-
+Future<List<List<FlSpot>>> fetchUserGraphData(List<Transaction> transactions) async{
+  List<List<FlSpot>> graphList = [[],[],[],[]];
   double x = 0;
   double y = 0;
+
   try {
-    y = userGraphData.transactions[0].percentChange;
-    x = double.parse(userGraphData.transactions[0].date.millisecondsSinceEpoch.toString());
 
-    FlSpot spot = FlSpot(x, y);
+    for(int i = 0;i < transactions.length;i++){
 
-    graphList.add(spot);
-
-
-    for(int i = 1;i < userGraphData.transactions.length;i++){
-
-      y = (userGraphData.transactions[i].percentChange / 100) * (userGraphData.transactions[i].crypto.valueUsd);
-      x = double.parse(userGraphData.transactions[i].date.millisecondsSinceEpoch.toString());
+      y = (transactions[i].percentChange / 100) * (transactions[i].crypto.valueUsd);
+      x = double.parse(transactions[i].date.millisecondsSinceEpoch.toString());
 
       FlSpot spot = FlSpot(x, y);
 
-      if(userGraphData.transactions[i].date.day > userGraphData.transactions[i-1].date.day)
-      graphList.add(spot);
-
+    if(transactions[i].type == 'Sold')
+      {
+        if (sameDay(transactions[i].date)) graphList[0].add(spot);
+        if (sameWeek(transactions[i].date)) graphList[1].add(spot);
+        if (sameMonth(transactions[i].date)) graphList[2].add(spot);
+        if (sameYear(transactions[i].date)) graphList[3].add(spot);
+      }
     }
-
-
 
   }catch (e) {
     print("User Graph Error:$e");
-    graphList = [];
+    return graphList = [];
   }
-
+  print(graphList[1]);
   return graphList;
 }
 
@@ -56,20 +52,22 @@ class UserGraph extends StatefulWidget {
 
 class _UserGraphState extends State<UserGraph> {
   List<List<FlSpot>> nodesList = [];
+
   int nodeIndex = 0;
   int currentSelectedIndex = 0;
   bool enableTouch = false;
-  List<String> names = ['7','30','60','100'];
+  List<String> names = ['Day','Week','Month','Year'];
 
   void getUserGraphData() async {
   if(mounted) {
-      nodesList.add(await compute(
-          fetchUserGraphData,
-          UserGraphData(
-              transactions:
-                  Provider.of<UserData>(context, listen: false).transactions,
-              numberOfTrades: 10)));
-      setState(() {});
+      List list = await compute(fetchUserGraphData,Provider.of<UserData>(context, listen: false).transactions);
+      setState(() {
+        nodesList.add(list[0]);
+        nodesList.add(list[1]);
+        nodesList.add(list[2]);
+        nodesList.add(list[3]);
+        //print(nodesList[0]);
+      });
     }
   }
 
@@ -118,7 +116,9 @@ class _UserGraphState extends State<UserGraph> {
             fit: FlexFit.tight,
             child: nodesList.isEmpty
                 ? Center(child: CircularProgressIndicator())
-                : ChangeNotifierProvider(
+                :
+            nodesList.length <= nodeIndex?Center(child: Text('Not enough Data'),):
+            nodesList[nodeIndex].length < 2 ?Center(child: Text('Not enough Data'),) :ChangeNotifierProvider(
               create:(context)=>GraphPersistentValue(displayPersistent: true),
               child: Stack(children: [
 
@@ -132,13 +132,4 @@ class _UserGraphState extends State<UserGraph> {
       ),
     );
   }
-}
-
-class UserGraphData{
-  final List<Transaction> transactions;
-  final int numberOfTrades;
-
-  UserGraphData({required this.transactions,required this.numberOfTrades});
-
-
 }

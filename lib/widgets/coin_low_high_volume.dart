@@ -1,5 +1,7 @@
 
 
+import 'package:crypto_trainer/constants/showcase_keys.dart';
+import 'package:crypto_trainer/widgets/custom_showcase.dart';
 import 'package:flutter/material.dart';
 
 import '../models/coin_data.dart';

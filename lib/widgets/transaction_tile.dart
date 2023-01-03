@@ -76,7 +76,7 @@ class TransactionTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '${DateFormat('kk:mm').format(transaction.date)}',
+                    '${DateFormat('HH:mm').format(transaction.date)}',
                     style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
                   ),
                   Text(

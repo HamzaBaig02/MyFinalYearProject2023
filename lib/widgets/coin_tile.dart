@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:crypto_trainer/models/coin_data.dart';
 import 'package:showcaseview/showcaseview.dart';
 
+import '../screens/crypto_details_screen_showcase.dart';
 import '../services/functions.dart';
 
 
@@ -43,7 +44,7 @@ class ShowCaseCoinTile extends StatelessWidget {
       onTargetClick: () => Navigator.push(
         context,
         MaterialPageRoute(builder: (context) {
-          return CryptoDetails(coinData);
+          return ShowCaseWidget(enableAutoScroll:true,builder: Builder(builder: (context) =>  CoinDetailsShowCase(coinData)));
         }),
       ),
       refKey: coinTileKey2,
