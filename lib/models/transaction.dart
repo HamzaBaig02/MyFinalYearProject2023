@@ -6,6 +6,7 @@ class Transaction {
   String type;
   double percentChange;
 
+
   Transaction(this.date, this.crypto, this.type,this.percentChange);
 
   Map<String, dynamic> toJson() {
@@ -13,7 +14,8 @@ class Transaction {
       'date': date.toString(),
       'crypto': crypto,
       'type': type,
-      'percentChange':percentChange
+      'percentChange': percentChange,
+
     };
   }
   Map<String, dynamic> toJsonFireStore() {
@@ -21,7 +23,8 @@ class Transaction {
       'date': date.toString(),
       'crypto': crypto.toJsonFireStore(),
       'type': type,
-      'percentChange':percentChange
+      'percentChange':percentChange,
+
     };
   }
 

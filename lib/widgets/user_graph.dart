@@ -72,12 +72,17 @@ class _UserGraphState extends State<UserGraph> {
     nodesList[listIndex] = list;
   });
   }
+  
+  getTopThreeCoins() async {
+    return await compute(topThreeCoins,Provider.of<UserData>(context, listen: false).transactions);
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getUserGraphData(0,0);
+    print(getTopThreeCoins());
   }
 
 
@@ -136,8 +141,8 @@ class _UserGraphState extends State<UserGraph> {
               create:(context)=>GraphPersistentValue(displayPersistent: true),
               child: Stack(children: [
 
-                PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex),
-                IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex),),
+                PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: true,),
+                IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: true,),),
 
               ],),
             ),

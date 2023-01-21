@@ -18,17 +18,15 @@ List<FlSpot> getRecentTransactions(List<Transaction> transactions) {
     if (difference < 60) {
       count++;
       final avgProfit;
-      double currentTransactionProfitAmount = (currentTransaction.percentChange/100) * currentTransaction.crypto.valueUsd;
-      double nextTransactionProfitAmount = (nextTransaction.percentChange/100) * nextTransaction.crypto.valueUsd;
       if(count >= 3){
-        //avgProfit =((currentTransactionProfitAmount* (count - 1)) + nextTransactionProfitAmount)/count;
-        avgProfit = (currentTransactionProfitAmount + nextTransactionProfitAmount);
+        avgProfit =((currentTransaction.percentChange * (count - 1)) + nextTransaction.percentChange)/count;
       }
       else
       {
-        avgProfit = (currentTransactionProfitAmount + nextTransactionProfitAmount);
+        avgProfit = (currentTransaction.percentChange + nextTransaction.percentChange)/2;
       }
       currentTransaction.percentChange = avgProfit;
+      //currentTransaction.crypto.valueUsd = currentTransaction.crypto.valueUsd + nextTransaction.crypto.valueUsd;
       filteredTransactions[i] = currentTransaction;
       filteredTransactions.removeAt(i + 1);
       i--;
@@ -63,19 +61,17 @@ List<FlSpot> getRecentWeekMonthYearTransactions(List<Transaction> transactions,i
     if (difference < 24) {
       count++;
       final avgProfit;
-      double currentTransactionProfitAmount = (currentTransaction.percentChange/100) * currentTransaction.crypto.valueUsd;
-      double nextTransactionProfitAmount = (nextTransaction.percentChange/100) * nextTransaction.crypto.valueUsd;
-
       if(count >= 3){
-        avgProfit = (currentTransactionProfitAmount + nextTransactionProfitAmount);
-        //avgProfit =((currentTransactionProfitAmount * (count - 1)) + nextTransactionProfitAmount)/count;
+        avgProfit =((currentTransaction.percentChange * (count - 1)) + nextTransaction.percentChange)/count;
       }
       else
       {
-        avgProfit = (currentTransactionProfitAmount + nextTransactionProfitAmount);
-        //avgProfit = (currentTransactionProfitAmount + nextTransactionProfitAmount)/2;
+        avgProfit = (currentTransaction.percentChange + nextTransaction.percentChange)/2;
       }
       currentTransaction.percentChange = avgProfit;
+      // print('CurrentTransactionValueUSD : ${currentTransaction.crypto.valueUsd }\nNextTransactionValueUSD : ${nextTransaction.crypto.valueUsd }\n');
+      // currentTransaction.crypto.valueUsd = currentTransaction.crypto.valueUsd + nextTransaction.crypto.valueUsd;
+
       filteredTransactions[i] = currentTransaction;
       filteredTransactions.removeAt(i + 1);
       i--;
@@ -90,4 +86,33 @@ List<FlSpot> getRecentWeekMonthYearTransactions(List<Transaction> transactions,i
   filteredTransactions.forEach((element) {flSpotList.add(FlSpot(double.parse(element.date.millisecondsSinceEpoch.toString()),element.percentChange));});
 
   return flSpotList;
+}
+
+Map<String, dynamic> topThreeCoins(List<Transaction> transactions) {
+  Map<String, dynamic> coinData = {};
+  Map<String, dynamic> topThreeCoinData = {};
+  for (var transaction in transactions) {
+    var coin = transaction.crypto.coin.id;
+    if (!coinData.containsKey(coin)) {
+      coinData[coin] = { 'count': 0,'investment': 0.0, 'profit': 0.0, 'percentage': 0.0 };
+    }
+    if(transaction.type == 'Bought')
+    coinData[coin]['investment'] += transaction.crypto.valueUsd;
+    if(transaction.type == 'Sold')
+    coinData[coin]['profit'] += (transaction.crypto.valueUsd * (transaction.percentChange/100));
+
+    coinData[coin]['count'] += 1;
+  }
+  // Sort the coins by count
+  var sortedCoins = coinData.keys.toList()..sort((a, b) => coinData[b]['count'] - coinData[a]['count']);
+  // Take the top 3 coins
+  var topThree = sortedCoins.sublist(0, 3);
+  // Calculate the average profit and loss for each top coin
+  for (var coin in topThree) {
+    if (!topThreeCoinData.containsKey(coin))
+      topThreeCoinData[coin] = { 'count': 0,'investment': 0.0, 'profit': 0.0, 'percentage': 0.0 };
+    topThreeCoinData[coin] = coinData[coin];
+  }
+  print(topThreeCoinData);
+  return coinData;
 }

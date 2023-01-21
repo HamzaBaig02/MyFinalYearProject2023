@@ -8,14 +8,16 @@ import '../services/functions.dart';
 import 'graph.dart';
 
 class PriceGraph extends StatelessWidget {
-  const PriceGraph({
+
+  PriceGraph({
     Key? key,
     required this.nodesList,
     required this.nodeIndex,
     //required this.widget,
     required this.showTooltipIndicatorsAtIndexes,
+    this.percentSymbol = false,
   }) : super(key: key);
-
+  bool percentSymbol;
   final List<List<FlSpot>> nodesList;
   final int nodeIndex;
   //final Graph widget;
@@ -53,9 +55,9 @@ class PriceGraph extends StatelessWidget {
                         date = date.toLocal();
                         String formattedDate = DateFormat('yyyy-MM-dd \n kk:mm').format(date);
 
-                        String data = "\$$price\n$formattedDate";
+                        String data = percentSymbol?"$price%\n$formattedDate":"\$$price\n$formattedDate";
 
-                        showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
+                        showTooltipIndicatorsAtIndexes?data = (percentSymbol?"$price%\n$formattedDate":"\$$price\n$formattedDate"):data = percentSymbol?"$price%":"\$$price";
 
                         list.add(LineTooltipItem(
                             data, TextStyle(fontWeight: FontWeight.w500,color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.grey.shade700,height: 1.5,shadows: showTooltipIndicatorsAtIndexes?[]:[
@@ -96,9 +98,9 @@ class PriceGraph extends StatelessWidget {
           date = date.toLocal();
           String formattedDate = DateFormat('yyyy-MM-dd \n kk:mm').format(date);
 
-          String data = "\$$price\n$formattedDate";
+          String data = percentSymbol?"$price%\n$formattedDate":"\$$price\n$formattedDate";
 
-          showTooltipIndicatorsAtIndexes?data = "\$$price\n$formattedDate":data = "\$$price";
+          showTooltipIndicatorsAtIndexes?data = (percentSymbol?"$price%\n$formattedDate":"\$$price\n$formattedDate"):data = percentSymbol?"$price%":"\$$price";
 
           list.add(LineTooltipItem(
               data, TextStyle(color: showTooltipIndicatorsAtIndexes?Colors.white:Colors.transparent,height: 1.5 )));
