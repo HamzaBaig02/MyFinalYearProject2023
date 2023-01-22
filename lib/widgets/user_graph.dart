@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:crypto_trainer/models/transaction.dart';
 import 'package:crypto_trainer/services/user_graph_comparrison_functions.dart';
 import 'package:crypto_trainer/widgets/price_graph.dart';
@@ -5,7 +7,7 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:async/async.dart';
 import '../models/graph_persistant_value.dart';
 import '../models/user_data.dart';
 import 'graph_button.dart';
@@ -58,18 +60,23 @@ class UserGraph extends StatefulWidget {
 
 class _UserGraphState extends State<UserGraph> {
   List<List<FlSpot>> nodesList = [[],[],[],[]];
-
+  Timer? timer;
   int nodeIndex = 0;
   int currentSelectedIndex = 0;
   bool enableTouch = false;
+  bool loading = true;
   List<String> names = ['Day','Week','Month','Year'];
 
   void getUserGraphData(int days,int listIndex) async {
+    setState(() {
+      loading = true;
+    });
   if(mounted == false) return;
   List <FlSpot> list = await compute(fetchUserGraphData,DateSorterObjectData(transactions: Provider.of<UserData>(context, listen: false).transactions, days: days));
   print(list);
   setState(() {
     nodesList[listIndex] = list;
+    loading = false;
   });
   }
   
@@ -81,20 +88,30 @@ class _UserGraphState extends State<UserGraph> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUserGraphData(0,0);
-    print(getTopThreeCoins());
+      timer = Timer(Duration(seconds: 2), () {
+        getUserGraphData(0, 0);
+        print(getTopThreeCoins());
+      });
+
+
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    timer?.cancel();
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
+      height: 325,
       child: Column(
         children: [
           Flexible(
               fit: FlexFit.tight,
-              flex: 1,
+              flex: 2,
               child: Container(
                 child: ListView.builder(
                     itemExtent: 85,
@@ -131,9 +148,9 @@ class _UserGraphState extends State<UserGraph> {
             height: 18,
           ),
           Flexible(
-            flex: 10,
+            flex: 13,
             fit: FlexFit.tight,
-            child: nodesList[nodeIndex].isEmpty
+            child: loading
                 ? Center(child: CircularProgressIndicator())
                 :
             nodesList.length <= nodeIndex?Center(child: Text('Not enough Data'),):
@@ -141,8 +158,8 @@ class _UserGraphState extends State<UserGraph> {
               create:(context)=>GraphPersistentValue(displayPersistent: true),
               child: Stack(children: [
 
-                PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: true,),
-                IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: true,),),
+                PriceGraph(showTooltipIndicatorsAtIndexes: true,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: false,),
+                IgnorePointer(child: PriceGraph(showTooltipIndicatorsAtIndexes: false,nodesList: nodesList, nodeIndex: nodeIndex,percentSymbol: false,),),
 
               ],),
             ),

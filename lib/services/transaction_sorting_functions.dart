@@ -26,7 +26,7 @@ List<FlSpot> getRecentTransactions(List<Transaction> transactions) {
         avgProfit = (currentTransaction.percentChange + nextTransaction.percentChange)/2;
       }
       currentTransaction.percentChange = avgProfit;
-      //currentTransaction.crypto.valueUsd = currentTransaction.crypto.valueUsd + nextTransaction.crypto.valueUsd;
+      //currentTransaction.crypto.valueUsd = currentTransaction.profitAmount + nextTransaction.profitAmount;
       filteredTransactions[i] = currentTransaction;
       filteredTransactions.removeAt(i + 1);
       i--;
@@ -69,9 +69,8 @@ List<FlSpot> getRecentWeekMonthYearTransactions(List<Transaction> transactions,i
         avgProfit = (currentTransaction.percentChange + nextTransaction.percentChange)/2;
       }
       currentTransaction.percentChange = avgProfit;
-      // print('CurrentTransactionValueUSD : ${currentTransaction.crypto.valueUsd }\nNextTransactionValueUSD : ${nextTransaction.crypto.valueUsd }\n');
-      // currentTransaction.crypto.valueUsd = currentTransaction.crypto.valueUsd + nextTransaction.crypto.valueUsd;
 
+      currentTransaction.profitAmount = currentTransaction.profitAmount + nextTransaction.profitAmount;
       filteredTransactions[i] = currentTransaction;
       filteredTransactions.removeAt(i + 1);
       i--;
@@ -83,7 +82,7 @@ List<FlSpot> getRecentWeekMonthYearTransactions(List<Transaction> transactions,i
     }
   }
 
-  filteredTransactions.forEach((element) {flSpotList.add(FlSpot(double.parse(element.date.millisecondsSinceEpoch.toString()),element.percentChange));});
+  filteredTransactions.forEach((element) {flSpotList.add(FlSpot(double.parse(element.date.millisecondsSinceEpoch.toString()),element.profitAmount));});
 
   return flSpotList;
 }

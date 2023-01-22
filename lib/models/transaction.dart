@@ -5,9 +5,12 @@ class Transaction {
   CryptoCurrency crypto;
   String type;
   double percentChange;
+  double profitAmount = 0;
 
 
-  Transaction(this.date, this.crypto, this.type,this.percentChange);
+  Transaction(this.date, this.crypto, this.type,this.percentChange){
+    this.profitAmount = (percentChange/100) * crypto.valueUsd;
+  }
 
   Map<String, dynamic> toJson() {
     return {
