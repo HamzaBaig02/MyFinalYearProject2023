@@ -40,7 +40,7 @@ List<FlSpot> getRecentTransactions(List<Transaction> transactions) {
   }
 
 
-  filteredTransactions.forEach((element) {flSpotList.add(FlSpot(double.parse(element.date.millisecondsSinceEpoch.toString()),element.percentChange));});
+  filteredTransactions.forEach((element) {flSpotList.add(FlSpot(double.parse(element.date.millisecondsSinceEpoch.toString()),element.profitAmount));});
 
   return flSpotList;
 }
