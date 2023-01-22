@@ -79,10 +79,7 @@ class _UserGraphState extends State<UserGraph> {
     loading = false;
   });
   }
-  
-  getTopThreeCoins() async {
-    return await compute(topThreeCoins,Provider.of<UserData>(context, listen: false).transactions);
-  }
+
 
   @override
   void initState() {
@@ -90,7 +87,6 @@ class _UserGraphState extends State<UserGraph> {
     super.initState();
       timer = Timer(Duration(seconds: 2), () {
         getUserGraphData(0, 0);
-        print(getTopThreeCoins());
       });
 
 
