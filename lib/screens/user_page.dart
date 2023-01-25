@@ -71,19 +71,21 @@ class _UserPageState extends State<UserPage> {
 
            child: Container(
           margin: EdgeInsets.symmetric(vertical: 5),
-          decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10))),
+          decoration: BoxDecoration(borderRadius: BorderRadius.only(topLeft: Radius.circular(10),topRight: Radius.circular(10)),color: Colors.white),
 
 
 
             child: Wrap(
                 runSpacing: 8,
               children: [
+                //Text('Portfolio Distribution',style: TextStyle(color: domColor,fontWeight: FontWeight.w300,fontSize: getFontSize(context, 4)),),
+                SizedBox(height: 10,),
                 Container(
                     decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.circular(10)),
                     padding: EdgeInsets.all(10),
                     child: PortfolioPieChart()),
                 //Text('Buying/Selling Rates',style: TextStyle(fontSize: getFontSize(context, 4),fontWeight: FontWeight.bold,color: domColor),),
-                BuyingSellingRates(),
+                // BuyingSellingRates(),
                 SizedBox(height: 10,),
                 Text('Trading Performance',style: TextStyle(color: domColor,fontWeight: FontWeight.w300,fontSize: getFontSize(context, 4)),),
                 Container(

@@ -102,7 +102,7 @@ class _UserGraphState extends State<UserGraph> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 325,
+      height: 310,
       child: Column(
         children: [
           Flexible(
@@ -144,7 +144,7 @@ class _UserGraphState extends State<UserGraph> {
             height: 18,
           ),
           Flexible(
-            flex: 13,
+            flex: 15,
             fit: FlexFit.tight,
             child: loading
                 ? Center(child: CircularProgressIndicator())

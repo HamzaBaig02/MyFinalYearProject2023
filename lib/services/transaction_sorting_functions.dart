@@ -93,14 +93,13 @@ Map<String, dynamic> topThreeCoins(List<Transaction> transactions) {
   for (var transaction in transactions) {
     var coin = transaction.crypto.coin.id;
     if (!coinData.containsKey(coin)) {
-      coinData[coin] = { 'count': 0, 'name': '${transaction.crypto.coin.name}', 'imageUrl': '${transaction.crypto.coin.imageUrl}','investment': 0.0, 'profit': 0.0, 'loss': 0.0 };
+      coinData[coin] = { 'count': 0, 'name': '${transaction.crypto.coin.name}', 'imageUrl': '${transaction.crypto.coin.imageUrl}','investment': 0.0, 'netProfit': 0.0};
     }
     if(transaction.type == 'Bought')
       coinData[coin]['investment'] += transaction.crypto.valueUsd;
-    if(transaction.type == 'Sold' && transaction.percentChange >= 0)
-      coinData[coin]['profit'] += (transaction.crypto.valueUsd * (transaction.percentChange/100));
-    if(transaction.type == 'Sold' && transaction.percentChange < 0)
-      coinData[coin]['loss'] += (transaction.crypto.valueUsd * (transaction.percentChange/100));
+    if(transaction.type == 'Sold')
+      coinData[coin]['netProfit'] += (transaction.crypto.valueUsd * (transaction.percentChange/100));
+
 
     coinData[coin]['count'] += 1;
   }
@@ -111,7 +110,7 @@ Map<String, dynamic> topThreeCoins(List<Transaction> transactions) {
   // Calculate the average profit and loss for each top coin
   for (var coin in topThree) {
     if (!topThreeCoinData.containsKey(coin))
-      topThreeCoinData[coin] = { 'count': 0,'investment': 0.0, 'profit': 0.0, 'loss': 0.0 };
+      topThreeCoinData[coin] = { 'count': 0,'investment': 0.0, 'netProfit': 0.0};
     topThreeCoinData[coin] = coinData[coin];
   }
 

@@ -36,8 +36,16 @@ class TopThreeCoins extends StatelessWidget {
               ),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Trades: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
+                  Text('${topThreeCoinData[keys[index]]['count']}',style: TextStyle(color: Colors.white)),
+                ],
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
+
                   Text('Investment: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
                   Text('\$${formatNumber(topThreeCoinData[keys[index]]['investment'])}',style: TextStyle(color: Colors.white)),
                 ],
@@ -46,17 +54,11 @@ class TopThreeCoins extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-                  Text('Profit: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
-                  Text('\$${formatNumber(topThreeCoinData[keys[index]]['profit'])}',style: TextStyle(color: Colors.white)),
+                  Text('Net Profit: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
+                  Text('\$${formatNumber(topThreeCoinData[keys[index]]['netProfit'])}',style: TextStyle(color: percentColor(topThreeCoinData[keys[index]]['netProfit']))),
                 ],
               ),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Loss: ',style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500)),
-                  Text('\$${formatNumber(topThreeCoinData[keys[index]]['loss'])}',style: TextStyle(color: Colors.white)),
-                ],
-              )
+
             ],),
         );
       },itemCount: 3,

@@ -52,11 +52,24 @@ dependencies:
   sentiment_dart: ^0.0.5
   url_launcher: ^6.1.7
   showcaseview: ^2.0.0+1
+  flutter_launcher_icons: ^0.11.0
+  flutter_native_splash: ^2.2.9
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+flutter_launcher_icons: "^0.11.0"
+
+
+flutter_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "assets/icon/ic_launcher.png"
+    min_sdk_android: 21 # android min sdk min:16, default 21
+flutter_native_splash:
+    color: "#ffffff"
+    image: "assets/splash_screen/cryptotrainer.png"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

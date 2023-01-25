@@ -117,15 +117,16 @@ class _UserInfoCardState extends State<UserInfoCard>
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: getFontSize(context,3.3),
-                        fontWeight: FontWeight.w500),
+                            fontSize: getFontSize(context,2.6),
+                        fontWeight: FontWeight.w400),
                       ),
                       Text(
                         '\$${formatNumber(balance)}',
                         style: TextStyle(
                             letterSpacing: 1,
                             color: Colors.white,
-                            fontSize: getFontSize(context,3)),
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(context,3.3)),
                       ),
                     ],
                   ),
@@ -133,19 +134,20 @@ class _UserInfoCardState extends State<UserInfoCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Profit',
+                        'Net Profit',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: getFontSize(context, 3.3),
-                            fontWeight: FontWeight.w500),
+                            fontSize: getFontSize(context,2.6),
+                            fontWeight: FontWeight.w400),
                       ),
                       Text(
                         '\$${formatNumber(profit)}',
                         style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 1,
-                            fontSize: getFontSize(context,3),
+                            fontWeight: FontWeight.w500,
+                            fontSize: getFontSize(context,3.3),
                       ),
                       )
                     ],
