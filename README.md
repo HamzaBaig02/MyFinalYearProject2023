@@ -1,5 +1,7 @@
 # MyFinalYearProject2023
 A Crypto Exchange simulator made for educational purposes using the Flutter framework
+<img src="https://user-images.githubusercontent.com/47035617/214894530-48b357fe-23ba-41a8-ae09-81971eccbfa5.png" height = 370px>
+
 
 ## Real-time Market Data for Over 500 Cryptocurrencies
 <img src="https://user-images.githubusercontent.com/47035617/214887131-b2b9e710-ec21-4054-926d-ef24d6b28323.gif" height = 500px>
